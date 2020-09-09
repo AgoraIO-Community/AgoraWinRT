@@ -1,0 +1,107 @@
+import "AgoraWinRTEnums.idl";
+
+namespace AgoraWinRT
+{
+    struct RtcStats {
+        UInt64 duration;
+        UInt64 txBytes;
+        UInt64 rxBytes;
+        UInt64 txAudioBytes;
+        UInt64 txVideoBytes;
+        UInt64 rxAudioBytes;
+        UInt64 rxVideoBytes;
+        UInt16 txKBitRate;
+        UInt16 rxKBitRate;
+        UInt16 rxAudioKBitRate;
+        UInt16 txAudioKBitRate;
+        UInt16 rxVideoKBitRate;
+        UInt16 txVideoKBitRate;
+        UInt16 lastmileDelay;
+        UInt16 txPacketLossRate;
+        UInt16 rxPacketLossRate;
+        UInt64 userCount;
+        Double cpuAppUsage;
+        Double cpuTotalUsage;
+        Int64 gatewayRtt;
+        Double memoryAppUsageRatio;
+        Double memoryTotalUsageRatio;
+        Int64 memoryAppUsageInKbytes;
+    };
+    struct VideoDimensions {
+        Int32 width;
+        Int32 height;
+    };
+    struct VideoEncoderConfiguration {
+        AgoraWinRT.VideoDimensions dimensions;
+        AgoraWinRT.FRAME_RATE frameRate;
+        Int32 minFrameRate;
+        Int32 bitrate;
+        Int32 minBitrate;
+        AgoraWinRT.ORIENTATION_MODE orientationMode;
+        AgoraWinRT.DEGRADATION_PREFERENCE degradationPreference;
+        AgoraWinRT.VIDEO_MIRROR_MODE_TYPE mirrorMode;
+    };
+    struct LocalAudioStats
+    {
+        Int32 numChannels;
+        Int32 sentSampleRate;
+        Int32 sentBitrate;
+        UInt16 txPacketLossRate;
+    };
+    struct RemoteAudioStats
+    {
+        UInt64 uid;
+        Int32 quality;
+        Int32 networkTransportDelay;
+        Int32 jitterBufferDelay;
+        Int32 audioLossRate;
+        Int32 numChannels;
+        Int32 receivedSampleRate;
+        Int32 receivedBitrate;
+        Int32 totalFrozenTime;
+        Int32 frozenRate;
+        Int32 totalActiveTime;
+        Int32 publishDuration;
+    };
+    struct LocalVideoStats
+    {
+        Int32 sentBitrate;
+        Int32 sentFrameRate;
+        Int32 encoderOutputFrameRate;
+        Int32 rendererOutputFrameRate;
+        Int32 targetBitrate;
+        Int32 targetFrameRate;
+        AgoraWinRT.QUALITY_ADAPT_INDICATION qualityAdaptIndication;
+        Int32 encodedBitrate;
+        Int32 encodedFrameWidth;
+        Int32 encodedFrameHeight;
+        Int32 encodedFrameCount;
+        AgoraWinRT.VIDEO_CODEC_TYPE codecType;
+        UInt16 txPacketLossRate;
+        Int32 captureFrameRate;
+    };
+    struct RemoteVideoStats
+    {
+        UInt64 uid;
+        Int32 delay;
+        Int32 width;
+        Int32 height;
+        Int32 receivedBitrate;
+        Int32 decoderOutputFrameRate;
+        Int32 rendererOutputFrameRate;
+        Int32 packetLossRate;
+        AgoraWinRT.REMOTE_VIDEO_STREAM_TYPE rxStreamType;
+        Int32 totalFrozenTime;
+        Int32 frozenRate;
+        Int32 totalActiveTime;
+        Int32 publishDuration;
+    };
+    struct BeautyOptions
+    {
+        AgoraWinRT.LIGHTENING_CONTRAST_LEVEL lighteningContrastLevel;
+        Single lighteningLevel;
+        Single smoothnessLevel;
+        Single rednessLevel;
+    };
+
+}

@@ -1,0 +1,80 @@
+import "AgoraWinRTTypes.idl";
+import "AgoraWinRTEnums.idl";
+
+namespace AgoraWinRT
+{
+	interface AgoraRtcEventHandler
+	{
+		//频道事件
+		void OnConnectionStateChanged(AgoraWinRT.CONNECTION_STATE_TYPE type, AgoraWinRT.CONNECTION_CHANGED_REASON_TYPE reason);
+		void OnJoinChannelSuccess(String channel, UInt64 uid, UInt32 elapsed);
+		void OnRejoinChannelSuccess(String channel, UInt64 uid, UInt32 elapsed);
+		void OnLeaveChannel(AgoraWinRT.RtcStats stats);
+		void OnClientRoleChanged(AgoraWinRT.CLIENT_ROLE_TYPE oldRole, AgoraWinRT.CLIENT_ROLE_TYPE newRole);
+		void OnUserJoined(UInt64 uid, UInt32 elapsed);
+		void OnUserOffline(UInt64 uid, AgoraWinRT.USER_OFFLINE_REASON_TYPE reason);
+		void OnNetworkTypeChanged(AgoraWinRT.NETWORK_TYPE type);
+		void OnConnectionLost();
+		void OnTokenPrivilegeWillExpire(String token);
+		void OnRequestToken();
+		//本地媒体事件
+		void OnLocalAudioStateChanged(AgoraWinRT.LOCAL_AUDIO_STREAM_STATE state, AgoraWinRT.LOCAL_AUDIO_STREAM_ERROR error);
+		void OnLocalVideoStateChanged(AgoraWinRT.LOCAL_VIDEO_STREAM_STATE state, AgoraWinRT.LOCAL_VIDEO_STREAM_ERROR error);
+		void OnFirstLocalAudioFramePublished(UInt32 elapsed);
+		void OnFirstLocalVideoFramePublished(UInt32 elapsed);
+		void OnAudioPublishStateChanged(String channel, AgoraWinRT.STREAM_PUBLISH_STATE oldState, AgoraWinRT.STREAM_PUBLISH_STATE newState, UInt32 elapsed);
+		void OnVideoPublishStateChanged(String channel, AgoraWinRT.STREAM_PUBLISH_STATE oldState, AgoraWinRT.STREAM_PUBLISH_STATE newState, UInt32 elapsed);
+		//远端媒体事件
+		void OnRemoteAudioStateChanged(UInt64 uid, AgoraWinRT.REMOTE_AUDIO_STATE state, AgoraWinRT.REMOTE_AUDIO_STATE_REASON reason, UInt32 elapsed);
+		void OnRemoteVideoStateChanged(UInt64 uid, AgoraWinRT.REMOTE_VIDEO_STATE state, AgoraWinRT.REMOTE_VIDEO_STATE_REASON reason, UInt32 elapsed);
+		void OnFirstRemoteVideoFrame(UInt64 uid, UInt32 width, UInt32 height, UInt32 elapsed);
+		void OnAudioSubscribeStateChanged(String channel, UInt64 uid, AgoraWinRT.STREAM_SUBSCRIBE_STATE oldState, AgoraWinRT.STREAM_SUBSCRIBE_STATE newState, UInt32 elapsed);
+		void OnVideoSubscribeStateChanged(String channel, UInt64 uid, AgoraWinRT.STREAM_SUBSCRIBE_STATE oldState, AgoraWinRT.STREAM_SUBSCRIBE_STATE newState, UInt32 elapsed);
+		//数据统计事件
+		void OnRtcStats(AgoraWinRT.RtcStats stats);
+		void OnNetworkQuality(UInt64 uid, AgoraWinRT.QUALITY_TYPE txQuality, AgoraWinRT.QUALITY_TYPE rxQuality);
+		void OnLocalAudioStats(AgoraWinRT.LocalAudioStats stats);
+		void OnLocalVideoStats(AgoraWinRT.LocalVideoStats stats);
+		void OnRemoteAudioStats(AgoraWinRT.RemoteAudioStats stats);
+		void OnRemoteVideoStats(AgoraWinRT.RemoteVideoStats stats);
+	};
+	[default_interface]
+	runtimeclass AgoraRtc : Windows.Foundation.IClosable
+	{
+		AgoraRtc(String vendorKey);
+
+		//频道管理
+		Int16 SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE type);
+		Int16 SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE type);
+		Int16 JoinChannel(String token, String channel, String info, UInt64 uid);
+		Int16 SwitchChannel(String token, String channel);
+		Int16 LeaveChannel();
+		Int16 RenewToken(String token);
+		AgoraWinRT.CONNECTION_STATE_TYPE GetConnectionState();
+
+		//音频管理
+		Int16 EnableAudio();
+		Int16 DisableAudio();
+		Int16 SetAudioProfile(AgoraWinRT.AUDIO_PROFILE_TYPE profile, AgoraWinRT.AUDIO_SCENARIO_TYPE scenario);
+		Int16 AdjustRecordingSignalVolume(Int16 volume);
+		Int16 AdjustUserPlaybackSignalVolume(UInt64 uid, Int16 volume);
+		Int16 AdjustPlaybackSignalVolume(Int16 volume);
+		Int16 EnableLocalAudio(Boolean enabled);
+		Int16 MuteLocalAudioStream(Boolean muted);
+		Int16 MuteRemoteAudioStream(UInt64 uid, Boolean muted);
+		Int16 MuteAllRemoteAudioStreams(Boolean muted);
+		Int16 SetDefaultMuteAllRemoteAudioStreams(Boolean muted);
+
+		//视频管理
+		Int16 EnableVideo();
+		Int16 DisableVideo();
+		Int16 SetVideoEncoderConfiguration(AgoraWinRT.VideoEncoderConfiguration config);
+		Int16 MuteLocalVideoStream(Boolean muted);
+		Int16 MuteRemoteVideoStream(UInt64 uid, Boolean muted);
+		Int16 MuteAllRemoteVideoStream(Boolean muted);
+		Int16 SetDefaultMuteAllRemoteVideoStreams(Boolean muted);
+
+		//视频前处理及后处理
+		Int16 SetBeautyEffectOptions(Boolean enabled, AgoraWinRT.BeautyOptions options);
+	};
+}
