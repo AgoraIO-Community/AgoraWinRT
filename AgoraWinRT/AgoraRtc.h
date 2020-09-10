@@ -41,6 +41,46 @@ namespace winrt::AgoraWinRT::implementation
         int16_t SetDefaultMuteAllRemoteVideoStreams(bool muted);
         //视频前处理及后处理
         int16_t SetBeautyEffectOptions(bool enabled, AgoraWinRT::BeautyOptions const& options);
+        //音乐文件播放及混音
+        int16_t StartAudioMixing(hstring const& file, bool loopback, bool replace, int32_t cycle);
+        int16_t StopAudioMixing();
+        int16_t PauseAudioMixing();
+        int16_t ResumeAudioMixing();
+        int16_t AdjustAudioMixingVolume(uint16_t volume);
+        int16_t AdjustAudioMixingPlayoutVolume(uint16_t volume);
+        int16_t AdjustAudioMixingPublishVolume(uint16_t volume);
+        int16_t GetAudioMixingPublishVolume();
+        int16_t GetAudioMixingDuration();
+        int16_t GetAudioMixingCurrentPosition();
+        int16_t SetAudioMixingPosition(uint64_t pos);
+        int16_t SetAudioMixingPitch(int16_t pitch);
+        //音效文件播放管理
+        int16_t GetEffectsVolume();
+        int16_t SetEffectsVolume(uint16_t volume);
+        int16_t SetVolumeOfEffect(uint64_t soundId, uint16_t volume);
+        int16_t PlayEffect(uint64_t soundId, hstring const& file, int16_t loopCount, float pitch, float pan, float gain, bool publish);
+        int16_t StopEffect(uint64_t soundId);
+        int16_t StopAllEffect();
+        int16_t PreloadEffect(uint64_t soundId, hstring const& file);
+        int16_t UnloadEffect(uint64_t soundId);
+        int16_t PauseEffect(uint64_t soundId);
+        int16_t PauseAllEffect();
+        int16_t ResumeEffect(uint64_t soundId);
+        int16_t ResumeAllEffect();
+        //变声与混响
+        int16_t SetLocalVoiceChanger(AgoraWinRT::VOICE_CHANGER_PRESET const& changer);
+        int16_t SetLocalVoiceReverbPreset(AgoraWinRT::AUDIO_REVERB_PRESET const& preset);
+        int16_t SetLocalVoicePitch(float pitch);
+        int16_t SetLocalVoiceEqualization(AgoraWinRT::AUDIO_EQUALIZATION_BAND_FREQUENCY const& freq, int16_t gain);
+        int16_t SetLocalVoiceReverb(AgoraWinRT::AUDIO_REVERB_TYPE const& type, uint64_t value);
+        //听声辩位
+        int16_t EnableSoundPositionIndication(bool enabled);
+        int16_t SetRemoteVoicePosition(uint64_t uid, float pan, float gain);
+        //CDN推流
+        int16_t SetLiveTranscoding(AgoraWinRT::LiveTranscoding const& transcoding);
+        int16_t AddPublishStreamUrl(hstring const& url, bool enabled);
+        int16_t RemovePublishStreamUrl(hstring const& url);
+
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
         AgoraWinRT::AgoraRtcEventHandler m_handler{ nullptr };
@@ -78,6 +118,16 @@ namespace winrt::AgoraWinRT::implementation
         void onLocalVideoStats(const agora::rtc::LocalVideoStats& stats) override;
         void onRemoteAudioStats(const agora::rtc::RemoteAudioStats& stats) override;
         void onRemoteVideoStats(const agora::rtc::RemoteVideoStats& stats) override;
+        //音乐文件播放及管理
+        void onAudioMixingStateChanged(agora::rtc::AUDIO_MIXING_STATE_TYPE state, agora::rtc::AUDIO_MIXING_ERROR_TYPE error) override;
+        void onRemoteAudioMixingBegin() override;
+        void onRemoteAudioMixingEnd() override;
+        //音效文件播放及管理
+        void onAudioEffectFinished(int soundId) override;
+        //CDN推流
+        void onRtmpStreamingStateChanged(const char* url, agora::rtc::RTMP_STREAM_PUBLISH_STATE state, agora::rtc::RTMP_STREAM_PUBLISH_ERROR error) override;
+        void onRtmpStreamingEvent(const char* url, agora::rtc::RTMP_STREAMING_EVENT code) override;
+        void onTranscodingUpdated() override;
     };
 }
 namespace winrt::AgoraWinRT::factory_implementation

@@ -103,5 +103,50 @@ namespace AgoraWinRT
         Single smoothnessLevel;
         Single rednessLevel;
     };
-
+    struct TranscodingUser 
+    {
+        UInt64 uid;
+        UInt32 x;
+        UInt32 y;
+        UInt32 width;
+        UInt32 height;
+        UInt16 zOrder;
+        Single alpha;
+        UInt16 audioChannel;
+    };
+    struct RtcImage
+    {
+        String url;
+        Int32 x;
+        Int32 y;
+        Int32 width;
+        Int32 height;
+    };
+    struct LiveStreamAdvancedFeature
+    {
+        String LBHQ;
+        String VEO;
+        String featureName;
+        Boolean opened;
+    };
+    runtimeclass LiveTranscoding : Windows.Foundation.IClosable {
+        Int32 width;
+        Int32 height;
+        Int32 videoBitrate;
+        Int32 videoFramerate;
+        Boolean lowLatency;
+        Int32 videoGop;
+        AgoraWinRT.VIDEO_CODEC_PROFILE_TYPE videoCodecProfile;
+        UInt64 backgroundColor;
+        AgoraWinRT.TranscodingUser[] transcodingUsers;
+        String transcodingExtraInfo;
+        String metadata;
+        AgoraWinRT.RtcImage watermark;
+        AgoraWinRT.RtcImage backgroundImage;
+        AgoraWinRT.AUDIO_SAMPLE_RATE_TYPE audioSampleRate;
+        Int32 audioBitrate;
+        Int32 audioChannels;
+        AgoraWinRT.AUDIO_CODEC_PROFILE_TYPE audioCodecProfile;
+        AgoraWinRT.LiveStreamAdvancedFeature[] advancedFeatures;
+    };
 }

@@ -37,6 +37,16 @@ namespace AgoraWinRT
 		void OnLocalVideoStats(AgoraWinRT.LocalVideoStats stats);
 		void OnRemoteAudioStats(AgoraWinRT.RemoteAudioStats stats);
 		void OnRemoteVideoStats(AgoraWinRT.RemoteVideoStats stats);
+		//音乐文件播放及混音
+		void OnAudioMixingStateChanged(AgoraWinRT.AUDIO_MIXING_STATE_TYPE state, AgoraWinRT.AUDIO_MIXING_ERROR_TYPE error);
+		void OnRemoteAudioMixingBegin();
+		void OnRemoteAudioMixingEnd();
+		//音效文件播放管理
+		void OnAudioEffectFinished(UInt64 soundId);
+		//CDN推流
+		void OnRtmpStreamingStateChanged(String url, AgoraWinRT.RTMP_STREAM_PUBLISH_STATE state, AgoraWinRT.RTMP_STREAM_PUBLISH_ERROR error);
+		void OnRtmpStreamingEvent(String url, AgoraWinRT.RTMP_STREAMING_EVENT code);
+		void OnTranscodingUpdated();
 	};
 	[default_interface]
 	runtimeclass AgoraRtc : Windows.Foundation.IClosable
@@ -76,5 +86,49 @@ namespace AgoraWinRT
 
 		//视频前处理及后处理
 		Int16 SetBeautyEffectOptions(Boolean enabled, AgoraWinRT.BeautyOptions options);
+
+		//音乐文件播放及混音
+		Int16 StartAudioMixing(String file, Boolean loopback, Boolean replace, Int32 cycle);
+		Int16 StopAudioMixing();
+		Int16 PauseAudioMixing();
+		Int16 ResumeAudioMixing();
+		Int16 AdjustAudioMixingVolume(UInt16 volume);
+		Int16 AdjustAudioMixingPlayoutVolume(UInt16 volume);
+		Int16 AdjustAudioMixingPublishVolume(UInt16 volume);
+		Int16 GetAudioMixingPublishVolume();
+		Int16 GetAudioMixingDuration();
+		Int16 GetAudioMixingCurrentPosition();
+		Int16 SetAudioMixingPosition(UInt64 pos);
+		Int16 SetAudioMixingPitch(Int16 pitch);
+
+		//音效文件播放管理
+		Int16 GetEffectsVolume();
+		Int16 SetEffectsVolume(UInt16 volume);
+		Int16 SetVolumeOfEffect(UInt64 soundId, UInt16 volume);
+		Int16 PlayEffect(UInt64 soundId, String file, Int16 loopCount, Single pitch, Single pan, Single gain, Boolean publish);
+		Int16 StopEffect(UInt64 soundId);
+		Int16 StopAllEffect();
+		Int16 PreloadEffect(UInt64 soundId, String file);
+		Int16 UnloadEffect(UInt64 soundId);
+		Int16 PauseEffect(UInt64 soundId);
+		Int16 PauseAllEffect();
+		Int16 ResumeEffect(UInt64 soundId);
+		Int16 ResumeAllEffect();
+
+		//变身与混响
+		Int16 SetLocalVoiceChanger(AgoraWinRT.VOICE_CHANGER_PRESET changer);
+		Int16 SetLocalVoiceReverbPreset(AgoraWinRT.AUDIO_REVERB_PRESET preset);
+		Int16 SetLocalVoicePitch(Single pitch);
+		Int16 SetLocalVoiceEqualization(AgoraWinRT.AUDIO_EQUALIZATION_BAND_FREQUENCY freq, Int16 gain);
+		Int16 SetLocalVoiceReverb(AgoraWinRT.AUDIO_REVERB_TYPE type, UInt64 value);
+
+		//听声辩位
+		Int16 EnableSoundPositionIndication(Boolean enabled);
+		Int16 SetRemoteVoicePosition(UInt64 uid, Single pan, Single gain);
+
+		//CDN推流
+		Int16 SetLiveTranscoding(AgoraWinRT.LiveTranscoding transcoding);
+		Int16 AddPublishStreamUrl(String url, Boolean enabled);
+		Int16 RemovePublishStreamUrl(String url);
 	};
 }

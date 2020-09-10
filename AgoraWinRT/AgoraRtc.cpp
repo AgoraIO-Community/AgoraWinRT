@@ -133,6 +133,142 @@ namespace winrt::AgoraWinRT::implementation
     {
         return m_rtcEngine->setBeautyEffectOptions(enabled, Utils::ToRaw(options));
     }
+    int16_t AgoraRtc::StartAudioMixing(hstring const& file, bool loopback, bool replace, int32_t cycle)
+    {
+        return m_rtcEngine->startAudioMixing(Utils::ToString(file).c_str(), loopback, replace, cycle);
+    }
+    int16_t AgoraRtc::StopAudioMixing()
+    {
+        return m_rtcEngine->stopAudioMixing();
+    }
+    int16_t AgoraRtc::PauseAudioMixing()
+    {
+        return m_rtcEngine->pauseAudioMixing();
+    }
+    int16_t AgoraRtc::ResumeAudioMixing()
+    {
+        return m_rtcEngine->resumeAudioMixing();
+    }
+    int16_t AgoraRtc::AdjustAudioMixingVolume(uint16_t volume)
+    {
+        return m_rtcEngine->adjustAudioMixingVolume(volume);
+    }
+    int16_t AgoraRtc::AdjustAudioMixingPlayoutVolume(uint16_t volume)
+    {
+        return m_rtcEngine->adjustAudioMixingPlayoutVolume(volume);
+    }
+    int16_t AgoraRtc::AdjustAudioMixingPublishVolume(uint16_t volume)
+    {
+        return m_rtcEngine->adjustAudioMixingPublishVolume(volume);
+    }
+    int16_t AgoraRtc::GetAudioMixingPublishVolume()
+    {
+        return m_rtcEngine->getAudioMixingPublishVolume();
+    }
+    int16_t AgoraRtc::GetAudioMixingDuration()
+    {
+        return m_rtcEngine->getAudioMixingDuration();
+    }
+    int16_t AgoraRtc::GetAudioMixingCurrentPosition()
+    {
+        return m_rtcEngine->getAudioMixingCurrentPosition();
+    }
+    int16_t AgoraRtc::SetAudioMixingPosition(uint64_t pos)
+    {
+        return m_rtcEngine->setAudioMixingPosition(pos);
+    }
+    int16_t AgoraRtc::SetAudioMixingPitch(int16_t pitch)
+    {
+        return m_rtcEngine->setAudioMixingPitch(pitch);
+    }
+    int16_t AgoraRtc::GetEffectsVolume()
+    {
+        return m_rtcEngine->getEffectsVolume();
+    }
+    int16_t AgoraRtc::SetEffectsVolume(uint16_t volume)
+    {
+        return m_rtcEngine->setEffectsVolume(volume);
+    }
+    int16_t AgoraRtc::SetVolumeOfEffect(uint64_t soundId, uint16_t volume)
+    {
+        return m_rtcEngine->setVolumeOfEffect(soundId, volume);
+    }
+    int16_t AgoraRtc::PlayEffect(uint64_t soundId, hstring const& file, int16_t loopCount, float pitch, float pan, float gain, bool publish)
+    {
+        return m_rtcEngine->playEffect(soundId, Utils::ToString(file).c_str(), loopCount, pitch, pan, gain, publish);
+    }
+    int16_t AgoraRtc::StopEffect(uint64_t soundId)
+    {
+        return m_rtcEngine->stopEffect(soundId);
+    }
+    int16_t AgoraRtc::StopAllEffect()
+    {
+        return m_rtcEngine->stopAllEffects();
+    }
+    int16_t AgoraRtc::PreloadEffect(uint64_t soundId, hstring const& file)
+    {
+        return m_rtcEngine->preloadEffect(soundId, Utils::ToString(file).c_str());
+    }
+    int16_t AgoraRtc::UnloadEffect(uint64_t soundId)
+    {
+        return m_rtcEngine->unloadEffect(soundId);
+    }
+    int16_t AgoraRtc::PauseEffect(uint64_t soundId)
+    {
+        return m_rtcEngine->pauseEffect(soundId);
+    }
+    int16_t AgoraRtc::PauseAllEffect()
+    {
+        return m_rtcEngine->pauseAllEffects();
+    }
+    int16_t AgoraRtc::ResumeEffect(uint64_t soundId)
+    {
+        return m_rtcEngine->resumeEffect(soundId);
+    }
+    int16_t AgoraRtc::ResumeAllEffect()
+    {
+        return m_rtcEngine->resumeAllEffects();
+    }
+    int16_t AgoraRtc::SetLocalVoiceChanger(AgoraWinRT::VOICE_CHANGER_PRESET const& changer)
+    {
+        return m_rtcEngine->setLocalVoiceChanger((agora::rtc::VOICE_CHANGER_PRESET)changer);
+    }
+    int16_t AgoraRtc::SetLocalVoiceReverbPreset(AgoraWinRT::AUDIO_REVERB_PRESET const& preset)
+    {
+        return m_rtcEngine->setLocalVoiceReverbPreset((agora::rtc::AUDIO_REVERB_PRESET)preset);
+    }
+    int16_t AgoraRtc::SetLocalVoicePitch(float pitch)
+    {
+        return m_rtcEngine->setLocalVoicePitch(pitch);
+    }
+    int16_t AgoraRtc::SetLocalVoiceEqualization(AgoraWinRT::AUDIO_EQUALIZATION_BAND_FREQUENCY const& freq, int16_t gain)
+    {
+        return m_rtcEngine->setLocalVoiceEqualization((agora::rtc::AUDIO_EQUALIZATION_BAND_FREQUENCY)freq, gain);
+    }
+    int16_t AgoraRtc::SetLocalVoiceReverb(AgoraWinRT::AUDIO_REVERB_TYPE const& type, uint64_t value)
+    {
+        return m_rtcEngine->setLocalVoiceReverb((agora::rtc::AUDIO_REVERB_TYPE)type, value);
+    }
+    int16_t AgoraRtc::EnableSoundPositionIndication(bool enabled)
+    {
+        return m_rtcEngine->enableSoundPositionIndication(enabled);
+    }
+    int16_t AgoraRtc::SetRemoteVoicePosition(uint64_t uid, float pan, float gain)
+    {
+        return m_rtcEngine->setRemoteVoicePosition(uid, pan, gain);
+    }
+    int16_t AgoraRtc::SetLiveTranscoding(AgoraWinRT::LiveTranscoding const& transcoding)
+    {
+        return m_rtcEngine->setLiveTranscoding(Utils::ToRaw(transcoding));
+    }
+    int16_t AgoraRtc::AddPublishStreamUrl(hstring const& url, bool enabled)
+    {
+        return m_rtcEngine->addPublishStreamUrl(Utils::ToString(url).c_str(), enabled);
+    }
+    int16_t AgoraRtc::RemovePublishStreamUrl(hstring const& url)
+    {
+        return m_rtcEngine->removePublishStreamUrl(Utils::ToString(url).c_str());
+    }
     void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
     {
         if (m_handler) m_handler.OnConnectionStateChanged((CONNECTION_STATE_TYPE)type, (CONNECTION_CHANGED_REASON_TYPE)reason);
@@ -246,5 +382,33 @@ namespace winrt::AgoraWinRT::implementation
     void AgoraRtc::onRemoteVideoStats(const agora::rtc::RemoteVideoStats& stats)
     {
         if (m_handler) m_handler.OnRemoteVideoStats(Utils::FromRaw(stats));
+    }
+    void AgoraRtc::onAudioMixingStateChanged(agora::rtc::AUDIO_MIXING_STATE_TYPE state, agora::rtc::AUDIO_MIXING_ERROR_TYPE error)
+    {
+        if (m_handler) m_handler.OnAudioMixingStateChanged((AgoraWinRT::AUDIO_MIXING_STATE_TYPE)state, (AgoraWinRT::AUDIO_MIXING_ERROR_TYPE)error);
+    }
+    void AgoraRtc::onRemoteAudioMixingBegin()
+    {
+        if (m_handler) m_handler.OnRemoteAudioMixingBegin();
+    }
+    void AgoraRtc::onRemoteAudioMixingEnd()
+    {
+        if (m_handler) m_handler.OnRemoteAudioMixingEnd();
+    }
+    void AgoraRtc::onAudioEffectFinished(int soundId)
+    {
+        if (m_handler) m_handler.OnAudioEffectFinished(soundId);
+    }
+    void AgoraRtc::onRtmpStreamingStateChanged(const char* url, agora::rtc::RTMP_STREAM_PUBLISH_STATE state, agora::rtc::RTMP_STREAM_PUBLISH_ERROR error)
+    {
+        if (m_handler) m_handler.OnRtmpStreamingStateChanged(Utils::ToString(url), (AgoraWinRT::RTMP_STREAM_PUBLISH_STATE)state, (AgoraWinRT::RTMP_STREAM_PUBLISH_ERROR)error);
+    }
+    void AgoraRtc::onRtmpStreamingEvent(const char* url, agora::rtc::RTMP_STREAMING_EVENT code)
+    {
+        if (m_handler) m_handler.OnRtmpStreamingEvent(Utils::ToString(url), (AgoraWinRT::RTMP_STREAMING_EVENT)code);
+    }
+    void AgoraRtc::onTranscodingUpdated()
+    {
+        if (m_handler) m_handler.OnTranscodingUpdated();
     }
 }

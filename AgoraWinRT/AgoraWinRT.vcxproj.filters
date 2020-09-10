@@ -11,14 +11,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Class.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="AgoraRtc.cpp" />
+    <ClCompile Include="LiveTranscoding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="AgoraRtc.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="LiveTranscoding.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />
