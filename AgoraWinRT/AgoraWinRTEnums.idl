@@ -385,5 +385,12 @@ namespace AgoraWinRT
 	enum AUDIO_FRAME_TYPE {
 		FRAME_TYPE_PCM16 = 0,  // PCM 16bit little endian
 	};
-
+	enum ENCRYPTION_MODE
+	{
+		AES_128_XTS = 1,
+		AES_128_ECB = 2,
+		AES_256_XTS = 3,
+		SM4_128_ECB = 4,
+		MODE_END,
+	};
 }

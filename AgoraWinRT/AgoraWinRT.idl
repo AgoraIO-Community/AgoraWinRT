@@ -66,7 +66,7 @@ namespace AgoraWinRT
 		AgoraRtc(String vendorKey);
 		
 		//注册RtcEngin事件处理器
-		void RegisteryRtcEngineEventHandler(AgoraWinRT.AgoraRtcEventHandler handler);
+		void RegisterRtcEngineEventHandler(AgoraWinRT.AgoraRtcEventHandler handler);
 
 		//频道管理
 		Int16 SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE type);
@@ -185,6 +185,14 @@ namespace AgoraWinRT
 		Int16 PullAudioFrame(AgoraWinRT.AudioFrame frame);
 
 		//媒体附属信息
-		void RegisteryMediaMetadataObserver(AgoraWinRT.MetadataObserver observer);
+		void RegisterMediaMetadataObserver(AgoraWinRT.MetadataObserver observer);
+
+		//直播水印
+		Int16 AddVideoWatermark(String file, AgoraWinRT.WatermarkOptions option);
+		Int16 ClearVideoWatermark();
+
+		//加密
+		Int16 EnableEncryption(Boolean enable, AgoraWinRT.EncryptionConfig config);
+		void RegisterPacketObserver(AgoraWinRT.PacketObserver observer);
 	};
 }

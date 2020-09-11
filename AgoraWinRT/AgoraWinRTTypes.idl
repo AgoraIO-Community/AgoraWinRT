@@ -243,5 +243,33 @@ namespace AgoraWinRT
         Boolean OnReadyToSendMetadata(AgoraWinRT.Metadata metadata);
         void OnMetadataReceived(AgoraWinRT.Metadata metadata);
     };
-
+    struct Rectangle
+    {
+        Int64 x;
+        Int64 y;
+        Int64 width;
+        Int64 height;
+    };
+    struct WatermarkOptions
+    {
+        Boolean visibleInPreview;
+        AgoraWinRT.Rectangle positionInLandscapeMode;
+        AgoraWinRT.Rectangle positionInProtraitMode;
+    };
+    struct EncryptionConfig
+    {
+        AgoraWinRT.ENCRYPTION_MODE mode;
+        String key;
+    };
+    runtimeclass Packet: Windows.Foundation.IClosable
+    {
+        UInt8[] buffer;
+    };
+    interface PacketObserver
+    {
+        Boolean OnSendAudioPacket(AgoraWinRT.Packet packet);
+        Boolean OnSendVideoPacket(AgoraWinRT.Packet packet);
+        Boolean OnReceiveAudioPacket(AgoraWinRT.Packet packet);
+        Boolean OnReceiveVideoPacket(AgoraWinRT.Packet packet);
+    };
 }

@@ -6,16 +6,17 @@ namespace winrt::AgoraWinRT::implementation
 {
     struct AgoraRtc : AgoraRtcT<AgoraRtc>,
         public agora::rtc::IRtcEngineEventHandler,
-        private agora::rtc::IMetadataObserver
+        private agora::rtc::IMetadataObserver,
+        private agora::rtc::IPacketObserver
     {
         AgoraRtc() = default;
 
         AgoraRtc(hstring const& vendorKey);
     public:
         //RtcEngine事件处理
-        void RegisteryRtcEngineEventHandler(AgoraWinRT::AgoraRtcEventHandler handler);
+        void RegisterRtcEngineEventHandler(AgoraWinRT::AgoraRtcEventHandler handler);
         //媒体元数据观察器
-        void RegisteryMediaMetadataObserver(AgoraWinRT::MetadataObserver observer);
+        void RegisterMediaMetadataObserver(AgoraWinRT::MetadataObserver observer);
     public:
         //频道管理
         int16_t SetChannelProfile(AgoraWinRT::CHANNEL_PROFILE_TYPE const& type);
@@ -117,12 +118,19 @@ namespace winrt::AgoraWinRT::implementation
         //音频自渲染
         int16_t SetExternalAudioSink(bool enable, uint32_t sampleRate, uint8_t channels);
         int16_t PullAudioFrame(AgoraWinRT::AudioFrame const& frame);
+        //直播水印
+        int16_t AddVideoWatermark(hstring const& file, AgoraWinRT::WatermarkOptions const& option);
+        int16_t ClearVideoWatermark();
+        //加密
+        int16_t EnableEncryption(bool enable, AgoraWinRT::EncryptionConfig const& config);
+        void RegisterPacketObserver(AgoraWinRT::PacketObserver const& observer);
 
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
         agora::media::IMediaEngine* m_mediaEngine{ nullptr };
         AgoraWinRT::AgoraRtcEventHandler m_handler{ nullptr };
         AgoraWinRT::MetadataObserver m_metadataObserver{ nullptr };
+        AgoraWinRT::PacketObserver m_packetObserver{ nullptr };
     private:
         //频道管理事件
         void onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason) override;
@@ -184,6 +192,11 @@ namespace winrt::AgoraWinRT::implementation
         int getMaxMetadataSize() override;
         bool onReadyToSendMetadata(agora::rtc::IMetadataObserver::Metadata& metadata) override;
         void onMetadataReceived(const agora::rtc::IMetadataObserver::Metadata& metadata) override;
+        //IPacketObserver实现部分
+        bool onSendAudioPacket(Packet& packet) override;
+        bool onSendVideoPacket(Packet& packet) override;
+        bool onReceiveAudioPacket(Packet& packet) override;
+        bool onReceiveVideoPacket(Packet& packet) override;
     };
 }
 namespace winrt::AgoraWinRT::factory_implementation

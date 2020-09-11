@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "AgoraRtc.g.h"
 #include "Metadata.h"
+#include "Packet.h"
 
 namespace Utils {
 	
@@ -157,6 +158,12 @@ namespace Utils {
 		result->uid(raw.uid);
 		result->timestamp(raw.timeStampMs);
 		result->buffer(Utils::FromRaw(raw.buffer, raw.size));
+		return result;
+	}
+
+	winrt::com_ptr<winrt::AgoraWinRT::implementation::Packet> FromRaw(const agora::rtc::IPacketObserver::Packet& raw) {
+		auto result = winrt::make_self<winrt::AgoraWinRT::implementation::Packet>();
+		result->buffer(Utils::FromRaw(const_cast<unsigned char*>(raw.buffer), raw.size));
 		return result;
 	}
 
@@ -324,6 +331,30 @@ namespace Utils {
 		raw->buffer = Utils::ToRaw(value.buffer());
 		raw->renderTimeMs = value.renderTimeMs();
 		raw->avsync_type = value.avsync_type();
+		return raw;
+	}
+
+	agora::rtc::Rectangle ToRaw(winrt::AgoraWinRT::Rectangle const& value) {
+		agora::rtc::Rectangle raw;
+		raw.x = value.x;
+		raw.y = value.y;
+		raw.width = value.width;
+		raw.height = value.height;
+		return raw;
+	}
+
+	agora::rtc::WatermarkOptions ToRaw(winrt::AgoraWinRT::WatermarkOptions const& value) {
+		agora::rtc::WatermarkOptions raw;
+		raw.visibleInPreview = value.visibleInPreview;
+		raw.positionInLandscapeMode = Utils::ToRaw(value.positionInLandscapeMode);
+		raw.positionInPortraitMode = Utils::ToRaw(value.positionInProtraitMode);
+		return raw;
+	}
+
+	agora::rtc::EncryptionConfig ToRaw(winrt::AgoraWinRT::EncryptionConfig const& value) {
+		agora::rtc::EncryptionConfig raw;
+		raw.encryptionMode = (agora::rtc::ENCRYPTION_MODE)value.mode;
+		raw.encryptionKey = Utils::Copy(value.key);
 		return raw;
 	}
 

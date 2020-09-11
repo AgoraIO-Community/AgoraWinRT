@@ -33,11 +33,11 @@ namespace winrt::AgoraWinRT::implementation
 		else
 			throw L"rtcEngine initialize failed";
 	}
-	void AgoraRtc::RegisteryRtcEngineEventHandler(AgoraWinRT::AgoraRtcEventHandler handler)
+	void AgoraRtc::RegisterRtcEngineEventHandler(AgoraWinRT::AgoraRtcEventHandler handler)
 	{
 		m_handler = handler;
 	}
-	void AgoraRtc::RegisteryMediaMetadataObserver(AgoraWinRT::MetadataObserver observer)
+	void AgoraRtc::RegisterMediaMetadataObserver(AgoraWinRT::MetadataObserver observer)
 	{
 		m_metadataObserver = observer;
 	}
@@ -390,6 +390,23 @@ namespace winrt::AgoraWinRT::implementation
 		if (result == 0) frame.buffer(Utils::FromRaw(raw->buffer, length));
 		return result;
 	}
+	int16_t AgoraRtc::AddVideoWatermark(hstring const& file, AgoraWinRT::WatermarkOptions const& option)
+	{
+		return m_rtcEngine->addVideoWatermark(Utils::ToString(file).c_str(), Utils::ToRaw(option));
+	}
+	int16_t AgoraRtc::ClearVideoWatermark()
+	{
+		return m_rtcEngine->clearVideoWatermarks();
+	}
+	int16_t AgoraRtc::EnableEncryption(bool enable, AgoraWinRT::EncryptionConfig const& config)
+	{
+		if (enable) m_rtcEngine->registerPacketObserver(this);
+		return m_rtcEngine->enableEncryption(enable, Utils::ToRaw(config));
+	}
+	void AgoraRtc::RegisterPacketObserver(AgoraWinRT::PacketObserver const& observer)
+	{
+		m_packetObserver = observer;
+	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
 	{
 		if (m_handler) m_handler.OnConnectionStateChanged((CONNECTION_STATE_TYPE)type, (CONNECTION_CHANGED_REASON_TYPE)reason);
@@ -587,5 +604,37 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		auto data = Utils::FromRaw(metadata);
 		if (m_metadataObserver) m_metadataObserver.OnMetadataReceived(*data);
+	}
+	bool AgoraRtc::onSendAudioPacket(Packet& packet)
+	{
+		if (m_packetObserver) {
+			auto data = Utils::FromRaw(packet);
+			return m_packetObserver.OnSendAudioPacket(*data);
+		}
+		else return true;
+	}
+	bool AgoraRtc::onSendVideoPacket(Packet& packet)
+	{
+		if (m_packetObserver) {
+			auto data = Utils::FromRaw(packet);
+			return m_packetObserver.OnSendVideoPacket(*data);
+		}
+		else return true;
+	}
+	bool AgoraRtc::onReceiveAudioPacket(Packet& packet)
+	{
+		if (m_packetObserver) {
+			auto data = Utils::FromRaw(packet);
+			return m_packetObserver.OnReceiveAudioPacket(*data);
+		}
+		else return true;
+	}
+	bool AgoraRtc::onReceiveVideoPacket(Packet& packet)
+	{
+		if (m_packetObserver) {
+			auto data = Utils::FromRaw(packet);
+			return m_packetObserver.OnReceiveVideoPacket(*data);
+		}
+		else return true;
 	}
 }
