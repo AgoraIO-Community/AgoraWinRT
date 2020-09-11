@@ -117,6 +117,36 @@ namespace Utils {
 		return stats;
 	}
 
+	winrt::com_array<winrt::AgoraWinRT::AudioVolumeInfo> FromRaw(const agora::rtc::AudioVolumeInfo* raw, int count) {
+		auto infos = winrt::com_array<winrt::AgoraWinRT::AudioVolumeInfo>(count);
+		for (int i = 0; i < count; i++) {
+			auto info = infos[i];
+			info.channelId = Utils::ToString(raw[i].channelId);
+			info.uid = raw[i].uid;
+			info.vad = raw[i].vad;
+			info.volume = raw[i].volume;
+		}
+		return infos; 
+	}
+
+	winrt::AgoraWinRT::LastmileProbeOneWayResult FromRaw(const agora::rtc::LastmileProbeOneWayResult& raw) {
+		winrt::AgoraWinRT::LastmileProbeOneWayResult result;
+		result.packetLossRate = raw.packetLossRate;
+		result.jitter = raw.jitter;
+		result.availableBandwidth = raw.availableBandwidth;
+		return result;
+	}
+
+	winrt::AgoraWinRT::LastmileProbeResult FromRaw(const agora::rtc::LastmileProbeResult& raw) {
+		winrt::AgoraWinRT::LastmileProbeResult result;
+		result.state = (winrt::AgoraWinRT::LASTMILE_PROBE_RESULT_STATE)raw.state;
+		result.uplinkReport = Utils::FromRaw(raw.uplinkReport);
+		result.downlinkReport = Utils::FromRaw(raw.downlinkReport);
+		result.rtt = raw.rtt;
+		return result;
+	}
+
+
 	agora::rtc::BeautyOptions ToRaw(winrt::AgoraWinRT::BeautyOptions const& value) {
 		agora::rtc::BeautyOptions raw;
 		raw.lighteningContrastLevel = (agora::rtc::BeautyOptions::LIGHTENING_CONTRAST_LEVEL)value.lighteningContrastLevel;
@@ -141,11 +171,11 @@ namespace Utils {
 	}
 
 	agora::rtc::TranscodingUser* ToRaw(winrt::com_array<winrt::AgoraWinRT::TranscodingUser> const& value) {
-		auto raw = reinterpret_cast<agora::rtc::TranscodingUser*>(malloc(sizeof(agora::rtc::TranscodingUser) * value.size()));
+		auto raw = new agora::rtc::TranscodingUser[value.size()];
 		int index = 0;
 		std::for_each(value.begin(), value.end(),
-			[raw, index](winrt::AgoraWinRT::TranscodingUser const& elem) {
-				auto user = &raw[index];
+			[raw, &index](winrt::AgoraWinRT::TranscodingUser const& elem) {
+				auto user = &raw[index++];
 				user->uid = elem.uid;
 				user->x = elem.x;
 				user->y = elem.y;
@@ -170,11 +200,11 @@ namespace Utils {
 	}
 
 	agora::rtc::LiveStreamAdvancedFeature* ToRaw(winrt::com_array<winrt::AgoraWinRT::LiveStreamAdvancedFeature> const& value) {
-		auto raw = reinterpret_cast<agora::rtc::LiveStreamAdvancedFeature*>(malloc(sizeof(agora::rtc::LiveStreamAdvancedFeature) * value.size()));
+		auto raw = new agora::rtc::LiveStreamAdvancedFeature[value.size()];
 		int index = 0;
 		std::for_each(value.begin(), value.end(),
-			[raw, index](winrt::AgoraWinRT::LiveStreamAdvancedFeature const& elem) {
-				auto feature = &raw[index];
+			[raw, &index](winrt::AgoraWinRT::LiveStreamAdvancedFeature const& elem) {
+				auto feature = &raw[index++];
 				feature->LBHQ = Utils::Copy(elem.LBHQ);
 				feature->VEO = Utils::Copy(elem.VEO);
 				feature->featureName = Utils::Copy(elem.featureName);
@@ -207,6 +237,45 @@ namespace Utils {
 		auto features = value.advancedFeatures();
 		raw.advancedFeatureCount = features.size();
 		raw.advancedFeatures = Utils::ToRaw(features);
+		return raw;
+	}
+
+	agora::rtc::ChannelMediaInfo* ToRaw(winrt::AgoraWinRT::ChannelMediaInfo const& value) {
+		auto raw = new agora::rtc::ChannelMediaInfo();
+		raw->channelName = Utils::Copy(value.name);
+		raw->token = Utils::Copy(value.token);
+		raw->uid = value.uid;
+		return raw;
+	}
+
+	agora::rtc::ChannelMediaInfo* ToRaw(winrt::com_array<winrt::AgoraWinRT::ChannelMediaInfo> const& value) {
+		auto raw = new agora::rtc::ChannelMediaInfo[value.size()];
+		int index = 0;
+		std::for_each(value.begin(), value.end(),
+			[raw, &index](winrt::AgoraWinRT::ChannelMediaInfo const& elem) {
+				auto info = &raw[index++];
+				info->channelName = Utils::Copy(elem.name);
+				info->token = Utils::Copy(elem.token);
+				info->uid = elem.uid;
+			});
+		return raw;
+	}
+
+	agora::rtc::ChannelMediaRelayConfiguration ToRaw(winrt::AgoraWinRT::ChannelMediaRelayConfiguration const& value) {
+		agora::rtc::ChannelMediaRelayConfiguration raw;
+		raw.srcInfo = Utils::ToRaw(value.src());
+		auto dest = value.dest();
+		raw.destCount = dest.size();
+		raw.destInfos = Utils::ToRaw(dest);
+		return raw;
+	}
+
+	agora::rtc::LastmileProbeConfig ToRaw(winrt::AgoraWinRT::LastmileProbeConfig const& value) {
+		agora::rtc::LastmileProbeConfig raw;
+		raw.probeUplink = value.probeUplink;
+		raw.probeDownlink = value.probeDownlink;
+		raw.expectedUplinkBitrate = value.expectedUplinkBitrate;
+		raw.expectedDownlinkBitrate = value.expectedDownlinkBitrate;
 		return raw;
 	}
 

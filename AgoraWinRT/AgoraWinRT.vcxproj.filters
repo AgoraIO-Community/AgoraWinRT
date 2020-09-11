@@ -14,12 +14,14 @@
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="AgoraRtc.cpp" />
     <ClCompile Include="LiveTranscoding.cpp" />
+    <ClCompile Include="ChannelMediaRelayConfiguration.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="AgoraRtc.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="LiveTranscoding.h" />
+    <ClInclude Include="ChannelMediaRelayConfiguration.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />

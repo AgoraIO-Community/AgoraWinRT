@@ -129,7 +129,8 @@ namespace AgoraWinRT
         String featureName;
         Boolean opened;
     };
-    runtimeclass LiveTranscoding : Windows.Foundation.IClosable {
+    runtimeclass LiveTranscoding : Windows.Foundation.IClosable 
+    {
         Int32 width;
         Int32 height;
         Int32 videoBitrate;
@@ -149,4 +150,40 @@ namespace AgoraWinRT
         AgoraWinRT.AUDIO_CODEC_PROFILE_TYPE audioCodecProfile;
         AgoraWinRT.LiveStreamAdvancedFeature[] advancedFeatures;
     };
+    struct ChannelMediaInfo
+    {
+        String name;
+        String token;
+        UInt64 uid;
+    };
+    runtimeclass ChannelMediaRelayConfiguration: Windows.Foundation.IClosable
+    {
+        AgoraWinRT.ChannelMediaInfo src;
+        AgoraWinRT.ChannelMediaInfo[] dest;
+    };
+    struct AudioVolumeInfo
+    {
+        UInt64 uid;
+        UInt8 volume;
+        UInt8 vad;
+        String channelId;
+    };
+    struct LastmileProbeConfig {
+        Boolean probeUplink;
+        Boolean probeDownlink;
+        UInt32 expectedUplinkBitrate;
+        UInt32 expectedDownlinkBitrate;
+    };
+    struct LastmileProbeOneWayResult {
+        UInt8 packetLossRate;
+        UInt64 jitter;
+        UInt64 availableBandwidth;
+    };
+    struct LastmileProbeResult {
+        AgoraWinRT.LASTMILE_PROBE_RESULT_STATE state;
+        AgoraWinRT.LastmileProbeOneWayResult uplinkReport;
+        AgoraWinRT.LastmileProbeOneWayResult downlinkReport;
+        UInt64 rtt;
+    };
+
 }

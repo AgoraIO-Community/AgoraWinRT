@@ -47,6 +47,18 @@ namespace AgoraWinRT
 		void OnRtmpStreamingStateChanged(String url, AgoraWinRT.RTMP_STREAM_PUBLISH_STATE state, AgoraWinRT.RTMP_STREAM_PUBLISH_ERROR error);
 		void OnRtmpStreamingEvent(String url, AgoraWinRT.RTMP_STREAMING_EVENT code);
 		void OnTranscodingUpdated();
+		//跨频道媒体流转发
+		void OnChannelMediaRelayStateChanged(AgoraWinRT.CHANNEL_MEDIA_RELAY_STATE state, AgoraWinRT.CHANNEL_MEDIA_RELAY_ERROR error);
+		void OnChannelMediaRelayEvent(AgoraWinRT.CHANNEL_MEDIA_RELAY_EVENT code);
+		//音量提示
+		void OnAudioVolumeIndication(AgoraWinRT.AudioVolumeInfo[] speakers, UInt8 totalVolume);
+		void OnActiveSpeaker(UInt64 uid);
+		//视频流回退
+		void OnLocalPublishFallbackToAudioOnly(Boolean isFallbackOrRecover);
+		void OnRemoteSubscribeFallbackToAudioOnly(UInt64 uid, Boolean isFallbackOrRecover);
+		//通话前网络测试
+		void OnLastmileQuality(AgoraWinRT.QUALITY_TYPE quality);
+		void OnLastmileProbeResult(AgoraWinRT.LastmileProbeResult result);
 	};
 	[default_interface]
 	runtimeclass AgoraRtc : Windows.Foundation.IClosable
@@ -130,5 +142,31 @@ namespace AgoraWinRT
 		Int16 SetLiveTranscoding(AgoraWinRT.LiveTranscoding transcoding);
 		Int16 AddPublishStreamUrl(String url, Boolean enabled);
 		Int16 RemovePublishStreamUrl(String url);
+
+		//跨频道媒体流转发
+		Int16 StartChannelMediaRelay(AgoraWinRT.ChannelMediaRelayConfiguration config);
+		Int16 UpdateChannelMediaRelay(AgoraWinRT.ChannelMediaRelayConfiguration config);
+		Int16 StopChannelMediaRelay();
+
+		//音量提示
+		Int16 EnableAudioVolumeIndication(Int32 interval, UInt8 smooth, Boolean report);
+
+		//视频双流模式
+		Int16 EnableDualStreamMode(Boolean enabled);
+		Int16 SetRemoteVideoStreamType(UInt64 uid, AgoraWinRT.REMOTE_VIDEO_STREAM_TYPE type);
+		Int16 SetRemoteDefaultVideoStreamType(AgoraWinRT.REMOTE_VIDEO_STREAM_TYPE type);
+
+		//视频流回退
+		Int16 SetLocalPublishFallbackOption(AgoraWinRT.STREAM_FALLBACK_OPTIONS option);
+		Int16 SetRemoteSubscribeFallbackOption(AgoraWinRT.STREAM_FALLBACK_OPTIONS option);
+		Int16 SetRemoteUserPriority(UInt64 uid, AgoraWinRT.PRIORITY_TYPE type);
+
+		//通话前网络测试
+		Int16 StartEchoTest(UInt8 interval);
+		Int16 StopEchoTest();
+		Int16 EnableLastmileTest();
+		Int16 DisableLastmileTest();
+		Int16 StartLastmileProbeTest(AgoraWinRT.LastmileProbeConfig config);
+		Int16 StopLastmileProbeTest();
 	};
 }
