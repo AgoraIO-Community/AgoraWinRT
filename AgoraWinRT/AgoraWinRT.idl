@@ -64,6 +64,9 @@ namespace AgoraWinRT
 	runtimeclass AgoraRtc : Windows.Foundation.IClosable
 	{
 		AgoraRtc(String vendorKey);
+		
+		//注册RtcEngin事件处理器
+		void RegisteryRtcEngineEventHandler(AgoraWinRT.AgoraRtcEventHandler handler);
 
 		//频道管理
 		Int16 SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE type);
@@ -168,5 +171,20 @@ namespace AgoraWinRT
 		Int16 DisableLastmileTest();
 		Int16 StartLastmileProbeTest(AgoraWinRT.LastmileProbeConfig config);
 		Int16 StopLastmileProbeTest();
+
+		//视频自采集
+		Int16 SetExternalVideoSource(Boolean enable, Boolean useTexture);
+		Int16 PushVideoFrame(AgoraWinRT.ExternalVideoFrame frame);
+
+		//音频自采集
+		Int16 SetExternalAudioSource(Boolean enable, UInt32 sampleRate, UInt8 channels);
+		Int16 PushAuioFrame(AgoraWinRT.AudioFrame frame);
+
+		//音频自渲染
+		Int16 SetExternalAudioSink(Boolean enable, UInt32 sampleRate, UInt8 channels);
+		Int16 PullAudioFrame(AgoraWinRT.AudioFrame frame);
+
+		//媒体附属信息
+		void RegisteryMediaMetadataObserver(AgoraWinRT.MetadataObserver observer);
 	};
 }

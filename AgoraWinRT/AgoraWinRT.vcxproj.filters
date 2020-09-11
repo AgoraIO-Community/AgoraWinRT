@@ -15,6 +15,9 @@
     <ClCompile Include="AgoraRtc.cpp" />
     <ClCompile Include="LiveTranscoding.cpp" />
     <ClCompile Include="ChannelMediaRelayConfiguration.cpp" />
+    <ClCompile Include="ExternalVideoFrame.cpp" />
+    <ClCompile Include="AudioFrame.cpp" />
+    <ClCompile Include="Metadata.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -22,6 +25,9 @@
     <ClInclude Include="Utils.h" />
     <ClInclude Include="LiveTranscoding.h" />
     <ClInclude Include="ChannelMediaRelayConfiguration.h" />
+    <ClInclude Include="ExternalVideoFrame.h" />
+    <ClInclude Include="AudioFrame.h" />
+    <ClInclude Include="Metadata.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />

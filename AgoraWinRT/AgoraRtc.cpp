@@ -15,15 +15,31 @@ namespace winrt::AgoraWinRT::implementation
 			throw L"createAgoraRtcEngine failed";
 
 		agora::rtc::RtcEngineContext context;
-		std::string tmp = Utils::ToString(vendorKey);
-		context.appId = tmp.c_str();
+		context.appId = Utils::Copy(vendorKey);
 		context.eventHandler = this;
 		if (m_rtcEngine->initialize(context) == 0)
 		{
 			//设置IMediaEngine接口
+			agora::media::IMediaEngine* media = nullptr;
+			if (!m_rtcEngine->queryInterface(agora::AGORA_IID_MEDIA_ENGINE, reinterpret_cast<void**>(&media))) {
+				m_mediaEngine = media;
+				//TODO:注册音视频包观察器
+			}
+			else
+				throw L"media engine initialize failed";
+
+			m_rtcEngine->registerMediaMetadataObserver(this, agora::rtc::IMetadataObserver::METADATA_TYPE::VIDEO_METADATA);
 		}
 		else
 			throw L"rtcEngine initialize failed";
+	}
+	void AgoraRtc::RegisteryRtcEngineEventHandler(AgoraWinRT::AgoraRtcEventHandler handler)
+	{
+		m_handler = handler;
+	}
+	void AgoraRtc::RegisteryMediaMetadataObserver(AgoraWinRT::MetadataObserver observer)
+	{
+		m_metadataObserver = observer;
 	}
 	int16_t AgoraRtc::SetChannelProfile(AgoraWinRT::CHANNEL_PROFILE_TYPE const& type)
 	{
@@ -333,6 +349,47 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		return m_rtcEngine->stopLastmileProbeTest();
 	}
+	int16_t AgoraRtc::SetExternalVideoSource(bool enable, bool useTexture)
+	{
+		return m_mediaEngine->setExternalVideoSource(enable, useTexture);
+	}
+	int16_t AgoraRtc::PushVideoFrame(AgoraWinRT::ExternalVideoFrame const& frame)
+	{
+		LARGE_INTEGER freq, curCount;
+		QueryPerformanceFrequency(&freq);
+		QueryPerformanceCounter(&curCount);
+		curCount.QuadPart = curCount.QuadPart * 1000 / freq.QuadPart;
+		frame.timestamp(curCount.QuadPart);
+		auto raw = Utils::ToRaw(frame);
+		auto result = m_mediaEngine->pushVideoFrame(raw);
+		Utils::Free(raw);
+		return result;
+	}
+	int16_t AgoraRtc::SetExternalAudioSource(bool enable, uint32_t sampleRate, uint8_t channels)
+	{
+		return m_rtcEngine->setExternalAudioSource(enable, sampleRate, channels);
+	}
+	int16_t AgoraRtc::PushAuioFrame(AgoraWinRT::AudioFrame const& frame)
+	{
+		frame.renderTimeMs(GetTickCount64());
+		auto raw = Utils::ToRaw(frame);
+		auto result = m_mediaEngine->pushAudioFrame(raw);
+		Utils::Free(raw);
+		return result;
+	}
+	int16_t AgoraRtc::SetExternalAudioSink(bool enable, uint32_t sampleRate, uint8_t channels)
+	{
+		return m_rtcEngine->setExternalAudioSink(enable, sampleRate, channels);
+	}
+	int16_t AgoraRtc::PullAudioFrame(AgoraWinRT::AudioFrame const& frame)
+	{
+		auto raw = Utils::ToRaw(frame);
+		auto length = raw->samples * raw->channels * raw->bytesPerSample;
+		raw->buffer = new byte[length];
+		int result = m_mediaEngine->pullAudioFrame(raw);
+		if (result == 0) frame.buffer(Utils::FromRaw(raw->buffer, length));
+		return result;
+	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
 	{
 		if (m_handler) m_handler.OnConnectionStateChanged((CONNECTION_STATE_TYPE)type, (CONNECTION_CHANGED_REASON_TYPE)reason);
@@ -512,7 +569,23 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onLastmileProbeResult(const agora::rtc::LastmileProbeResult& result)
 	{
-		if (m_handler) 
+		if (m_handler)
 			m_handler.OnLastmileProbeResult(Utils::FromRaw(result));
+	}
+	int AgoraRtc::getMaxMetadataSize()
+	{
+		if (m_metadataObserver) return m_metadataObserver.GetMaxMetadataSize();
+		else return 1024;
+	}
+	bool AgoraRtc::onReadyToSendMetadata(agora::rtc::IMetadataObserver::Metadata& metadata)
+	{
+		auto data = Utils::FromRaw(metadata);
+		if (m_metadataObserver) return m_metadataObserver.OnReadyToSendMetadata(*data);
+		return true;
+	}
+	void AgoraRtc::onMetadataReceived(const agora::rtc::IMetadataObserver::Metadata& metadata)
+	{
+		auto data = Utils::FromRaw(metadata);
+		if (m_metadataObserver) m_metadataObserver.OnMetadataReceived(*data);
 	}
 }

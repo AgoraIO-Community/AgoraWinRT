@@ -2,6 +2,7 @@
 #include <string>
 #include "pch.h"
 #include "AgoraRtc.g.h"
+#include "Metadata.h"
 
 namespace Utils {
 	
@@ -14,7 +15,7 @@ namespace Utils {
 		std::string source = Utils::ToString(value);
 		int length = source.length() + 1;
 		char* result = new char[length];
-		strcpy_s(result, sizeof(char) * length, source.c_str());
+		strcpy_s(result, length, source.c_str());
 		return result;
 	}
 
@@ -146,6 +147,18 @@ namespace Utils {
 		return result;
 	}
 
+	winrt::com_array<uint8_t> FromRaw(void* raw, int count) {
+		uint8_t* buffer = reinterpret_cast<uint8_t*>(raw);
+		return winrt::com_array(buffer, buffer + count);
+	}
+
+	winrt::com_ptr<winrt::AgoraWinRT::implementation::Metadata> FromRaw(const agora::rtc::IMetadataObserver::Metadata& raw) {
+		auto result = winrt::make_self<winrt::AgoraWinRT::implementation::Metadata>();
+		result->uid(raw.uid);
+		result->timestamp(raw.timeStampMs);
+		result->buffer(Utils::FromRaw(raw.buffer, raw.size));
+		return result;
+	}
 
 	agora::rtc::BeautyOptions ToRaw(winrt::AgoraWinRT::BeautyOptions const& value) {
 		agora::rtc::BeautyOptions raw;
@@ -279,4 +292,48 @@ namespace Utils {
 		return raw;
 	}
 
+	void* ToRaw(winrt::com_array<uint8_t> const& value) {
+		auto raw = new byte[value.size()];
+		memcpy_s(raw, value.size(), value.data(), value.size());
+		return raw;
+	}
+
+	agora::media::ExternalVideoFrame* ToRaw(winrt::AgoraWinRT::ExternalVideoFrame const& value) {
+		auto raw = new agora::media::ExternalVideoFrame();
+		raw->type = (agora::media::ExternalVideoFrame::VIDEO_BUFFER_TYPE)value.type();
+		raw->format = (agora::media::ExternalVideoFrame::VIDEO_PIXEL_FORMAT)value.format();
+		raw->stride = value.stride();
+		raw->buffer = Utils::ToRaw(value.buffer());
+		raw->height = value.height();
+		raw->cropLeft = value.cropLeft();
+		raw->cropTop = value.cropTop();
+		raw->cropRight = value.cropRight();
+		raw->cropBottom = value.cropBottom();
+		raw->rotation = value.rotation();
+		raw->timestamp = value.timestamp();
+		return raw;
+	}
+
+	agora::media::IAudioFrameObserver::AudioFrame* ToRaw(winrt::AgoraWinRT::AudioFrame const& value) {
+		auto raw = new agora::media::IAudioFrameObserver::AudioFrame();
+		raw->type = (agora::media::IAudioFrameObserver::AUDIO_FRAME_TYPE)value.type();
+		raw->samples = value.samples();
+		raw->bytesPerSample = value.bytesPerSample();
+		raw->channels = value.channels();
+		raw->samplesPerSec = value.samplesPerSec();
+		raw->buffer = Utils::ToRaw(value.buffer());
+		raw->renderTimeMs = value.renderTimeMs();
+		raw->avsync_type = value.avsync_type();
+		return raw;
+	}
+
+	void Free(agora::media::ExternalVideoFrame* value) {
+		delete[] value->buffer;
+		delete value;
+	}
+
+	void Free(agora::media::IAudioFrameObserver::AudioFrame* value) {
+		delete[] value->buffer;
+		delete value;
+	}
 }

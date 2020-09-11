@@ -185,5 +185,63 @@ namespace AgoraWinRT
         AgoraWinRT.LastmileProbeOneWayResult downlinkReport;
         UInt64 rtt;
     };
+    enum VIDEO_BUFFER_TYPE
+    {
+        VIDEO_BUFFER_RAW_DATA = 1,
+    };
+    enum VIDEO_PIXEL_FORMAT
+    {
+        VIDEO_PIXEL_UNKNOWN = 0,
+        VIDEO_PIXEL_I420 = 1,
+        VIDEO_PIXEL_BGRA = 2,
+        VIDEO_PIXEL_NV21 = 3,
+        VIDEO_PIXEL_RGBA = 4,
+        VIDEO_PIXEL_IMC2 = 5,
+        VIDEO_PIXEL_ARGB = 7,
+        VIDEO_PIXEL_NV12 = 8,
+        VIDEO_PIXEL_I422 = 16,
+    };
+    runtimeclass ExternalVideoFrame : Windows.Foundation.IClosable
+    {
+        AgoraWinRT.VIDEO_BUFFER_TYPE type;
+        AgoraWinRT.VIDEO_PIXEL_FORMAT format;
+        UInt8[] buffer;
+        UInt32 stride;
+        UInt32 height;
+        UInt32 cropLeft;
+        UInt32 cropTop;
+        UInt32 cropRight;
+        UInt32 cropBottom;
+        UInt16 rotation;
+        Int64 timestamp;
+    };
+    runtimeclass AudioFrame : Windows.Foundation.IClosable 
+    {
+        AgoraWinRT.AUDIO_FRAME_TYPE type;
+        UInt32 samples;  //number of samples for each channel in this frame
+        UInt8 bytesPerSample;  //number of bytes per sample: 2 for PCM16
+        UInt8 channels;  //number of channels (data are interleaved if stereo)
+        UInt32 samplesPerSec;  //sampling rate
+        UInt8[] buffer;  //data buffer
+        UInt64 renderTimeMs;
+        Int64 avsync_type;
+    };
+    enum METADATA_TYPE
+    {
+        UNKNOWN_METADATA = -1,
+         VIDEO_METADATA = 0,
+    };
+    runtimeclass Metadata: Windows.Foundation.IClosable
+    {
+        UInt64 uid;
+        UInt8[] buffer;
+        Int64 timestamp;
+    };
+    interface MetadataObserver
+    {
+        Int64 GetMaxMetadataSize();
+        Boolean OnReadyToSendMetadata(AgoraWinRT.Metadata metadata);
+        void OnMetadataReceived(AgoraWinRT.Metadata metadata);
+    };
 
 }

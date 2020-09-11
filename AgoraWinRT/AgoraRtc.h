@@ -5,11 +5,18 @@
 namespace winrt::AgoraWinRT::implementation
 {
     struct AgoraRtc : AgoraRtcT<AgoraRtc>,
-        public agora::rtc::IRtcEngineEventHandler
+        public agora::rtc::IRtcEngineEventHandler,
+        private agora::rtc::IMetadataObserver
     {
         AgoraRtc() = default;
 
         AgoraRtc(hstring const& vendorKey);
+    public:
+        //RtcEngine事件处理
+        void RegisteryRtcEngineEventHandler(AgoraWinRT::AgoraRtcEventHandler handler);
+        //媒体元数据观察器
+        void RegisteryMediaMetadataObserver(AgoraWinRT::MetadataObserver observer);
+    public:
         //频道管理
         int16_t SetChannelProfile(AgoraWinRT::CHANNEL_PROFILE_TYPE const& type);
         int16_t SetClientRole(AgoraWinRT::CLIENT_ROLE_TYPE const& type);
@@ -101,11 +108,21 @@ namespace winrt::AgoraWinRT::implementation
         int16_t DisableLastmileTest();
         int16_t StartLastmileProbeTest(AgoraWinRT::LastmileProbeConfig const& config);
         int16_t StopLastmileProbeTest();
+        //视频自采集
+        int16_t SetExternalVideoSource(bool enable, bool useTexture);
+        int16_t PushVideoFrame(AgoraWinRT::ExternalVideoFrame const& frame);
+        //音频自采集
+        int16_t SetExternalAudioSource(bool enable, uint32_t sampleRate, uint8_t channels);
+        int16_t PushAuioFrame(AgoraWinRT::AudioFrame const& frame);
+        //音频自渲染
+        int16_t SetExternalAudioSink(bool enable, uint32_t sampleRate, uint8_t channels);
+        int16_t PullAudioFrame(AgoraWinRT::AudioFrame const& frame);
 
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
+        agora::media::IMediaEngine* m_mediaEngine{ nullptr };
         AgoraWinRT::AgoraRtcEventHandler m_handler{ nullptr };
-
+        AgoraWinRT::MetadataObserver m_metadataObserver{ nullptr };
     private:
         //频道管理事件
         void onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason) override;
@@ -161,6 +178,12 @@ namespace winrt::AgoraWinRT::implementation
         //通话前网络测试
         void onLastmileQuality(int quality) override;
         void onLastmileProbeResult(const agora::rtc::LastmileProbeResult& result) override;
+
+    private:
+        //IMetadataObserver实现部分
+        int getMaxMetadataSize() override;
+        bool onReadyToSendMetadata(agora::rtc::IMetadataObserver::Metadata& metadata) override;
+        void onMetadataReceived(const agora::rtc::IMetadataObserver::Metadata& metadata) override;
     };
 }
 namespace winrt::AgoraWinRT::factory_implementation

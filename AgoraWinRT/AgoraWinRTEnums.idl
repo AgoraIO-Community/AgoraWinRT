@@ -382,5 +382,8 @@ namespace AgoraWinRT
 		LASTMILE_PROBE_RESULT_INCOMPLETE_NO_BWE = 2,
 		LASTMILE_PROBE_RESULT_UNAVAILABLE = 3
 	};
+	enum AUDIO_FRAME_TYPE {
+		FRAME_TYPE_PCM16 = 0,  // PCM 16bit little endian
+	};
 
 }
