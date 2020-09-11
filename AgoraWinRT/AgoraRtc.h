@@ -124,6 +124,29 @@ namespace winrt::AgoraWinRT::implementation
         //加密
         int16_t EnableEncryption(bool enable, AgoraWinRT::EncryptionConfig const& config);
         void RegisterPacketObserver(AgoraWinRT::PacketObserver const& observer);
+        //音频录制
+        int16_t StartAudioRecording(hstring const& file, uint32_t sampleRate, AgoraWinRT::AUDIO_RECORDING_QUALITY_TYPE const& type);
+        int16_t StopAudioRecording();
+        //直播输入在线媒体流
+        int16_t AddInjectStreamUrl(hstring const& url, AgoraWinRT::InjectStreamConfig const& config);
+        int16_t RemoveInjectStreamUrl(hstring const& url);
+        //流消息
+        int64_t CreateDataStream(bool reliable, bool ordered);
+        int16_t SendStreamMessage(int64_t streamId, hstring const& data);
+        //其他音频控制
+        int16_t EnableLoopbackRecording(bool enabled, hstring const& deviceName);
+        //其他视频控制
+        int16_t SetCameraCapturerConfiguration(AgoraWinRT::CameraCapturerConfiguration const& config);
+        //其他方法
+        int16_t SendCustomReportMessage(hstring const& id, hstring const& category, hstring const& eventName, hstring const& label, int64_t value);
+        int16_t GetCallId(hstring& id);
+        int16_t Rate(hstring const& callId, uint8_t rating, hstring const& desc);
+        int16_t Complain(hstring const& callId, hstring const& desc);
+        hstring GetVersion(int64_t& build);
+        int16_t SetLogFile(hstring const& file);
+        int16_t SetLogFilter(uint16_t filter);
+        int16_t SetLogFileSize(uint64_t size);
+        hstring GetErrorDesc(int64_t code);
 
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
@@ -186,7 +209,15 @@ namespace winrt::AgoraWinRT::implementation
         //通话前网络测试
         void onLastmileQuality(int quality) override;
         void onLastmileProbeResult(const agora::rtc::LastmileProbeResult& result) override;
-
+        //直播输入在线媒体流
+        void onStreamInjectedStatus(const char* url, agora::rtc::uid_t uid, int status) override;
+        //流消息
+        void onStreamMessage(agora::rtc::uid_t uid, int streamId, const char* data, size_t length) override;
+        void onStreamMessageError(agora::rtc::uid_t uid, int streamId, int code, int missed, int cached) override;
+        //其他事件
+        void onWarning(int warn, const char* msg) override;
+        void onError(int err, const char* msg) override;
+        void onApiCallExecuted(int err, const char* api, const char* result) override;
     private:
         //IMetadataObserver实现部分
         int getMaxMetadataSize() override;

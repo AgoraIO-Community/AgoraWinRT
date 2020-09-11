@@ -59,6 +59,15 @@ namespace AgoraWinRT
 		//通话前网络测试
 		void OnLastmileQuality(AgoraWinRT.QUALITY_TYPE quality);
 		void OnLastmileProbeResult(AgoraWinRT.LastmileProbeResult result);
+		//直播输入在线媒体流
+		void OnStreamInjectedStatus(String url, UInt64 uid, AgoraWinRT.INJECT_STREAM_STATUS status);
+		//流消息
+		void OnStreamMessage(UInt64 uid, Int64 streamId, String data);
+		void OnStreamMessageError(UInt64 uid, Int64 streamId, UInt32 error, UInt16 missed, UInt16 cached);
+		//其他事件
+		void OnWarning(Int64 code, String msg);
+		void OnError(Int64 code, String msg);
+		void OnApiCallExecuted(Int64 code, String api, String result);
 	};
 	[default_interface]
 	runtimeclass AgoraRtc : Windows.Foundation.IClosable
@@ -194,5 +203,34 @@ namespace AgoraWinRT
 		//加密
 		Int16 EnableEncryption(Boolean enable, AgoraWinRT.EncryptionConfig config);
 		void RegisterPacketObserver(AgoraWinRT.PacketObserver observer);
+
+		//音频录制
+		Int16 StartAudioRecording(String file, UInt32 sampleRate, AgoraWinRT.AUDIO_RECORDING_QUALITY_TYPE type);
+		Int16 StopAudioRecording();
+
+		//直播输入在线媒体流
+		Int16 AddInjectStreamUrl(String url, AgoraWinRT.InjectStreamConfig config);
+		Int16 RemoveInjectStreamUrl(String url);
+
+		//流消息
+		Int64 CreateDataStream(Boolean reliable, Boolean ordered);
+		Int16 SendStreamMessage(Int64 streamId, String data);
+
+		//其他音频控制
+		Int16 EnableLoopbackRecording(Boolean enabled, String deviceName);
+
+		//其他视频控制
+		Int16 SetCameraCapturerConfiguration(AgoraWinRT.CameraCapturerConfiguration config);
+
+		//其他方法
+		Int16 SendCustomReportMessage(String id, String category, String eventName, String label, Int64 value);
+		Int16 GetCallId(out String id);
+		Int16 Rate(String callId, UInt8 rating, String desc);
+		Int16 Complain(String callId, String desc);
+		String GetVersion(out Int64 build);
+		Int16 SetLogFile(String file);
+		Int16 SetLogFilter(UInt16 filter);
+		Int16 SetLogFileSize(UInt64 size);
+		String GetErrorDesc(Int64 code);
 	};
 }

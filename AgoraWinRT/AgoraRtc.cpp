@@ -407,6 +407,92 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		m_packetObserver = observer;
 	}
+	int16_t AgoraRtc::StartAudioRecording(hstring const& file, uint32_t sampleRate, AgoraWinRT::AUDIO_RECORDING_QUALITY_TYPE const& type)
+	{
+		return m_rtcEngine->startAudioRecording(Utils::ToString(file).c_str(), (agora::rtc::AUDIO_RECORDING_QUALITY_TYPE)type);
+	}
+	int16_t AgoraRtc::StopAudioRecording()
+	{
+		return m_rtcEngine->stopAudioRecording();
+	}
+	int16_t AgoraRtc::AddInjectStreamUrl(hstring const& url, AgoraWinRT::InjectStreamConfig const& config)
+	{
+		return m_rtcEngine->addInjectStreamUrl(Utils::ToString(url).c_str(), Utils::ToRaw(config));
+	}
+	int16_t AgoraRtc::RemoveInjectStreamUrl(hstring const& url)
+	{
+		return m_rtcEngine->removeInjectStreamUrl(Utils::ToString(url).c_str());
+	}
+	int64_t AgoraRtc::CreateDataStream(bool reliable, bool ordered)
+	{
+		int streamId;
+		auto result = m_rtcEngine->createDataStream(&streamId, reliable, ordered);
+		return result == 0 ? streamId : result;
+	}
+	int16_t AgoraRtc::SendStreamMessage(int64_t streamId, hstring const& data)
+	{
+		return m_rtcEngine->sendStreamMessage(streamId, Utils::ToString(data).c_str(), data.size());
+	}
+	int16_t AgoraRtc::EnableLoopbackRecording(bool enabled, hstring const& deviceName)
+	{
+		return m_rtcEngine->enableLoopbackRecording(enabled, Utils::ToString(deviceName).c_str());
+	}
+	int16_t AgoraRtc::SetCameraCapturerConfiguration(AgoraWinRT::CameraCapturerConfiguration const& config)
+	{
+		return m_rtcEngine->setCameraCapturerConfiguration(Utils::ToRaw(config));
+	}
+	int16_t AgoraRtc::SendCustomReportMessage(hstring const& id, hstring const& category, hstring const& eventName, hstring const& label, int64_t value)
+	{
+		return m_rtcEngine->sendCustomReportMessage(
+			Utils::ToString(id).c_str(),
+			Utils::ToString(category).c_str(),
+			Utils::ToString(eventName).c_str(),
+			Utils::ToString(label).c_str(),
+			value);
+	}
+	int16_t AgoraRtc::GetCallId(hstring& id)
+	{
+		agora::util::AString callId;
+		auto result = m_rtcEngine->getCallId(callId);
+		if (result == 0) id = Utils::ToString(callId.get()->c_str());
+		else id = hstring{};
+		return result;
+	}
+	int16_t AgoraRtc::Rate(hstring const& callId, uint8_t rating, hstring const& desc)
+	{
+		return m_rtcEngine->rate(
+			Utils::ToString(callId).c_str(),
+			rating,
+			Utils::ToString(desc).c_str()
+		);
+	}
+	int16_t AgoraRtc::Complain(hstring const& callId, hstring const& desc)
+	{
+		return m_rtcEngine->complain(Utils::ToString(callId).c_str(), Utils::ToString(desc).c_str());
+	}
+	hstring AgoraRtc::GetVersion(int64_t& build)
+	{
+		int version;
+		auto result = m_rtcEngine->getVersion(&version);
+		build = version;
+		return Utils::ToString(result);
+	}
+	int16_t AgoraRtc::SetLogFile(hstring const& file)
+	{
+		return m_rtcEngine->setLogFile(Utils::ToString(file).c_str());
+	}
+	int16_t AgoraRtc::SetLogFilter(uint16_t filter)
+	{
+		return m_rtcEngine->setLogFilter(filter);
+	}
+	int16_t AgoraRtc::SetLogFileSize(uint64_t size)
+	{
+		return m_rtcEngine->setLogFileSize(size);
+	}
+	hstring AgoraRtc::GetErrorDesc(int64_t code)
+	{
+		return Utils::ToString(m_rtcEngine->getErrorDescription(code));
+	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
 	{
 		if (m_handler) m_handler.OnConnectionStateChanged((CONNECTION_STATE_TYPE)type, (CONNECTION_CHANGED_REASON_TYPE)reason);
@@ -588,6 +674,30 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		if (m_handler)
 			m_handler.OnLastmileProbeResult(Utils::FromRaw(result));
+	}
+	void AgoraRtc::onStreamInjectedStatus(const char* url, agora::rtc::uid_t uid, int status)
+	{
+		if (m_handler) m_handler.OnStreamInjectedStatus(Utils::ToString(url), uid, (AgoraWinRT::INJECT_STREAM_STATUS)status);
+	}
+	void AgoraRtc::onStreamMessage(agora::rtc::uid_t uid, int streamId, const char* data, size_t length)
+	{
+		if (m_handler) m_handler.OnStreamMessage(uid, streamId, Utils::ToString(data));
+	}
+	void AgoraRtc::onStreamMessageError(agora::rtc::uid_t uid, int streamId, int code, int missed, int cached)
+	{
+		if (m_handler) m_handler.OnStreamMessageError(uid, streamId, code, missed, cached);
+	}
+	void AgoraRtc::onWarning(int warn, const char* msg)
+	{
+		if (m_handler) m_handler.OnWarning(warn, Utils::ToString(msg));
+	}
+	void AgoraRtc::onError(int err, const char* msg)
+	{
+		if (m_handler) m_handler.OnError(err, Utils::ToString(msg));
+	}
+	void AgoraRtc::onApiCallExecuted(int err, const char* api, const char* result)
+	{
+		if (m_handler) m_handler.OnApiCallExecuted(err, Utils::ToString(api), Utils::ToString(result));
 	}
 	int AgoraRtc::getMaxMetadataSize()
 	{

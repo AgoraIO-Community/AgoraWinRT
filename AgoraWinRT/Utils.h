@@ -6,7 +6,7 @@
 #include "Packet.h"
 
 namespace Utils {
-	
+
 	std::string ToString(winrt::hstring const& value) {
 		std::wstring wvalue(value.c_str());
 		return std::string(wvalue.begin(), wvalue.end());
@@ -128,7 +128,7 @@ namespace Utils {
 			info.vad = raw[i].vad;
 			info.volume = raw[i].volume;
 		}
-		return infos; 
+		return infos;
 	}
 
 	winrt::AgoraWinRT::LastmileProbeOneWayResult FromRaw(const agora::rtc::LastmileProbeOneWayResult& raw) {
@@ -355,6 +355,26 @@ namespace Utils {
 		agora::rtc::EncryptionConfig raw;
 		raw.encryptionMode = (agora::rtc::ENCRYPTION_MODE)value.mode;
 		raw.encryptionKey = Utils::Copy(value.key);
+		return raw;
+	}
+
+	agora::rtc::InjectStreamConfig ToRaw(winrt::AgoraWinRT::InjectStreamConfig const& value) {
+		agora::rtc::InjectStreamConfig raw;
+		raw.width = value.width;
+		raw.height = value.height;
+		raw.videoGop = value.videoGop;
+		raw.videoFramerate = value.videoFramerate;
+		raw.videoBitrate = value.videoBitrate;
+		raw.audioSampleRate = (agora::rtc::AUDIO_SAMPLE_RATE_TYPE)value.audioSampleRate;
+		raw.audioBitrate = value.audioBitrate;
+		raw.audioChannels = value.audioChannels;
+		return raw;
+	}
+
+	agora::rtc::CameraCapturerConfiguration ToRaw(winrt::AgoraWinRT::CameraCapturerConfiguration const& config)
+	{
+		agora::rtc::CameraCapturerConfiguration raw;
+		raw.preference = (agora::rtc::CAPTURER_OUTPUT_PREFERENCE)config.prefernce;
 		return raw;
 	}
 

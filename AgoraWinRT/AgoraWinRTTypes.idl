@@ -272,4 +272,20 @@ namespace AgoraWinRT
         Boolean OnReceiveAudioPacket(AgoraWinRT.Packet packet);
         Boolean OnReceiveVideoPacket(AgoraWinRT.Packet packet);
     };
+    struct InjectStreamConfig 
+    {
+        Int64 width;
+        Int64 height;
+        Int16 videoGop;
+        Int16 videoFramerate;
+        Int64 videoBitrate;
+        AgoraWinRT.AUDIO_SAMPLE_RATE_TYPE audioSampleRate;
+        Int64 audioBitrate;
+        UInt8 audioChannels;
+    };
+    struct CameraCapturerConfiguration
+    {
+        AgoraWinRT.CAPTURER_OUTPUT_PREFERENCE prefernce;
+    };
+
 }
