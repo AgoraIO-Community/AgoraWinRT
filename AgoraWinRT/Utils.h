@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 #include "pch.h"
-#include "AgoraRtc.g.h"
+#include "winrt/AgoraWinRT.h"
 #include "Metadata.h"
 #include "Packet.h"
+#include "AudioFrame.h"
+#include "VideoFrame.h"
 
 namespace Utils {
 
@@ -167,6 +169,60 @@ namespace Utils {
 		return result;
 	}
 
+	winrt::com_ptr<winrt::AgoraWinRT::implementation::AudioFrame> FromRaw(const agora::media::IAudioFrameObserver::AudioFrame& raw) {
+		auto result = winrt::make_self<winrt::AgoraWinRT::implementation::AudioFrame>();
+		result->type((winrt::AgoraWinRT::AUDIO_FRAME_TYPE)raw.type);
+		result->samples(raw.samples);
+		result->bytesPerSample(raw.bytesPerSample);
+		result->channels(raw.channels);
+		result->samplesPerSec(raw.samplesPerSec);
+		result->buffer(Utils::FromRaw(raw.buffer, raw.samples * raw.channels * raw.bytesPerSample));
+		result->renderTimeMs(raw.renderTimeMs);
+		result->avsync_type(raw.avsync_type);
+		return result;
+	}
+
+	winrt::com_ptr<winrt::AgoraWinRT::implementation::VideoFrame> FromRaw(const agora::media::IVideoFrameObserver::VideoFrame& raw) {
+		auto result = winrt::make_self<winrt::AgoraWinRT::implementation::VideoFrame>();
+		result->type((winrt::AgoraWinRT::VIDEO_FRAME_TYPE)raw.type);
+		result->width(raw.width);
+		result->height(raw.height);
+		result->yStride(raw.yStride);
+		result->uStride(raw.uStride);
+		result->vStride(raw.vStride);
+		result->yBuffer(Utils::FromRaw(raw.yBuffer, raw.height * raw.width));
+		result->uBuffer(Utils::FromRaw(raw.uBuffer, raw.height * raw.width / 4));
+		result->vBuffer(Utils::FromRaw(raw.vBuffer, raw.height * raw.width / 4));
+		result->rotation(raw.rotation);
+		result->renderTimeMs(raw.renderTimeMs);
+		result->avsync_type(raw.avsync_type);
+		return result;
+	}
+
+	void* ToRaw(winrt::com_array<uint8_t> const& value) {
+		auto raw = new byte[value.size()];
+		memcpy_s(raw, value.size(), value.data(), value.size());
+		return raw;
+	}
+
+	void ToRaw(winrt::com_ptr<winrt::AgoraWinRT::implementation::VideoFrame> const& value, agora::media::IVideoFrameObserver::VideoFrame& raw) {
+		raw.type = (agora::media::IVideoFrameObserver::VIDEO_FRAME_TYPE)(value->type());
+		raw.width = value->width();
+		raw.height = value->height();
+		raw.yStride = value->yStride();
+		raw.uStride = value->uStride();
+		raw.vStride = value->vStride();
+		delete[] raw.yBuffer;
+		raw.yBuffer = Utils::ToRaw(value->yBuffer());
+		delete[] raw.uBuffer;
+		raw.uBuffer = Utils::ToRaw(value->uBuffer());
+		delete[] raw.vBuffer;
+		raw.vBuffer = Utils::ToRaw(value->vBuffer());
+		raw.rotation = value->rotation();
+		raw.renderTimeMs = value->renderTimeMs();
+		raw.avsync_type = value->avsync_type();
+	}
+
 	agora::rtc::BeautyOptions ToRaw(winrt::AgoraWinRT::BeautyOptions const& value) {
 		agora::rtc::BeautyOptions raw;
 		raw.lighteningContrastLevel = (agora::rtc::BeautyOptions::LIGHTENING_CONTRAST_LEVEL)value.lighteningContrastLevel;
@@ -299,11 +355,6 @@ namespace Utils {
 		return raw;
 	}
 
-	void* ToRaw(winrt::com_array<uint8_t> const& value) {
-		auto raw = new byte[value.size()];
-		memcpy_s(raw, value.size(), value.data(), value.size());
-		return raw;
-	}
 
 	agora::media::ExternalVideoFrame* ToRaw(winrt::AgoraWinRT::ExternalVideoFrame const& value) {
 		auto raw = new agora::media::ExternalVideoFrame();
@@ -321,6 +372,11 @@ namespace Utils {
 		return raw;
 	}
 
+	void Free(agora::media::ExternalVideoFrame* value) {
+		delete[] value->buffer;
+		delete value;
+	}
+
 	agora::media::IAudioFrameObserver::AudioFrame* ToRaw(winrt::AgoraWinRT::AudioFrame const& value) {
 		auto raw = new agora::media::IAudioFrameObserver::AudioFrame();
 		raw->type = (agora::media::IAudioFrameObserver::AUDIO_FRAME_TYPE)value.type();
@@ -332,6 +388,11 @@ namespace Utils {
 		raw->renderTimeMs = value.renderTimeMs();
 		raw->avsync_type = value.avsync_type();
 		return raw;
+	}
+
+	void Free(agora::media::IAudioFrameObserver::AudioFrame* value) {
+		delete[] value->buffer;
+		delete value;
 	}
 
 	agora::rtc::Rectangle ToRaw(winrt::AgoraWinRT::Rectangle const& value) {
@@ -378,13 +439,7 @@ namespace Utils {
 		return raw;
 	}
 
-	void Free(agora::media::ExternalVideoFrame* value) {
-		delete[] value->buffer;
-		delete value;
-	}
 
-	void Free(agora::media::IAudioFrameObserver::AudioFrame* value) {
-		delete[] value->buffer;
-		delete value;
-	}
+
+
 }

@@ -4,6 +4,43 @@
 
 namespace winrt::AgoraWinRT::implementation
 {
+    class RawAudioFrameObserver : public agora::media::IAudioFrameObserver
+    {
+    public:
+        void RegisterObserver(AgoraWinRT::AudioFrameObserver observer);
+
+        // 通过 IAudioFrameObserver 继承
+        virtual bool onRecordAudioFrame(AudioFrame& audioFrame) override;
+        virtual bool onPlaybackAudioFrame(AudioFrame& audioFrame) override;
+        virtual bool onMixedAudioFrame(AudioFrame& audioFrame) override;
+        virtual bool onPlaybackAudioFrameBeforeMixing(unsigned int uid, AudioFrame& audioFrame) override;
+        virtual bool isMultipleChannelFrameWanted() override;
+        virtual bool onPlaybackAudioFrameBeforeMixingEx(const char* channelId, unsigned int uid, AudioFrame& audioFrame) override;
+    private:
+        AgoraWinRT::AudioFrameObserver m_observer{ nullptr };
+    };
+
+    class RawVideoFrameObserver : public agora::media::IVideoFrameObserver
+    {
+    public:
+        void RegisterObserver(AgoraWinRT::VideoFrameObserver observer);
+
+        // 通过 IVideoFrameObserver 继承
+        virtual bool onCaptureVideoFrame(VideoFrame& videoFrame) override;
+        virtual bool onPreEncodeVideoFrame(VideoFrame& videoFrame) override;
+        virtual bool onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame) override;
+        virtual VIDEO_FRAME_TYPE getVideoFormatPreference() override;
+        virtual bool getRotationApplied();
+        virtual bool getMirrorApplied();
+        virtual bool getSmoothRenderingEnabled();
+        virtual uint32_t getObservedFramePosition();
+        virtual bool isMultipleChannelFrameWanted();
+        virtual bool onRenderVideoFrameEx(const char* channelId, unsigned int uid, VideoFrame& videoFrame) override;
+
+    private:
+        AgoraWinRT::VideoFrameObserver m_observer{ nullptr };
+    };
+
     struct AgoraRtc : AgoraRtcT<AgoraRtc>,
         public agora::rtc::IRtcEngineEventHandler,
         private agora::rtc::IMetadataObserver,
@@ -147,6 +184,13 @@ namespace winrt::AgoraWinRT::implementation
         int16_t SetLogFilter(uint16_t filter);
         int16_t SetLogFileSize(uint64_t size);
         hstring GetErrorDesc(int64_t code);
+        //原始音频数据
+        void RegisterAudioFrameObserver(AgoraWinRT::AudioFrameObserver const& observer);
+        int16_t SetRecordingAudioFrameParameters(uint32_t sampleRate, uint8_t channels, AgoraWinRT::RAW_AUDIO_FRAME_OP_MODE_TYPE const& mode, uint32_t samplesPerCall);
+        int16_t SetPlaybackAudioFrameParameters(uint32_t sampleRate, uint8_t channels, AgoraWinRT::RAW_AUDIO_FRAME_OP_MODE_TYPE const& mode, uint32_t samplesPerCall);
+        int16_t SetMixedAudioFrameParameters(uint32_t sampleRate, uint32_t samplesPerCall);
+        //原始视频数据
+        void RegisterVideoFrameObserver(AgoraWinRT::VideoFrameObserver const& observer);
 
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
@@ -154,6 +198,8 @@ namespace winrt::AgoraWinRT::implementation
         AgoraWinRT::AgoraRtcEventHandler m_handler{ nullptr };
         AgoraWinRT::MetadataObserver m_metadataObserver{ nullptr };
         AgoraWinRT::PacketObserver m_packetObserver{ nullptr };
+        AgoraWinRT::implementation::RawAudioFrameObserver* m_rawAudioFrameObserver{ nullptr };
+        AgoraWinRT::implementation::RawVideoFrameObserver* m_rawVideoFrameObserver{ nullptr };
     private:
         //频道管理事件
         void onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason) override;
@@ -228,6 +274,7 @@ namespace winrt::AgoraWinRT::implementation
         bool onSendVideoPacket(Packet& packet) override;
         bool onReceiveAudioPacket(Packet& packet) override;
         bool onReceiveVideoPacket(Packet& packet) override;
+
     };
 }
 namespace winrt::AgoraWinRT::factory_implementation

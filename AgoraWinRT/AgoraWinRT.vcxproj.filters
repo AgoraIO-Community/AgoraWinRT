@@ -19,6 +19,7 @@
     <ClCompile Include="AudioFrame.cpp" />
     <ClCompile Include="Metadata.cpp" />
     <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="VideoFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="AudioFrame.h" />
     <ClInclude Include="Metadata.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="VideoFrame.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />
@@ -45,5 +47,6 @@
     <Midl Include="AgoraWinRT.idl" />
     <Midl Include="AgoraWinRTEnums.idl" />
     <Midl Include="AgoraWinRTTypes.idl" />
+    <Midl Include="AgoraWinRTInterfaces.idl" />
   </ItemGroup>
 </Project>

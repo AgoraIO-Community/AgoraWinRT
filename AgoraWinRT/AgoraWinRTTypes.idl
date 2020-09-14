@@ -237,12 +237,6 @@ namespace AgoraWinRT
         UInt8[] buffer;
         Int64 timestamp;
     };
-    interface MetadataObserver
-    {
-        Int64 GetMaxMetadataSize();
-        Boolean OnReadyToSendMetadata(AgoraWinRT.Metadata metadata);
-        void OnMetadataReceived(AgoraWinRT.Metadata metadata);
-    };
     struct Rectangle
     {
         Int64 x;
@@ -287,5 +281,20 @@ namespace AgoraWinRT
     {
         AgoraWinRT.CAPTURER_OUTPUT_PREFERENCE prefernce;
     };
-
+    runtimeclass VideoFrame : Windows.Foundation.IClosable
+    {
+        Boolean BeModified;
+        AgoraWinRT.VIDEO_FRAME_TYPE type;
+        UInt32 width;
+        UInt32 height;
+        UInt32 yStride;
+        UInt32 uStride;
+        UInt32 vStride;
+        UInt8[] yBuffer;
+        UInt8[] uBuffer;
+        UInt8[] vBuffer;
+        UInt16 rotation;
+        Int64 renderTimeMs;
+        Int64 avsync_type;
+    }
 }

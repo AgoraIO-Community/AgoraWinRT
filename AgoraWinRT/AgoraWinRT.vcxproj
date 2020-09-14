@@ -126,6 +126,7 @@
     <ClInclude Include="Packet.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="VideoFrame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AgoraRtc.cpp" />
@@ -139,10 +140,12 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="VideoFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="AgoraWinRT.idl" />
     <Midl Include="AgoraWinRTEnums.idl" />
+    <Midl Include="AgoraWinRTInterfaces.idl" />
     <Midl Include="AgoraWinRTTypes.idl" />
   </ItemGroup>
   <ItemGroup>

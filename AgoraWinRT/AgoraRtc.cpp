@@ -5,6 +5,147 @@
 
 namespace winrt::AgoraWinRT::implementation
 {
+	void winrt::AgoraWinRT::implementation::RawAudioFrameObserver::RegisterObserver(AgoraWinRT::AudioFrameObserver observer)
+	{
+		m_observer = observer;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onRecordAudioFrame(AudioFrame& audioFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(audioFrame);
+			return m_observer.OnRecordAudioFrame(*data);
+		}
+		else return true;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrame(AudioFrame& audioFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(audioFrame);
+			return m_observer.OnPlaybackAudioFrame(*data);
+		}
+		else return true;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onMixedAudioFrame(AudioFrame& audioFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(audioFrame);
+			return m_observer.OnMixedAudioFrame(*data);
+		}
+		else return true;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrameBeforeMixing(unsigned int uid, AudioFrame& audioFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(audioFrame);
+			return m_observer.OnPlaybackAudioFrameBeforeMixing(uid, *data);
+		}
+		else return true;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::isMultipleChannelFrameWanted()
+	{
+		if (m_observer) return m_observer.IsMultipleChannelAudioFrameWanted();
+		else return false;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrameBeforeMixingEx(const char* channelId, unsigned int uid, AudioFrame& audioFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(audioFrame);
+			return m_observer.OnPlaybackAudioFrameBeforeMixingEx(Utils::ToString(channelId), uid, *data);
+		}
+		else return true;
+	}
+
+	void winrt::AgoraWinRT::implementation::RawVideoFrameObserver::RegisterObserver(AgoraWinRT::VideoFrameObserver observer)
+	{
+		m_observer = observer;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(videoFrame);
+			auto result = m_observer.OnCaptureVideoFrame(*data);
+			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			return result;
+		}
+		else return true;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onPreEncodeVideoFrame(VideoFrame& videoFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(videoFrame);
+			auto result = m_observer.OnPreEncodeVideFrame(*data);
+			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			return result;
+		}
+		else return true;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(videoFrame);
+			auto result = m_observer.OnRenderVideoFrame(uid, *data);
+			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			return result;
+		}
+		else return true;
+	}
+
+	agora::media::IVideoFrameObserver::VIDEO_FRAME_TYPE winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getVideoFormatPreference()
+	{
+		if (m_observer) return (agora::media::IVideoFrameObserver::VIDEO_FRAME_TYPE)m_observer.GetVideoFramePreference();
+		else return agora::media::IVideoFrameObserver::FRAME_TYPE_YUV420;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getRotationApplied()
+	{
+		if (m_observer) return m_observer.GetRotationApplied();
+		else return false;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getMirrorApplied()
+	{
+		if (m_observer) return m_observer.GetMirrorApplied();
+		else return false;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getSmoothRenderingEnabled()
+	{
+		if (m_observer) return m_observer.GetSmoothRenderingEnabled();
+		else return false;
+	}
+
+	uint32_t winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getObservedFramePosition()
+	{
+		if (m_observer) return m_observer.GetObservedFramePosition();
+		else return agora::media::IVideoFrameObserver::POSITION_POST_CAPTURER | agora::media::IVideoFrameObserver::POSITION_PRE_RENDERER;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::isMultipleChannelFrameWanted()
+	{
+		if (m_observer) return m_observer.IsMultipleChannelVideoFrameWanted();
+		else return false;
+	}
+
+	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onRenderVideoFrameEx(const char* channelId, unsigned int uid, VideoFrame& videoFrame)
+	{
+		if (m_observer) {
+			auto data = Utils::FromRaw(videoFrame);
+			auto result = m_observer.OnRenderVideoFrameEx(Utils::ToString(channelId), uid, *data);
+			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			return result;
+		}
+		else return true;
+	}
+
 	AgoraRtc::AgoraRtc(hstring const& vendorKey)
 	{
 		if (vendorKey.empty())
@@ -23,7 +164,10 @@ namespace winrt::AgoraWinRT::implementation
 			agora::media::IMediaEngine* media = nullptr;
 			if (!m_rtcEngine->queryInterface(agora::AGORA_IID_MEDIA_ENGINE, reinterpret_cast<void**>(&media))) {
 				m_mediaEngine = media;
-				//TODO:×¢²áÒôÊÓÆµ°ü¹Û²ìÆ÷
+				m_rawAudioFrameObserver = new AgoraWinRT::implementation::RawAudioFrameObserver();
+				m_mediaEngine->registerAudioFrameObserver(m_rawAudioFrameObserver);
+				m_rawVideoFrameObserver = new AgoraWinRT::implementation::RawVideoFrameObserver();
+				m_mediaEngine->registerVideoFrameObserver(m_rawVideoFrameObserver);
 			}
 			else
 				throw L"media engine initialize failed";
@@ -492,6 +636,26 @@ namespace winrt::AgoraWinRT::implementation
 	hstring AgoraRtc::GetErrorDesc(int64_t code)
 	{
 		return Utils::ToString(m_rtcEngine->getErrorDescription(code));
+	}
+	void AgoraRtc::RegisterAudioFrameObserver(AgoraWinRT::AudioFrameObserver const& observer)
+	{
+		m_rawAudioFrameObserver->RegisterObserver(observer);
+	}
+	int16_t AgoraRtc::SetRecordingAudioFrameParameters(uint32_t sampleRate, uint8_t channels, AgoraWinRT::RAW_AUDIO_FRAME_OP_MODE_TYPE const& mode, uint32_t samplesPerCall)
+	{
+		return m_rtcEngine->setRecordingAudioFrameParameters(sampleRate, channels, (agora::rtc::RAW_AUDIO_FRAME_OP_MODE_TYPE)mode, samplesPerCall);
+	}
+	int16_t AgoraRtc::SetPlaybackAudioFrameParameters(uint32_t sampleRate, uint8_t channels, AgoraWinRT::RAW_AUDIO_FRAME_OP_MODE_TYPE const& mode, uint32_t samplesPerCall)
+	{
+		return m_rtcEngine->setPlaybackAudioFrameParameters(sampleRate, channels, (agora::rtc::RAW_AUDIO_FRAME_OP_MODE_TYPE)mode, samplesPerCall);
+	}
+	int16_t AgoraRtc::SetMixedAudioFrameParameters(uint32_t sampleRate, uint32_t samplesPerCall)
+	{
+		return m_rtcEngine->setMixedAudioFrameParameters(sampleRate, samplesPerCall);
+	}
+	void AgoraRtc::RegisterVideoFrameObserver(AgoraWinRT::VideoFrameObserver const& observer)
+	{
+		m_rawVideoFrameObserver->RegisterObserver(observer);
 	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
 	{
