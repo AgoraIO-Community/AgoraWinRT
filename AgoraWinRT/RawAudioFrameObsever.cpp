@@ -12,7 +12,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onRecordAudioFrame(AudioFrame& audioFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
+			auto data = Utils::To(audioFrame);
 			return m_observer.OnRecordAudioFrame(*data);
 		}
 		else return true;
@@ -21,7 +21,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrame(AudioFrame& audioFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
+			auto data = Utils::To(audioFrame);
 			return m_observer.OnPlaybackAudioFrame(*data);
 		}
 		else return true;
@@ -30,7 +30,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onMixedAudioFrame(AudioFrame& audioFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
+			auto data = Utils::To(audioFrame);
 			return m_observer.OnMixedAudioFrame(*data);
 		}
 		else return true;
@@ -39,7 +39,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrameBeforeMixing(unsigned int uid, AudioFrame& audioFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
+			auto data = Utils::To(audioFrame);
 			return m_observer.OnPlaybackAudioFrameBeforeMixing(uid, *data);
 		}
 		else return true;
@@ -54,7 +54,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrameBeforeMixingEx(const char* channelId, unsigned int uid, AudioFrame& audioFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
+			auto data = Utils::To(audioFrame);
 			return m_observer.OnPlaybackAudioFrameBeforeMixingEx(Utils::To(channelId), uid, *data);
 		}
 		else return true;

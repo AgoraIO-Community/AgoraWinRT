@@ -55,11 +55,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::JoinChannel(hstring const& token, hstring const& channel, hstring const& info, uint64_t uid)
 	{
-		return m_rtcEngine->joinChannel(Utils::ToString(token).c_str(), Utils::ToString(channel).c_str(), Utils::ToString(info).c_str(), uid);
+		return m_rtcEngine->joinChannel(Utils::To(token).c_str(), Utils::To(channel).c_str(), Utils::To(info).c_str(), uid);
 	}
 	int16_t AgoraRtc::SwitchChannel(hstring const& token, hstring const& channel)
 	{
-		return m_rtcEngine->switchChannel(Utils::ToString(token).c_str(), Utils::ToString(channel).c_str());
+		return m_rtcEngine->switchChannel(Utils::To(token).c_str(), Utils::To(channel).c_str());
 	}
 	int16_t AgoraRtc::LeaveChannel()
 	{
@@ -67,7 +67,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::RenewToken(hstring const& token)
 	{
-		return m_rtcEngine->renewToken(Utils::ToString(token).c_str());
+		return m_rtcEngine->renewToken(Utils::To(token).c_str());
 	}
 	AgoraWinRT::CONNECTION_STATE_TYPE AgoraRtc::GetConnectionState()
 	{
@@ -131,7 +131,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::SetVideoEncoderConfiguration(AgoraWinRT::VideoEncoderConfiguration const& config)
 	{
-		return m_rtcEngine->setVideoEncoderConfiguration(Utils::ToRaw(config));
+		return m_rtcEngine->setVideoEncoderConfiguration(Utils::To(config));
 	}
 	int16_t AgoraRtc::MuteLocalVideoStream(bool muted)
 	{
@@ -151,11 +151,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::SetBeautyEffectOptions(bool enabled, AgoraWinRT::BeautyOptions const& options)
 	{
-		return m_rtcEngine->setBeautyEffectOptions(enabled, Utils::ToRaw(options));
+		return m_rtcEngine->setBeautyEffectOptions(enabled, Utils::To(options));
 	}
 	int16_t AgoraRtc::StartAudioMixing(hstring const& file, bool loopback, bool replace, int32_t cycle)
 	{
-		return m_rtcEngine->startAudioMixing(Utils::ToString(file).c_str(), loopback, replace, cycle);
+		return m_rtcEngine->startAudioMixing(Utils::To(file).c_str(), loopback, replace, cycle);
 	}
 	int16_t AgoraRtc::StopAudioMixing()
 	{
@@ -215,7 +215,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::PlayEffect(uint64_t soundId, hstring const& file, int16_t loopCount, float pitch, float pan, float gain, bool publish)
 	{
-		return m_rtcEngine->playEffect(soundId, Utils::ToString(file).c_str(), loopCount, pitch, pan, gain, publish);
+		return m_rtcEngine->playEffect(soundId, Utils::To(file).c_str(), loopCount, pitch, pan, gain, publish);
 	}
 	int16_t AgoraRtc::StopEffect(uint64_t soundId)
 	{
@@ -227,7 +227,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::PreloadEffect(uint64_t soundId, hstring const& file)
 	{
-		return m_rtcEngine->preloadEffect(soundId, Utils::ToString(file).c_str());
+		return m_rtcEngine->preloadEffect(soundId, Utils::To(file).c_str());
 	}
 	int16_t AgoraRtc::UnloadEffect(uint64_t soundId)
 	{
@@ -279,23 +279,23 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::SetLiveTranscoding(AgoraWinRT::LiveTranscoding const& transcoding)
 	{
-		return m_rtcEngine->setLiveTranscoding(Utils::ToRaw(transcoding));
+		return m_rtcEngine->setLiveTranscoding(Utils::To(transcoding));
 	}
 	int16_t AgoraRtc::AddPublishStreamUrl(hstring const& url, bool enabled)
 	{
-		return m_rtcEngine->addPublishStreamUrl(Utils::ToString(url).c_str(), enabled);
+		return m_rtcEngine->addPublishStreamUrl(Utils::To(url).c_str(), enabled);
 	}
 	int16_t AgoraRtc::RemovePublishStreamUrl(hstring const& url)
 	{
-		return m_rtcEngine->removePublishStreamUrl(Utils::ToString(url).c_str());
+		return m_rtcEngine->removePublishStreamUrl(Utils::To(url).c_str());
 	}
 	int16_t AgoraRtc::StartChannelMediaRelay(AgoraWinRT::ChannelMediaRelayConfiguration const& config)
 	{
-		return m_rtcEngine->startChannelMediaRelay(Utils::ToRaw(config));
+		return m_rtcEngine->startChannelMediaRelay(Utils::To(config));
 	}
 	int16_t AgoraRtc::UpdateChannelMediaRelay(AgoraWinRT::ChannelMediaRelayConfiguration const& config)
 	{
-		return m_rtcEngine->updateChannelMediaRelay(Utils::ToRaw(config));
+		return m_rtcEngine->updateChannelMediaRelay(Utils::To(config));
 	}
 	int16_t AgoraRtc::StopChannelMediaRelay()
 	{
@@ -347,7 +347,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::StartLastmileProbeTest(AgoraWinRT::LastmileProbeConfig const& config)
 	{
-		return m_rtcEngine->startLastmileProbeTest(Utils::ToRaw(config));
+		return m_rtcEngine->startLastmileProbeTest(Utils::To(config));
 	}
 	int16_t AgoraRtc::StopLastmileProbeTest()
 	{
@@ -364,7 +364,7 @@ namespace winrt::AgoraWinRT::implementation
 		QueryPerformanceCounter(&curCount);
 		curCount.QuadPart = curCount.QuadPart * 1000 / freq.QuadPart;
 		frame.timestamp(curCount.QuadPart);
-		auto raw = Utils::ToRaw(frame);
+		auto raw = Utils::To(frame);
 		auto result = m_mediaEngine->pushVideoFrame(raw);
 		Utils::Free(raw);
 		return result;
@@ -376,7 +376,7 @@ namespace winrt::AgoraWinRT::implementation
 	int16_t AgoraRtc::PushAuioFrame(AgoraWinRT::AudioFrame const& frame)
 	{
 		frame.renderTimeMs(GetTickCount64());
-		auto raw = Utils::ToRaw(frame);
+		auto raw = Utils::To(frame);
 		auto result = m_mediaEngine->pushAudioFrame(raw);
 		Utils::Free(raw);
 		return result;
@@ -387,16 +387,16 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::PullAudioFrame(AgoraWinRT::AudioFrame const& frame)
 	{
-		auto raw = Utils::ToRaw(frame);
+		auto raw = Utils::To(frame);
 		auto length = raw->samples * raw->channels * raw->bytesPerSample;
 		raw->buffer = new byte[length];
 		int result = m_mediaEngine->pullAudioFrame(raw);
-		if (result == 0) frame.buffer(Utils::FromRaw(raw->buffer, length));
+		if (result == 0) frame.buffer(Utils::To(raw->buffer, length));
 		return result;
 	}
 	int16_t AgoraRtc::AddVideoWatermark(hstring const& file, AgoraWinRT::WatermarkOptions const& option)
 	{
-		return m_rtcEngine->addVideoWatermark(Utils::ToString(file).c_str(), Utils::ToRaw(option));
+		return m_rtcEngine->addVideoWatermark(Utils::To(file).c_str(), Utils::To(option));
 	}
 	int16_t AgoraRtc::ClearVideoWatermark()
 	{
@@ -405,7 +405,7 @@ namespace winrt::AgoraWinRT::implementation
 	int16_t AgoraRtc::EnableEncryption(bool enable, AgoraWinRT::EncryptionConfig const& config)
 	{
 		if (enable) m_rtcEngine->registerPacketObserver(this);
-		return m_rtcEngine->enableEncryption(enable, Utils::ToRaw(config));
+		return m_rtcEngine->enableEncryption(enable, Utils::To(config));
 	}
 	void AgoraRtc::RegisterPacketObserver(AgoraWinRT::PacketObserver const& observer)
 	{
@@ -413,7 +413,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::StartAudioRecording(hstring const& file, uint32_t sampleRate, AgoraWinRT::AUDIO_RECORDING_QUALITY_TYPE const& type)
 	{
-		return m_rtcEngine->startAudioRecording(Utils::ToString(file).c_str(), (agora::rtc::AUDIO_RECORDING_QUALITY_TYPE)type);
+		return m_rtcEngine->startAudioRecording(Utils::To(file).c_str(), (agora::rtc::AUDIO_RECORDING_QUALITY_TYPE)type);
 	}
 	int16_t AgoraRtc::StopAudioRecording()
 	{
@@ -421,11 +421,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::AddInjectStreamUrl(hstring const& url, AgoraWinRT::InjectStreamConfig const& config)
 	{
-		return m_rtcEngine->addInjectStreamUrl(Utils::ToString(url).c_str(), Utils::ToRaw(config));
+		return m_rtcEngine->addInjectStreamUrl(Utils::To(url).c_str(), Utils::To(config));
 	}
 	int16_t AgoraRtc::RemoveInjectStreamUrl(hstring const& url)
 	{
-		return m_rtcEngine->removeInjectStreamUrl(Utils::ToString(url).c_str());
+		return m_rtcEngine->removeInjectStreamUrl(Utils::To(url).c_str());
 	}
 	int64_t AgoraRtc::CreateDataStream(bool reliable, bool ordered)
 	{
@@ -435,24 +435,24 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::SendStreamMessage(int64_t streamId, hstring const& data)
 	{
-		auto msg = Utils::ToString(data);
+		auto msg = Utils::To(data);
 		return m_rtcEngine->sendStreamMessage(streamId, msg.c_str(), msg.size());
 	}
 	int16_t AgoraRtc::EnableLoopbackRecording(bool enabled, hstring const& deviceName)
 	{
-		return m_rtcEngine->enableLoopbackRecording(enabled, Utils::ToString(deviceName).c_str());
+		return m_rtcEngine->enableLoopbackRecording(enabled, Utils::To(deviceName).c_str());
 	}
 	int16_t AgoraRtc::SetCameraCapturerConfiguration(AgoraWinRT::CameraCapturerConfiguration const& config)
 	{
-		return m_rtcEngine->setCameraCapturerConfiguration(Utils::ToRaw(config));
+		return m_rtcEngine->setCameraCapturerConfiguration(Utils::To(config));
 	}
 	int16_t AgoraRtc::SendCustomReportMessage(hstring const& id, hstring const& category, hstring const& eventName, hstring const& label, int64_t value)
 	{
 		return m_rtcEngine->sendCustomReportMessage(
-			Utils::ToString(id).c_str(),
-			Utils::ToString(category).c_str(),
-			Utils::ToString(eventName).c_str(),
-			Utils::ToString(label).c_str(),
+			Utils::To(id).c_str(),
+			Utils::To(category).c_str(),
+			Utils::To(eventName).c_str(),
+			Utils::To(label).c_str(),
 			value);
 	}
 	int16_t AgoraRtc::GetCallId(hstring& id)
@@ -466,14 +466,14 @@ namespace winrt::AgoraWinRT::implementation
 	int16_t AgoraRtc::Rate(hstring const& callId, uint8_t rating, hstring const& desc)
 	{
 		return m_rtcEngine->rate(
-			Utils::ToString(callId).c_str(),
+			Utils::To(callId).c_str(),
 			rating,
-			Utils::ToString(desc).c_str()
+			Utils::To(desc).c_str()
 		);
 	}
 	int16_t AgoraRtc::Complain(hstring const& callId, hstring const& desc)
 	{
-		return m_rtcEngine->complain(Utils::ToString(callId).c_str(), Utils::ToString(desc).c_str());
+		return m_rtcEngine->complain(Utils::To(callId).c_str(), Utils::To(desc).c_str());
 	}
 	hstring AgoraRtc::GetVersion(int64_t& build)
 	{
@@ -484,7 +484,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::SetLogFile(hstring const& file)
 	{
-		return m_rtcEngine->setLogFile(Utils::ToString(file).c_str());
+		return m_rtcEngine->setLogFile(Utils::To(file).c_str());
 	}
 	int16_t AgoraRtc::SetLogFilter(uint16_t filter)
 	{
@@ -521,7 +521,7 @@ namespace winrt::AgoraWinRT::implementation
 	AgoraWinRT::Channel AgoraRtc::CreateChannel(hstring const& channel)
 	{
 		auto engine2 = dynamic_cast<agora::rtc::IRtcEngine2*>(m_rtcEngine);
-		auto innerChannel = engine2->createChannel(Utils::ToString(channel).c_str());
+		auto innerChannel = engine2->createChannel(Utils::To(channel).c_str());
 		return winrt::make<AgoraWinRT::implementation::Channel>(innerChannel);
 	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
@@ -539,7 +539,7 @@ namespace winrt::AgoraWinRT::implementation
 	void AgoraRtc::onLeaveChannel(const agora::rtc::RtcStats& value)
 	{
 		if (m_handler) {
-			m_handler.OnLeaveChannel(Utils::FromRaw(value));
+			m_handler.OnLeaveChannel(Utils::To(value));
 		}
 	}
 	void AgoraRtc::onClientRoleChanged(agora::rtc::CLIENT_ROLE_TYPE oldRole, agora::rtc::CLIENT_ROLE_TYPE newRole)
@@ -616,7 +616,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onRtcStats(const agora::rtc::RtcStats& stats)
 	{
-		if (m_handler) m_handler.OnRtcStats(Utils::FromRaw(stats));
+		if (m_handler) m_handler.OnRtcStats(Utils::To(stats));
 	}
 	void AgoraRtc::onNetworkQuality(agora::rtc::uid_t uid, int txQuality, int rxQuality)
 	{
@@ -624,19 +624,19 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onLocalAudioStats(const agora::rtc::LocalAudioStats& stats)
 	{
-		if (m_handler) m_handler.OnLocalAudioStats(Utils::FromRaw(stats));
+		if (m_handler) m_handler.OnLocalAudioStats(Utils::To(stats));
 	}
 	void AgoraRtc::onLocalVideoStats(const agora::rtc::LocalVideoStats& stats)
 	{
-		if (m_handler) m_handler.OnLocalVideoStats(Utils::FromRaw(stats));
+		if (m_handler) m_handler.OnLocalVideoStats(Utils::To(stats));
 	}
 	void AgoraRtc::onRemoteAudioStats(const agora::rtc::RemoteAudioStats& stats)
 	{
-		if (m_handler) m_handler.OnRemoteAudioStats(Utils::FromRaw(stats));
+		if (m_handler) m_handler.OnRemoteAudioStats(Utils::To(stats));
 	}
 	void AgoraRtc::onRemoteVideoStats(const agora::rtc::RemoteVideoStats& stats)
 	{
-		if (m_handler) m_handler.OnRemoteVideoStats(Utils::FromRaw(stats));
+		if (m_handler) m_handler.OnRemoteVideoStats(Utils::To(stats));
 	}
 	void AgoraRtc::onAudioMixingStateChanged(agora::rtc::AUDIO_MIXING_STATE_TYPE state, agora::rtc::AUDIO_MIXING_ERROR_TYPE error)
 	{
@@ -680,7 +680,7 @@ namespace winrt::AgoraWinRT::implementation
 	void AgoraRtc::onAudioVolumeIndication(const agora::rtc::AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume)
 	{
 		if (m_handler) {
-			auto speakerArray = Utils::FromRaw(speakers, speakerNumber);
+			auto speakerArray = Utils::To(speakers, speakerNumber);
 			m_handler.OnAudioVolumeIndication(speakerArray, totalVolume);
 			speakerArray.clear();
 		}
@@ -704,7 +704,7 @@ namespace winrt::AgoraWinRT::implementation
 	void AgoraRtc::onLastmileProbeResult(const agora::rtc::LastmileProbeResult& result)
 	{
 		if (m_handler)
-			m_handler.OnLastmileProbeResult(Utils::FromRaw(result));
+			m_handler.OnLastmileProbeResult(Utils::To(result));
 	}
 	void AgoraRtc::onStreamInjectedStatus(const char* url, agora::rtc::uid_t uid, int status)
 	{
@@ -737,19 +737,19 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	bool AgoraRtc::onReadyToSendMetadata(agora::rtc::IMetadataObserver::Metadata& metadata)
 	{
-		auto data = Utils::FromRaw(metadata);
+		auto data = Utils::To(metadata);
 		if (m_metadataObserver) return m_metadataObserver.OnReadyToSendMetadata(*data);
 		else return true;
 	}
 	void AgoraRtc::onMetadataReceived(const agora::rtc::IMetadataObserver::Metadata& metadata)
 	{
-		auto data = Utils::FromRaw(metadata);
+		auto data = Utils::To(metadata);
 		if (m_metadataObserver) m_metadataObserver.OnMetadataReceived(*data);
 	}
 	bool AgoraRtc::onSendAudioPacket(Packet& packet)
 	{
 		if (m_packetObserver) {
-			auto data = Utils::FromRaw(packet);
+			auto data = Utils::To(packet);
 			return m_packetObserver.OnSendAudioPacket(*data);
 		}
 		else return true;
@@ -757,7 +757,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool AgoraRtc::onSendVideoPacket(Packet& packet)
 	{
 		if (m_packetObserver) {
-			auto data = Utils::FromRaw(packet);
+			auto data = Utils::To(packet);
 			return m_packetObserver.OnSendVideoPacket(*data);
 		}
 		else return true;
@@ -765,7 +765,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool AgoraRtc::onReceiveAudioPacket(Packet& packet)
 	{
 		if (m_packetObserver) {
-			auto data = Utils::FromRaw(packet);
+			auto data = Utils::To(packet);
 			return m_packetObserver.OnReceiveAudioPacket(*data);
 		}
 		else return true;
@@ -773,7 +773,7 @@ namespace winrt::AgoraWinRT::implementation
 	bool AgoraRtc::onReceiveVideoPacket(Packet& packet)
 	{
 		if (m_packetObserver) {
-			auto data = Utils::FromRaw(packet);
+			auto data = Utils::To(packet);
 			return m_packetObserver.OnReceiveVideoPacket(*data);
 		}
 		else return true;

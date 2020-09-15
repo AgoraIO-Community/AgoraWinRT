@@ -12,9 +12,9 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
+			auto data = Utils::To(videoFrame);
 			auto result = m_observer.OnCaptureVideoFrame(*data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			if (result && data->BeModified()) Utils::To(data, videoFrame);
 			return result;
 		}
 		else return true;
@@ -23,9 +23,9 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onPreEncodeVideoFrame(VideoFrame& videoFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
+			auto data = Utils::To(videoFrame);
 			auto result = m_observer.OnPreEncodeVideFrame(*data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			if (result && data->BeModified()) Utils::To(data, videoFrame);
 			return result;
 		}
 		else return true;
@@ -34,9 +34,9 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
+			auto data = Utils::To(videoFrame);
 			auto result = m_observer.OnRenderVideoFrame(uid, *data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			if (result && data->BeModified()) Utils::To(data, videoFrame);
 			return result;
 		}
 		else return true;
@@ -81,9 +81,9 @@ namespace winrt::AgoraWinRT::implementation
 	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onRenderVideoFrameEx(const char* channelId, unsigned int uid, VideoFrame& videoFrame)
 	{
 		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
+			auto data = Utils::To(videoFrame);
 			auto result = m_observer.OnRenderVideoFrameEx(Utils::To(channelId), uid, *data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
+			if (result && data->BeModified()) Utils::To(data, videoFrame);
 			return result;
 		}
 		else return true;
