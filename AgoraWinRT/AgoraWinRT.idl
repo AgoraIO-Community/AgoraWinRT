@@ -1,6 +1,7 @@
 import "AgoraWinRTTypes.idl";
 import "AgoraWinRTEnums.idl";
 import "AgoraWinRTInterfaces.idl";
+import "AgoraWinRTChannel.idl";
 
 namespace AgoraWinRT
 {
@@ -176,5 +177,8 @@ namespace AgoraWinRT
 
 		//原始视频数据
 		void RegisterVideoFrameObserver(AgoraWinRT.VideoFrameObserver observer);
+
+		//多频道
+		AgoraWinRT.Channel CreateChannel(String channel);
 	};
 }

@@ -2,150 +2,10 @@
 #include "AgoraRtc.h"
 #include "AgoraRtc.g.cpp"
 #include "Utils.h"
+#include "Channel.h"
 
 namespace winrt::AgoraWinRT::implementation
 {
-	void winrt::AgoraWinRT::implementation::RawAudioFrameObserver::RegisterObserver(AgoraWinRT::AudioFrameObserver observer)
-	{
-		m_observer = observer;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onRecordAudioFrame(AudioFrame& audioFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
-			return m_observer.OnRecordAudioFrame(*data);
-		}
-		else return true;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrame(AudioFrame& audioFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
-			return m_observer.OnPlaybackAudioFrame(*data);
-		}
-		else return true;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onMixedAudioFrame(AudioFrame& audioFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
-			return m_observer.OnMixedAudioFrame(*data);
-		}
-		else return true;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrameBeforeMixing(unsigned int uid, AudioFrame& audioFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
-			return m_observer.OnPlaybackAudioFrameBeforeMixing(uid, *data);
-		}
-		else return true;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::isMultipleChannelFrameWanted()
-	{
-		if (m_observer) return m_observer.IsMultipleChannelAudioFrameWanted();
-		else return false;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawAudioFrameObserver::onPlaybackAudioFrameBeforeMixingEx(const char* channelId, unsigned int uid, AudioFrame& audioFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(audioFrame);
-			return m_observer.OnPlaybackAudioFrameBeforeMixingEx(Utils::ToString(channelId), uid, *data);
-		}
-		else return true;
-	}
-
-	void winrt::AgoraWinRT::implementation::RawVideoFrameObserver::RegisterObserver(AgoraWinRT::VideoFrameObserver observer)
-	{
-		m_observer = observer;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
-			auto result = m_observer.OnCaptureVideoFrame(*data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
-			return result;
-		}
-		else return true;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onPreEncodeVideoFrame(VideoFrame& videoFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
-			auto result = m_observer.OnPreEncodeVideFrame(*data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
-			return result;
-		}
-		else return true;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
-			auto result = m_observer.OnRenderVideoFrame(uid, *data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
-			return result;
-		}
-		else return true;
-	}
-
-	agora::media::IVideoFrameObserver::VIDEO_FRAME_TYPE winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getVideoFormatPreference()
-	{
-		if (m_observer) return (agora::media::IVideoFrameObserver::VIDEO_FRAME_TYPE)m_observer.GetVideoFramePreference();
-		else return agora::media::IVideoFrameObserver::FRAME_TYPE_YUV420;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getRotationApplied()
-	{
-		if (m_observer) return m_observer.GetRotationApplied();
-		else return false;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getMirrorApplied()
-	{
-		if (m_observer) return m_observer.GetMirrorApplied();
-		else return false;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getSmoothRenderingEnabled()
-	{
-		if (m_observer) return m_observer.GetSmoothRenderingEnabled();
-		else return false;
-	}
-
-	uint32_t winrt::AgoraWinRT::implementation::RawVideoFrameObserver::getObservedFramePosition()
-	{
-		if (m_observer) return m_observer.GetObservedFramePosition();
-		else return agora::media::IVideoFrameObserver::POSITION_POST_CAPTURER | agora::media::IVideoFrameObserver::POSITION_PRE_RENDERER;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::isMultipleChannelFrameWanted()
-	{
-		if (m_observer) return m_observer.IsMultipleChannelVideoFrameWanted();
-		else return false;
-	}
-
-	bool winrt::AgoraWinRT::implementation::RawVideoFrameObserver::onRenderVideoFrameEx(const char* channelId, unsigned int uid, VideoFrame& videoFrame)
-	{
-		if (m_observer) {
-			auto data = Utils::FromRaw(videoFrame);
-			auto result = m_observer.OnRenderVideoFrameEx(Utils::ToString(channelId), uid, *data);
-			if (result && data->BeModified()) Utils::ToRaw(data, videoFrame);
-			return result;
-		}
-		else return true;
-	}
-
 	AgoraRtc::AgoraRtc(hstring const& vendorKey)
 	{
 		if (vendorKey.empty())
@@ -575,7 +435,8 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	int16_t AgoraRtc::SendStreamMessage(int64_t streamId, hstring const& data)
 	{
-		return m_rtcEngine->sendStreamMessage(streamId, Utils::ToString(data).c_str(), data.size());
+		auto msg = Utils::ToString(data);
+		return m_rtcEngine->sendStreamMessage(streamId, msg.c_str(), msg.size());
 	}
 	int16_t AgoraRtc::EnableLoopbackRecording(bool enabled, hstring const& deviceName)
 	{
@@ -598,7 +459,7 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		agora::util::AString callId;
 		auto result = m_rtcEngine->getCallId(callId);
-		if (result == 0) id = Utils::ToString(callId.get()->c_str());
+		if (result == 0) id = Utils::To(callId.get()->c_str());
 		else id = hstring{};
 		return result;
 	}
@@ -619,7 +480,7 @@ namespace winrt::AgoraWinRT::implementation
 		int version;
 		auto result = m_rtcEngine->getVersion(&version);
 		build = version;
-		return Utils::ToString(result);
+		return Utils::To(result);
 	}
 	int16_t AgoraRtc::SetLogFile(hstring const& file)
 	{
@@ -635,7 +496,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	hstring AgoraRtc::GetErrorDesc(int64_t code)
 	{
-		return Utils::ToString(m_rtcEngine->getErrorDescription(code));
+		return Utils::To(m_rtcEngine->getErrorDescription(code));
 	}
 	void AgoraRtc::RegisterAudioFrameObserver(AgoraWinRT::AudioFrameObserver const& observer)
 	{
@@ -657,17 +518,23 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		m_rawVideoFrameObserver->RegisterObserver(observer);
 	}
+	AgoraWinRT::Channel AgoraRtc::CreateChannel(hstring const& channel)
+	{
+		auto engine2 = dynamic_cast<agora::rtc::IRtcEngine2*>(m_rtcEngine);
+		auto innerChannel = engine2->createChannel(Utils::ToString(channel).c_str());
+		return winrt::make<AgoraWinRT::implementation::Channel>(innerChannel);
+	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
 	{
 		if (m_handler) m_handler.OnConnectionStateChanged((CONNECTION_STATE_TYPE)type, (CONNECTION_CHANGED_REASON_TYPE)reason);
 	}
 	void AgoraRtc::onJoinChannelSuccess(const char* channel, agora::rtc::uid_t uid, int elapsed)
 	{
-		if (m_handler) m_handler.OnJoinChannelSuccess(Utils::ToString(channel), uid, elapsed);
+		if (m_handler) m_handler.OnJoinChannelSuccess(Utils::To(channel), uid, elapsed);
 	}
 	void AgoraRtc::onRejoinChannelSuccess(const char* channel, agora::rtc::uid_t uid, int elapsed)
 	{
-		if (m_handler) m_handler.OnRejoinChannelSuccess(Utils::ToString(channel), uid, elapsed);
+		if (m_handler) m_handler.OnRejoinChannelSuccess(Utils::To(channel), uid, elapsed);
 	}
 	void AgoraRtc::onLeaveChannel(const agora::rtc::RtcStats& value)
 	{
@@ -697,7 +564,7 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onTokenPrivilegeWillExpire(const char* token)
 	{
-		if (m_handler) m_handler.OnTokenPrivilegeWillExpire(Utils::ToString(token));
+		if (m_handler) m_handler.OnTokenPrivilegeWillExpire(Utils::To(token));
 	}
 	void AgoraRtc::onRequestToken()
 	{
@@ -721,11 +588,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onAudioPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed)
 	{
-		if (m_handler) m_handler.OnAudioPublishStateChanged(Utils::ToString(channel), (AgoraWinRT::STREAM_PUBLISH_STATE)oldState, (AgoraWinRT::STREAM_PUBLISH_STATE)newState, elapsed);
+		if (m_handler) m_handler.OnAudioPublishStateChanged(Utils::To(channel), (AgoraWinRT::STREAM_PUBLISH_STATE)oldState, (AgoraWinRT::STREAM_PUBLISH_STATE)newState, elapsed);
 	}
 	void AgoraRtc::onVideoPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed)
 	{
-		if (m_handler) m_handler.OnVideoPublishStateChanged(Utils::ToString(channel), (AgoraWinRT::STREAM_PUBLISH_STATE)oldState, (AgoraWinRT::STREAM_PUBLISH_STATE)newState, elapsed);
+		if (m_handler) m_handler.OnVideoPublishStateChanged(Utils::To(channel), (AgoraWinRT::STREAM_PUBLISH_STATE)oldState, (AgoraWinRT::STREAM_PUBLISH_STATE)newState, elapsed);
 	}
 	void AgoraRtc::onRemoteAudioStateChanged(agora::rtc::uid_t uid, agora::rtc::REMOTE_AUDIO_STATE state, agora::rtc::REMOTE_AUDIO_STATE_REASON reason, int elapsed)
 	{
@@ -741,11 +608,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onAudioSubscribeStateChanged(const char* channel, agora::rtc::uid_t uid, agora::rtc::STREAM_SUBSCRIBE_STATE oldState, agora::rtc::STREAM_SUBSCRIBE_STATE newState, int elapsed)
 	{
-		if (m_handler) m_handler.OnAudioSubscribeStateChanged(Utils::ToString(channel), uid, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)oldState, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)newState, elapsed);
+		if (m_handler) m_handler.OnAudioSubscribeStateChanged(Utils::To(channel), uid, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)oldState, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)newState, elapsed);
 	}
 	void AgoraRtc::onVideoSubscribeStateChanged(const char* channel, agora::rtc::uid_t uid, agora::rtc::STREAM_SUBSCRIBE_STATE oldState, agora::rtc::STREAM_SUBSCRIBE_STATE newState, int elapsed)
 	{
-		if (m_handler) m_handler.OnVideoSubscribeStateChanged(Utils::ToString(channel), uid, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)oldState, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)newState, elapsed);
+		if (m_handler) m_handler.OnVideoSubscribeStateChanged(Utils::To(channel), uid, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)oldState, (AgoraWinRT::STREAM_SUBSCRIBE_STATE)newState, elapsed);
 	}
 	void AgoraRtc::onRtcStats(const agora::rtc::RtcStats& stats)
 	{
@@ -789,11 +656,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onRtmpStreamingStateChanged(const char* url, agora::rtc::RTMP_STREAM_PUBLISH_STATE state, agora::rtc::RTMP_STREAM_PUBLISH_ERROR error)
 	{
-		if (m_handler) m_handler.OnRtmpStreamingStateChanged(Utils::ToString(url), (AgoraWinRT::RTMP_STREAM_PUBLISH_STATE)state, (AgoraWinRT::RTMP_STREAM_PUBLISH_ERROR)error);
+		if (m_handler) m_handler.OnRtmpStreamingStateChanged(Utils::To(url), (AgoraWinRT::RTMP_STREAM_PUBLISH_STATE)state, (AgoraWinRT::RTMP_STREAM_PUBLISH_ERROR)error);
 	}
 	void AgoraRtc::onRtmpStreamingEvent(const char* url, agora::rtc::RTMP_STREAMING_EVENT code)
 	{
-		if (m_handler) m_handler.OnRtmpStreamingEvent(Utils::ToString(url), (AgoraWinRT::RTMP_STREAMING_EVENT)code);
+		if (m_handler) m_handler.OnRtmpStreamingEvent(Utils::To(url), (AgoraWinRT::RTMP_STREAMING_EVENT)code);
 	}
 	void AgoraRtc::onTranscodingUpdated()
 	{
@@ -841,11 +708,11 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onStreamInjectedStatus(const char* url, agora::rtc::uid_t uid, int status)
 	{
-		if (m_handler) m_handler.OnStreamInjectedStatus(Utils::ToString(url), uid, (AgoraWinRT::INJECT_STREAM_STATUS)status);
+		if (m_handler) m_handler.OnStreamInjectedStatus(Utils::To(url), uid, (AgoraWinRT::INJECT_STREAM_STATUS)status);
 	}
 	void AgoraRtc::onStreamMessage(agora::rtc::uid_t uid, int streamId, const char* data, size_t length)
 	{
-		if (m_handler) m_handler.OnStreamMessage(uid, streamId, Utils::ToString(data));
+		if (m_handler) m_handler.OnStreamMessage(uid, streamId, Utils::To(data));
 	}
 	void AgoraRtc::onStreamMessageError(agora::rtc::uid_t uid, int streamId, int code, int missed, int cached)
 	{
@@ -853,15 +720,15 @@ namespace winrt::AgoraWinRT::implementation
 	}
 	void AgoraRtc::onWarning(int warn, const char* msg)
 	{
-		if (m_handler) m_handler.OnWarning(warn, Utils::ToString(msg));
+		if (m_handler) m_handler.OnWarning(warn, Utils::To(msg));
 	}
 	void AgoraRtc::onError(int err, const char* msg)
 	{
-		if (m_handler) m_handler.OnError(err, Utils::ToString(msg));
+		if (m_handler) m_handler.OnError(err, Utils::To(msg));
 	}
 	void AgoraRtc::onApiCallExecuted(int err, const char* api, const char* result)
 	{
-		if (m_handler) m_handler.OnApiCallExecuted(err, Utils::ToString(api), Utils::ToString(result));
+		if (m_handler) m_handler.OnApiCallExecuted(err, Utils::To(api), Utils::To(result));
 	}
 	int AgoraRtc::getMaxMetadataSize()
 	{
@@ -872,7 +739,7 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		auto data = Utils::FromRaw(metadata);
 		if (m_metadataObserver) return m_metadataObserver.OnReadyToSendMetadata(*data);
-		return true;
+		else return true;
 	}
 	void AgoraRtc::onMetadataReceived(const agora::rtc::IMetadataObserver::Metadata& metadata)
 	{

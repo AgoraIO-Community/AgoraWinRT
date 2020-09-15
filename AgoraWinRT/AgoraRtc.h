@@ -1,45 +1,11 @@
 #pragma once
 #include "pch.h"
 #include "AgoraRtc.g.h"
+#include "RawAudioFrameObsever.h"
+#include "RawVideoFrameObserver.h"
 
 namespace winrt::AgoraWinRT::implementation
 {
-    class RawAudioFrameObserver : public agora::media::IAudioFrameObserver
-    {
-    public:
-        void RegisterObserver(AgoraWinRT::AudioFrameObserver observer);
-
-        // 通过 IAudioFrameObserver 继承
-        virtual bool onRecordAudioFrame(AudioFrame& audioFrame) override;
-        virtual bool onPlaybackAudioFrame(AudioFrame& audioFrame) override;
-        virtual bool onMixedAudioFrame(AudioFrame& audioFrame) override;
-        virtual bool onPlaybackAudioFrameBeforeMixing(unsigned int uid, AudioFrame& audioFrame) override;
-        virtual bool isMultipleChannelFrameWanted() override;
-        virtual bool onPlaybackAudioFrameBeforeMixingEx(const char* channelId, unsigned int uid, AudioFrame& audioFrame) override;
-    private:
-        AgoraWinRT::AudioFrameObserver m_observer{ nullptr };
-    };
-
-    class RawVideoFrameObserver : public agora::media::IVideoFrameObserver
-    {
-    public:
-        void RegisterObserver(AgoraWinRT::VideoFrameObserver observer);
-
-        // 通过 IVideoFrameObserver 继承
-        virtual bool onCaptureVideoFrame(VideoFrame& videoFrame) override;
-        virtual bool onPreEncodeVideoFrame(VideoFrame& videoFrame) override;
-        virtual bool onRenderVideoFrame(unsigned int uid, VideoFrame& videoFrame) override;
-        virtual VIDEO_FRAME_TYPE getVideoFormatPreference() override;
-        virtual bool getRotationApplied();
-        virtual bool getMirrorApplied();
-        virtual bool getSmoothRenderingEnabled();
-        virtual uint32_t getObservedFramePosition();
-        virtual bool isMultipleChannelFrameWanted();
-        virtual bool onRenderVideoFrameEx(const char* channelId, unsigned int uid, VideoFrame& videoFrame) override;
-
-    private:
-        AgoraWinRT::VideoFrameObserver m_observer{ nullptr };
-    };
 
     struct AgoraRtc : AgoraRtcT<AgoraRtc>,
         public agora::rtc::IRtcEngineEventHandler,
@@ -191,7 +157,8 @@ namespace winrt::AgoraWinRT::implementation
         int16_t SetMixedAudioFrameParameters(uint32_t sampleRate, uint32_t samplesPerCall);
         //原始视频数据
         void RegisterVideoFrameObserver(AgoraWinRT::VideoFrameObserver const& observer);
-
+        //多频道
+        AgoraWinRT::Channel CreateChannel(hstring const& channel);
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
         agora::media::IMediaEngine* m_mediaEngine{ nullptr };

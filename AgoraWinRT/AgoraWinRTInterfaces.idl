@@ -100,4 +100,5 @@ namespace AgoraWinRT
 		Boolean IsMultipleChannelVideoFrameWanted();
 		Boolean OnRenderVideoFrameEx(String channel, UInt64 uid, AgoraWinRT.VideoFrame frame);
 	};
+
 }

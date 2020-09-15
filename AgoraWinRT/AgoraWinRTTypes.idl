@@ -296,5 +296,10 @@ namespace AgoraWinRT
         UInt16 rotation;
         Int64 renderTimeMs;
         Int64 avsync_type;
-    }
+    };
+    struct ChannelMediaOptions
+    {
+        Boolean autoSubscribeAudio;
+        Boolean autoSubscribeVideo;
+    };
 }

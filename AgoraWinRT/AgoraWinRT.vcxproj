@@ -119,18 +119,22 @@
   <ItemGroup>
     <ClInclude Include="AgoraRtc.h" />
     <ClInclude Include="AudioFrame.h" />
+    <ClInclude Include="Channel.h" />
     <ClInclude Include="ChannelMediaRelayConfiguration.h" />
     <ClInclude Include="ExternalVideoFrame.h" />
     <ClInclude Include="LiveTranscoding.h" />
     <ClInclude Include="Metadata.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RawAudioFrameObsever.h" />
+    <ClInclude Include="RawVideoFrameObserver.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VideoFrame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AgoraRtc.cpp" />
     <ClCompile Include="AudioFrame.cpp" />
+    <ClCompile Include="Channel.cpp" />
     <ClCompile Include="ChannelMediaRelayConfiguration.cpp" />
     <ClCompile Include="ExternalVideoFrame.cpp" />
     <ClCompile Include="LiveTranscoding.cpp" />
@@ -140,6 +144,9 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="RawAudioFrameObsever.cpp" />
+    <ClCompile Include="RawVideoFrameObserver.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VideoFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +154,7 @@
     <Midl Include="AgoraWinRTEnums.idl" />
     <Midl Include="AgoraWinRTInterfaces.idl" />
     <Midl Include="AgoraWinRTTypes.idl" />
+    <Midl Include="AgoraWinRTChannel.idl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />
