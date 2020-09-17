@@ -4,13 +4,7 @@
 
 namespace winrt::AgoraWinRT::implementation
 {
-    VideoFrame::VideoFrame():
-        m_beModified(false),
-        m_yBuffer(com_array<uint8_t>()),
-        m_uBuffer(com_array<uint8_t>()),
-        m_vBuffer(com_array<uint8_t>())
-    {
-    }
+
     VideoFrame::~VideoFrame()
     {
         Close();

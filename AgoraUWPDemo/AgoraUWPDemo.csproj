@@ -130,6 +130,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="agora_rtc_sdk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -153,6 +156,16 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AgoraUWP\AgoraUWP.csproj">
+      <Project>{ee89e131-4ec6-4d78-b441-974d3d42a5c0}</Project>
+      <Name>AgoraUWP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AgoraWinRT\AgoraWinRT.vcxproj">
+      <Project>{e0a7ed14-861f-4eb9-ba03-c1485ea79358}</Project>
+      <Name>AgoraWinRT</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

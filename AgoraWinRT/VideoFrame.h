@@ -5,10 +5,9 @@ namespace winrt::AgoraWinRT::implementation
 {
     struct VideoFrame : VideoFrameT<VideoFrame>
     {
-        VideoFrame();
+        VideoFrame() = default;
         ~VideoFrame();
 
-    public:
         bool BeModified();
         void BeModified(bool value);
         AgoraWinRT::VIDEO_FRAME_TYPE type();
@@ -37,16 +36,16 @@ namespace winrt::AgoraWinRT::implementation
         void avsync_type(int64_t value);
         void Close();
     private:
-        bool m_beModified;
+        bool m_beModified = false;
         AgoraWinRT::VIDEO_FRAME_TYPE m_type;
         uint32_t m_width;
         uint32_t m_height;
         uint32_t m_yStride;
         uint32_t m_uStride;
         uint32_t m_vStride;
-        com_array<uint8_t> m_yBuffer;
-        com_array<uint8_t> m_uBuffer;
-        com_array<uint8_t> m_vBuffer;
+        com_array<uint8_t> m_yBuffer = com_array<uint8_t>();
+        com_array<uint8_t> m_uBuffer = com_array<uint8_t>();
+        com_array<uint8_t> m_vBuffer = com_array<uint8_t>();
         uint16_t m_rotation;
         int64_t m_renderTimeMs;
         int64_t m_avsync_type;

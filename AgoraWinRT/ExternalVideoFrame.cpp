@@ -4,10 +4,6 @@
 
 namespace winrt::AgoraWinRT::implementation
 {
-	ExternalVideoFrame::ExternalVideoFrame() :
-		m_buffer(com_array<uint8_t>())
-	{
-	}
 	ExternalVideoFrame::~ExternalVideoFrame()
 	{
 		Close();

@@ -5,7 +5,7 @@ namespace winrt::AgoraWinRT::implementation
 {
     struct ExternalVideoFrame : ExternalVideoFrameT<ExternalVideoFrame>
     {
-        ExternalVideoFrame();
+        ExternalVideoFrame() = default;
 
         ~ExternalVideoFrame();
 

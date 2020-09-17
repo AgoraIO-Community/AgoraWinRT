@@ -215,7 +215,7 @@ namespace AgoraWinRT
         UInt16 rotation;
         Int64 timestamp;
     };
-    runtimeclass AudioFrame : Windows.Foundation.IClosable 
+    runtimeclass AudioFrame : Windows.Foundation.IClosable
     {
         AgoraWinRT.AUDIO_FRAME_TYPE type;
         UInt32 samples;  //number of samples for each channel in this frame
@@ -302,4 +302,5 @@ namespace AgoraWinRT
         Boolean autoSubscribeAudio;
         Boolean autoSubscribeVideo;
     };
+
 }

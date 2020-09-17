@@ -4,62 +4,67 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Media.Capture;
+using Windows.Media.Capture.Frames;
+using Windows.Media.MediaProperties;
+using Windows.Security.Cryptography.Core;
+using Windows.UI.Xaml.Media;
 
 namespace AgoraUWP
 {
-    public class AgoraUWP: AgoraWinRT.AgoraRtcEventHandler
+    public class AgoraRtc : AgoraWinRT.AgoraRtc
     {
-        public void OnConnectionStateChanged(CONNECTION_STATE_TYPE type, CONNECTION_CHANGED_REASON_TYPE reason)
+        private VideoCanvas localVideo = null;
+
+        public AgoraRtc(string vendorKey): base(vendorKey)
         {
-            throw new NotImplementedException();
+            this.SetExternalVideoSource(true, false);
+            _ = this.InitCaptureAsync();
         }
 
-        public void OnJoinChannelSuccess(string channel, ulong uid, uint elapsed)
+        private async Task InitCaptureAsync()
         {
-            throw new NotImplementedException();
+            var mediaCapture = new MediaCapture();
+            var sourceGroup = await MediaFrameSourceGroup.FindAllAsync();
+            if (sourceGroup.Count == 0) return;
+            await mediaCapture.InitializeAsync(
+                new MediaCaptureInitializationSettings
+                {
+                    SourceGroup = sourceGroup[0],
+                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
+                    StreamingCaptureMode = StreamingCaptureMode.AudioAndVideo,
+                    MemoryPreference = MediaCaptureMemoryPreference.Auto,
+                });
+            foreach (MediaFrameSource source in mediaCapture.FrameSources.Values)
+            {
+                if (source.Info.SourceKind == MediaFrameSourceKind.Color)
+                {
+                    MediaFrameReader reader = await mediaCapture.CreateFrameReaderAsync(source, MediaEncodingSubtypes.Nv12);
+                    reader.FrameArrived += VideoFrameArrivedEvent;
+                    await reader.StartAsync();
+                }
+            }
         }
 
-        public void OnRejoinChannelSuccess(string channel, ulong uid, uint elapsed)
+        private void VideoFrameArrivedEvent(MediaFrameReader sender, MediaFrameArrivedEventArgs args)
         {
-            throw new NotImplementedException();
+            using(var frame = sender.TryAcquireLatestFrame())
+            {
+                if (frame == null) return;
+                var buffer = frame.BufferMediaFrame;
+                if (buffer == null) return;
+                var format = frame.VideoMediaFrame?.VideoFormat;
+                if (format == null) return;
+
+            }
         }
 
-        public void OnLeaveChannel(RtcStats stats)
+        public void SetupLocalVideo(VideoCanvas videoCanvas)
         {
-            throw new NotImplementedException();
+            this.localVideo = videoCanvas;
         }
 
-        public void OnClientRoleChanged(CLIENT_ROLE_TYPE oldRole, CLIENT_ROLE_TYPE newRole)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnUserJoined(ulong uid, uint elapsed)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnUserOffline(ulong uid, USER_OFFLINE_REASON_TYPE reason)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnNetworkTypeChanged(NETWORK_TYPE type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnConnectionLost()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnTokenPrivilegeWillExpire(string token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnRequestToken()
+        public void StartPreview()
         {
             throw new NotImplementedException();
         }

@@ -6,7 +6,7 @@ import "AgoraWinRTChannel.idl";
 namespace AgoraWinRT
 {
 	[default_interface]
-	runtimeclass AgoraRtc : Windows.Foundation.IClosable
+	unsealed runtimeclass AgoraRtc : Windows.Foundation.IClosable
 	{
 		AgoraRtc(String vendorKey);
 		
