@@ -58,14 +58,14 @@ namespace AgoraUWPDemo
 
         private void StartEngineAndPreview(object sender, RoutedEventArgs e)
         {
-            var test = new AgoraWinRT.Test();
             if (this.engine != null) this.engine.Dispose();
             this.engine = new AgoraRtc(txtVendorKey.Text);
             this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
             this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
-            this.engine.SetupLocalVideo(new VideoCanvas() { Source = localVideo.Source, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE });
+            this.engine.SetupLocalVideo(new ImageVideoCanvas() { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE });
             this.log("enable video", this.engine.EnableVideo());
             this.engine.StartPreview();
+            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
 
         }
 

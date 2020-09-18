@@ -1,33 +1,17 @@
-﻿using AgoraWinRT;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Media.Capture.Frames;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace AgoraUWP
 {
-    public abstract class VideoCanvas
-    {
-        public abstract object Target { get; set; }
-        public AgoraWinRT.RENDER_MODE_TYPE RenderMode { get; set; } = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE;
-        public String Channel { get; set; } = null;
-        public UInt64 User { get; set; } = 0;
-        public AgoraWinRT.VIDEO_MIRROR_MODE_TYPE MirrorMode { get; set; } = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED;
-
-        public virtual void Render(MediaFrameReference frame) { }
-
-        public virtual void Render(VideoFrame frame) { }
-    }
-
     [ComImport]
     [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -36,27 +20,37 @@ namespace AgoraUWP
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
-    public class ImageVideoCanvas : VideoCanvas
+    public interface IVideoFrameRender
     {
-        private Image target;
+        bool Rendering { get; set; }
+        VideoCanvas Canvas { get; set; }
+
+        void RenderFrame(MediaFrameReference frame);
+    }
+
+    public class ImageVideoFrameRender : IVideoFrameRender<Image>
+    {
         private SoftwareBitmap backBuffer;
-        private bool running;
-        private SoftwareBitmapSource source;
+        private bool running = false;
+        private bool rendering = false;
+        private VideoCanvas<Image> canvas = null;
+        private SoftwareBitmapSource target = null;
 
-        public override object Target { 
-            get=> target; 
-            set {
-                target = value as Image;
-                if (target != null)
-                {
-                    target.Source = new SoftwareBitmapSource();
-                    this.source = (SoftwareBitmapSource)target.Source;
-                }
-            } }
-
-        public override void Render(MediaFrameReference frame)
+        public bool Rendering { get => rendering; set => rendering = value; }
+        public VideoCanvas<Image> Canvas
         {
-            if (source == null) return;
+            get => canvas;
+            set
+            {
+                canvas = value;
+                target = (SoftwareBitmapSource)canvas?.Target.Source;
+            }
+
+        }
+
+        public void RenderFrame(MediaFrameReference frame)
+        {
+            if (!Rendering || Canvas == null || Canvas.Target == null) return;
             var bitmap = ConvertToImage(frame?.VideoMediaFrame);
             RenderBitmap(bitmap);
         }
@@ -67,7 +61,7 @@ namespace AgoraUWP
             bitmap = Interlocked.Exchange(ref this.backBuffer, bitmap);
             bitmap?.Dispose();
 
-            _ = target.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+            _ = Canvas.Target.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 async () =>
                 {
                     if (this.running) return;
@@ -76,8 +70,7 @@ namespace AgoraUWP
                     SoftwareBitmap tempBitmap;
                     while ((tempBitmap = Interlocked.Exchange(ref this.backBuffer, null)) != null)
                     {
-                  
-                        await source?.SetBitmapAsync(tempBitmap);
+                        await target?.SetBitmapAsync(tempBitmap);
                         tempBitmap.Dispose();
                     }
 
@@ -93,6 +86,5 @@ namespace AgoraUWP
                 return SoftwareBitmap.Convert(inputBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
             }
         }
-        
     }
 }

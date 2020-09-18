@@ -22,15 +22,28 @@
                     <RowDefinition Height="auto" MinHeight="200"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Vendor Key:" Grid.Column="0" Grid.Row="0" />
-                <TextBox x:Name="txtVendorKey" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Text="c021e195268048418d8176e3d7a8e8bd" />
+                <TextBox x:Name="txtVendorKey" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Text="3d09433bedce4d68b50d444772728d0d" />
                 <TextBlock Text="Channel Name:" Grid.Column="0" Grid.Row="1"/>
                 <TextBox x:Name="txtChannelName" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Text="666"/>
                 <TextBlock Text="Channel Token:" Grid.Column="0" Grid.Row="2"/>
-                <TextBox x:Name="txtChannelToken" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Text="006c021e195268048418d8176e3d7a8e8bdIADb5FhzAxq4N7VaTBQn9QFVAnNmlHZkl0dLkoFbcKH49dxEAZkAAAAAEAB44TxzjyhIXwEAAQCQKEhf" />
+                <TextBox x:Name="txtChannelToken" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Text="" />
                 <TextBlock Text="调用结果:" Grid.Column="0" Grid.Row="3"/>
                 <TextBox x:Name="txtResult" Grid.Column="1" Grid.Row="3" 
                      HorizontalAlignment="Stretch" MaxHeight="200" AcceptsReturn="True" 
                      TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </Grid>
+            <Grid Margin="12" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="btnStart" Content="正常打开" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"/>
+                <Button x:Name="btnStartWithExternalAudio" Content="通过ExternalAudio打开" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" />
+                <Button x:Name="btnStartWithPullAudio" Content="使用PullAudioFrame打开" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" />
             </Grid>
             <Grid Margin="12">
                 <Grid.ColumnDefinitions>
@@ -49,20 +62,7 @@
                     <Image x:Name="remoteVideo" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </StackPanel>
             </Grid>
-            <TextBlock Text="三种打开一次只能使用一个，打开后再使用另一个，需要重启程序再进入" HorizontalAlignment="Stretch" Margin="15"/>
-            <Grid Margin="12" ColumnSpacing="12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Button x:Name="btnStart" Content="正常打开" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"/>
-                <Button x:Name="btnStartWithExternalAudio" Content="通过ExternalAudio打开" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" />
-                <Button x:Name="btnStartWithPullAudio" Content="使用PullAudioFrame打开" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" />
-            </Grid>
+            
         </StackPanel>
     </Grid>
 </Page>

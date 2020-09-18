@@ -203,6 +203,7 @@ namespace AgoraWinRT
     };
     runtimeclass ExternalVideoFrame : Windows.Foundation.IClosable
     {
+        ExternalVideoFrame();
         AgoraWinRT.VIDEO_BUFFER_TYPE type;
         AgoraWinRT.VIDEO_PIXEL_FORMAT format;
         UInt8[] buffer;

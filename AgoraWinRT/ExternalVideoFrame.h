@@ -36,7 +36,7 @@ namespace winrt::AgoraWinRT::implementation
     private:
         AgoraWinRT::VIDEO_BUFFER_TYPE m_type;
         AgoraWinRT::VIDEO_PIXEL_FORMAT m_format;
-        com_array<uint8_t> m_buffer;
+        com_array<uint8_t> m_buffer = com_array<uint8_t>();
         uint32_t m_stride;
         uint32_t m_height;
         uint32_t m_cropLeft;
@@ -45,5 +45,12 @@ namespace winrt::AgoraWinRT::implementation
         uint32_t m_cropBottom;
         uint16_t m_rotation;
         int64_t m_timestamp;
+    };
+}
+namespace winrt::AgoraWinRT::factory_implementation
+{
+    struct ExternalVideoFrame : ExternalVideoFrameT<ExternalVideoFrame, implementation::ExternalVideoFrame>
+    {
+
     };
 }
