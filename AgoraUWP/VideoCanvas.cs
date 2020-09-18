@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Media.Capture.Frames;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -57,8 +59,7 @@ namespace AgoraUWP
         public override void Render(MediaFrameReference frame)
         {
             if (source == null) return;
-            var bitmap = ConvertToImage(frame?.VideoMediaFrame);
-            RenderBitmap(bitmap);
+            RenderBitmap(ConvertToImage(frame?.VideoMediaFrame));
         }
 
         private void RenderBitmap(SoftwareBitmap bitmap)
@@ -93,6 +94,38 @@ namespace AgoraUWP
                 return SoftwareBitmap.Convert(inputBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
             }
         }
-        
+
+        public override void Render(VideoFrame frame)
+        {
+            if (source == null) return;
+            var nvBuffer = ConvertToNv12(frame);
+            var image = ConvertToImage(nvBuffer, (int)frame.width, (int)frame.height);
+            RenderBitmap(image);
+        }
+
+        private byte[] ConvertToNv12(VideoFrame frame)
+        {
+            var size = frame.width * frame.height;
+            var totalLength = size * 3 / 2;
+            var result = new byte[totalLength];
+            var ybuffer = frame.yBuffer;
+            Array.Copy(ybuffer, result, ybuffer.Length);
+            byte[] ubuffer = frame.uBuffer, vbuffer = frame.vBuffer;
+            for (int i = (int)size, j = 0; i < totalLength; j++)
+            {
+                result[i++] = ubuffer[j];
+                result[i++] = vbuffer[j];
+            }
+            return result;
+        }
+
+        private unsafe SoftwareBitmap ConvertToImage(byte[] input, int width, int height)
+        {
+            using (var yuv = SoftwareBitmap.CreateCopyFromBuffer(input.AsBuffer(), BitmapPixelFormat.Nv12, width, height))
+            {
+                return SoftwareBitmap.Convert(yuv, BitmapPixelFormat.Bgra8);
+            }
+
+        }
     }
 }

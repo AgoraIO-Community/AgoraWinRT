@@ -180,31 +180,31 @@ namespace winrt::AgoraWinRT::implementation
         void onConnectionLost() override;
         void onTokenPrivilegeWillExpire(const char* token) override;
         void onRequestToken() override;
-        //本地媒体事件
+        ////本地媒体事件
         void onLocalAudioStateChanged(agora::rtc::LOCAL_AUDIO_STREAM_STATE state, agora::rtc::LOCAL_AUDIO_STREAM_ERROR error) override;
         void onLocalVideoStateChanged(agora::rtc::LOCAL_VIDEO_STREAM_STATE state, agora::rtc::LOCAL_VIDEO_STREAM_ERROR error) override;
         void onFirstLocalAudioFramePublished(int elapsed) override;
         void onFirstLocalVideoFramePublished(int elapsed) override;
         void onAudioPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed) override;
         void onVideoPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed) override;
-        //远端媒体事件
+        ////远端媒体事件
         void onRemoteAudioStateChanged(agora::rtc::uid_t uid, agora::rtc::REMOTE_AUDIO_STATE state, agora::rtc::REMOTE_AUDIO_STATE_REASON reason, int elapsed);
         void onRemoteVideoStateChanged(agora::rtc::uid_t uid, agora::rtc::REMOTE_VIDEO_STATE state, agora::rtc::REMOTE_VIDEO_STATE_REASON reason, int elapsed);
         void onFirstRemoteVideoFrame(agora::rtc::uid_t uid, int width, int height, int elapsed);
         void onAudioSubscribeStateChanged(const char* channel, agora::rtc::uid_t uid, agora::rtc::STREAM_SUBSCRIBE_STATE oldState, agora::rtc::STREAM_SUBSCRIBE_STATE newState, int elapsed);
         void onVideoSubscribeStateChanged(const char* channel, agora::rtc::uid_t uid, agora::rtc::STREAM_SUBSCRIBE_STATE oldState, agora::rtc::STREAM_SUBSCRIBE_STATE newState, int elapsed);
-        //数据统计事件
+        ////数据统计事件
         void onRtcStats(const agora::rtc::RtcStats& stats) override;
         void onNetworkQuality(agora::rtc::uid_t uid, int txQuality, int rxQuality) override;
         void onLocalAudioStats(const agora::rtc::LocalAudioStats& stats) override;
         void onLocalVideoStats(const agora::rtc::LocalVideoStats& stats) override;
         void onRemoteAudioStats(const agora::rtc::RemoteAudioStats& stats) override;
         void onRemoteVideoStats(const agora::rtc::RemoteVideoStats& stats) override;
-        //音乐文件播放及管理
+        ////音乐文件播放及管理
         void onAudioMixingStateChanged(agora::rtc::AUDIO_MIXING_STATE_TYPE state, agora::rtc::AUDIO_MIXING_ERROR_TYPE error) override;
         void onRemoteAudioMixingBegin() override;
         void onRemoteAudioMixingEnd() override;
-        //音效文件播放及管理
+        ////音效文件播放及管理
         void onAudioEffectFinished(int soundId) override;
         //CDN推流
         void onRtmpStreamingStateChanged(const char* url, agora::rtc::RTMP_STREAM_PUBLISH_STATE state, agora::rtc::RTMP_STREAM_PUBLISH_ERROR error) override;
@@ -216,7 +216,7 @@ namespace winrt::AgoraWinRT::implementation
         //音量提示
         void onAudioVolumeIndication(const agora::rtc::AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume) override;
         void onActiveSpeaker(agora::rtc::uid_t uid) override;
-        //视频流回退
+        ////视频流回退
         void onLocalPublishFallbackToAudioOnly(bool isFallbackOrRecover) override;
         void onRemoteSubscribeFallbackToAudioOnly(agora::rtc::uid_t uid, bool isFallbackOrRecover) override;
         //通话前网络测试
@@ -224,10 +224,10 @@ namespace winrt::AgoraWinRT::implementation
         void onLastmileProbeResult(const agora::rtc::LastmileProbeResult& result) override;
         //直播输入在线媒体流
         void onStreamInjectedStatus(const char* url, agora::rtc::uid_t uid, int status) override;
-        //流消息
+        ////流消息
         void onStreamMessage(agora::rtc::uid_t uid, int streamId, const char* data, size_t length) override;
         void onStreamMessageError(agora::rtc::uid_t uid, int streamId, int code, int missed, int cached) override;
-        //其他事件
+        ////其他事件
         void onWarning(int warn, const char* msg) override;
         void onError(int err, const char* msg) override;
         void onApiCallExecuted(int err, const char* api, const char* result) override;

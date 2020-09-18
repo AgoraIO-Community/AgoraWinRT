@@ -23,6 +23,7 @@ namespace AgoraUWP
         private VideoCanvas localVideo = null;
         private bool previewing;
         private bool joinChanneled;
+        private VideoCanvas remoteVideo = null;
 
         public AgoraRtc(string vendorKey): base(vendorKey)
         {
@@ -78,6 +79,11 @@ namespace AgoraUWP
                 }
                 Preview(frame);
             }
+        }
+
+        public void SetupRemoteVideo(VideoCanvas videoCanvas)
+        {
+            this.remoteVideo = videoCanvas;
         }
 
         private void Preview(MediaFrameReference frame)
@@ -423,11 +429,13 @@ namespace AgoraUWP
 
         bool VideoFrameObserver.OnPreEncodeVideFrame(VideoFrame frame)
         {
+            this.localVideo?.Render(frame);
             return OnPreEncodeVideFrame == null ? true : OnPreEncodeVideFrame(frame);
         }
 
         bool VideoFrameObserver.OnRenderVideoFrame(ulong uid, VideoFrame frame)
         {
+            this.remoteVideo?.Render(frame);
             return OnRenderVideoFrame == null ? true : OnRenderVideoFrame(uid, frame);
         }
 
@@ -453,7 +461,7 @@ namespace AgoraUWP
 
         uint VideoFrameObserver.GetObservedFramePosition()
         {
-            return GetObservedFramePosition == null ? 0 : GetObservedFramePosition();
+            return GetObservedFramePosition == null ? Convert.ToUInt16(VIDEO_OBSERVER_POSITION.POSITION_POST_CAPTURER | VIDEO_OBSERVER_POSITION.POSITION_PRE_RENDERER) : GetObservedFramePosition();
         }
 
         bool VideoFrameObserver.IsMultipleChannelVideoFrameWanted()

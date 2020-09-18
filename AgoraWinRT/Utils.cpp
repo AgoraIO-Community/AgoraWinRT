@@ -17,6 +17,7 @@ namespace Utils {
 	}
 
 	winrt::hstring To(const char* value) {
+		if (value == NULL) return winrt::hstring();
 		std::string string = std::string(value);
 		int size = MultiByteToWideChar(CP_UTF8, 0, &string[0], (int)string.size(), NULL, 0);
 		std::wstring wstring(size, 0);
@@ -25,6 +26,7 @@ namespace Utils {
 	}
 
 	winrt::hstring To(const char* value, size_t length) {
+		if (value == NULL || length == 0) return winrt::hstring();
 		std::string string = std::string(value, length);
 		int size = MultiByteToWideChar(CP_UTF8, 0, &string[0], (int)string.size(), NULL, 0);
 		std::wstring wstring(size, 0);
