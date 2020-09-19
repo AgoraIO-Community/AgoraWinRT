@@ -429,14 +429,16 @@ namespace AgoraUWP
 
         bool VideoFrameObserver.OnPreEncodeVideFrame(VideoFrame frame)
         {
+            var result = OnPreEncodeVideFrame == null ? true : OnPreEncodeVideFrame(frame);
             this.localVideo?.Render(frame);
-            return OnPreEncodeVideFrame == null ? true : OnPreEncodeVideFrame(frame);
+            return result;
         }
 
         bool VideoFrameObserver.OnRenderVideoFrame(ulong uid, VideoFrame frame)
         {
+            var result = OnRenderVideoFrame == null ? true : OnRenderVideoFrame(uid, frame);
             this.remoteVideo?.Render(frame);
-            return OnRenderVideoFrame == null ? true : OnRenderVideoFrame(uid, frame);
+            return result;
         }
 
         VIDEO_FRAME_TYPE VideoFrameObserver.GetVideoFramePreference()
