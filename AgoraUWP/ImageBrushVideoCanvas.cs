@@ -22,7 +22,6 @@ namespace AgoraUWP
         private SoftwareBitmap backBuffer;
         private bool running;
         private ushort oldRotation;
-        private Stretch stretch;
 
         public ImageBrushVideoCanvas()
         {

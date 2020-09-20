@@ -15,53 +15,55 @@ using Windows.UI.Xaml.Media;
 
 namespace AgoraUWP
 {
-    public class AgoraRtc : AgoraWinRT.AgoraRtc, 
-        AgoraWinRT.AgoraRtcEventHandler, 
-        AgoraWinRT.VideoFrameObserver, 
+    public class AgoraUWPRtc : AgoraWinRT.AgoraRtc,
+        AgoraWinRT.AgoraRtcEventHandler,
+        AgoraWinRT.VideoFrameObserver,
         AgoraWinRT.AudioFrameObserver
     {
         private VideoCanvas localVideo = null;
         private bool previewing;
+        private DateTime? firstLocalVideoFrameElapsed = null;
         private bool joinChanneled;
-        private VideoCanvas remoteVideo = null;
+        private Dictionary<ulong, VideoCanvas> remoteVideos = new Dictionary<ulong, VideoCanvas>();
+        private MediaFrameReader videoFrameReader;
+        private DateTime? firstRemoteVideoFrameElapsed = null;
 
-        public AgoraRtc(string vendorKey): base(vendorKey)
+        public AgoraUWPRtc(string vendorKey) : base(vendorKey)
         {
             base.RegisterRtcEngineEventHandler(this);
             base.RegisterVideoFrameObserver(this);
             base.RegisterAudioFrameObserver(this);
 
-            this.SetExternalVideoSource(true, false);            
-            _ = this.InitCaptureAsync();
+            this.SetExternalVideoSource(true, false);
+            InitCaptureAsync();
         }
 
-        private async Task InitCaptureAsync()
+        private void InitCaptureAsync()
         {
             var mediaCapture = new MediaCapture();
-            var sourceGroup = await MediaFrameSourceGroup.FindAllAsync();
+            var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
             if (sourceGroup.Count == 0) return;
-            await mediaCapture.InitializeAsync(
+            mediaCapture.InitializeAsync(
                 new MediaCaptureInitializationSettings
                 {
                     SourceGroup = sourceGroup[0],
                     SharingMode = MediaCaptureSharingMode.SharedReadOnly,
                     StreamingCaptureMode = StreamingCaptureMode.AudioAndVideo,
                     MemoryPreference = MediaCaptureMemoryPreference.Cpu
-                }) ;
+                }).AsTask().Wait();
             foreach (MediaFrameSource source in mediaCapture.FrameSources.Values)
             {
                 if (source.Info.SourceKind == MediaFrameSourceKind.Color)
                 {
-                    MediaFrameReader reader = await mediaCapture.CreateFrameReaderAsync(source, MediaEncodingSubtypes.Nv12);
-                    reader.FrameArrived += VideoFrameArrivedEvent;
-                    await reader.StartAsync();
+                    videoFrameReader = mediaCapture.CreateFrameReaderAsync(source, MediaEncodingSubtypes.Nv12).AsTask().GetAwaiter().GetResult();
+                    videoFrameReader.FrameArrived += VideoFrameArrivedEvent;
                 }
             }
         }
 
         private void VideoFrameArrivedEvent(MediaFrameReader sender, MediaFrameArrivedEventArgs args)
         {
-            using(var frame = sender.TryAcquireLatestFrame())
+            using (var frame = sender.TryAcquireLatestFrame())
             {
                 if (frame == null) return;
                 var buffer = frame.BufferMediaFrame;
@@ -81,11 +83,6 @@ namespace AgoraUWP
             }
         }
 
-        public void SetupRemoteVideo(VideoCanvas videoCanvas)
-        {
-            this.remoteVideo = videoCanvas;
-        }
-
         private void Preview(MediaFrameReference frame)
         {
             if (this.previewing && !this.joinChanneled)
@@ -94,14 +91,59 @@ namespace AgoraUWP
             }
         }
 
+        public new short JoinChannel(string token, string channel, string info, ulong uid)
+        {
+            if (!this.firstLocalVideoFrameElapsed.HasValue) this.firstLocalVideoFrameElapsed = DateTime.Now;
+            this.firstRemoteVideoFrameElapsed = DateTime.Now;
+
+            return base.JoinChannel(token, channel, info, uid);
+        }
+
+        public new short EnableVideo()
+        {
+            var result = base.EnableVideo();
+            EnableLocalVideo(true);
+            return result;
+        }
+
+        public new short DisableVideo()
+        {
+            EnableLocalVideo(false);
+            return base.DisableVideo();
+        }
+
+        public void EnableLocalVideo(bool enabled)
+        {
+            if (enabled) _ = videoFrameReader?.StartAsync();
+            else _ = videoFrameReader?.StopAsync();
+        }
+
         public void SetupLocalVideo(VideoCanvas videoCanvas)
         {
             this.localVideo = videoCanvas;
         }
-
+        public void SetupRemoteVideo(VideoCanvas videoCanvas)
+        {
+            this.remoteVideos[videoCanvas.User] = videoCanvas;
+        }
+        public void SetLocalRenderMode(RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode)
+        {
+            localVideo.RenderMode = renderMode;
+            localVideo.MirrorMode = mirrorMode;
+        }
+        public void SetRemoteRenderMode(ulong uid, RENDER_MODE_TYPE renderMode, VIDEO_MIRROR_MODE_TYPE mirrorMode)
+        {
+            var videoCanvas = this.remoteVideos[uid];
+            if (videoCanvas != null)
+            {
+                videoCanvas.RenderMode = renderMode;
+                videoCanvas.MirrorMode = mirrorMode;
+            }
+        }
         public void StartPreview()
         {
             this.previewing = true;
+            if (!this.firstLocalVideoFrameElapsed.HasValue) this.firstLocalVideoFrameElapsed = DateTime.Now;
         }
 
         public void StopPreview()
@@ -126,6 +168,7 @@ namespace AgoraUWP
         public event OnLocalVideoStateChangedDelegate OnLocalVideoStateChanged;
         public event OnFirstLocalAudioFramePublishedDelegate OnFirstLocalAudioFramePublished;
         public event OnFirstLocalVideoFramePublishedDelegate OnFirstLocalVideoFramePublished;
+        public event OnFirstLocalVideoFrameDelegate OnFirstLocalVideoFrame;
         public event OnAudioPublishStateChangedDelegate OnAudioPublishStateChanged;
         public event OnVideoPublishStateChangedDelegate OnVideoPublishStateChanged;
         public event OnRemoteAudioStateChangedDelegate OnRemoteAudioStateChanged;
@@ -237,6 +280,11 @@ namespace AgoraUWP
         void AgoraRtcEventHandler.OnFirstLocalVideoFramePublished(uint elapsed)
         {
             OnFirstLocalVideoFramePublished?.Invoke(elapsed);
+        }
+
+        void AgoraRtcEventHandler.OnFirstLocalVideoFrame(uint width, uint height, uint elapsed)
+        {
+            OnFirstLocalVideoFrame?.Invoke(width, height, elapsed);
         }
 
         void AgoraRtcEventHandler.OnAudioPublishStateChanged(string channel, STREAM_PUBLISH_STATE oldState, STREAM_PUBLISH_STATE newState, uint elapsed)
@@ -424,26 +472,39 @@ namespace AgoraUWP
 
         bool VideoFrameObserver.OnCaptureVideoFrame(VideoFrame frame)
         {
-          return  OnCaptureVideoFrame == null ? true : OnCaptureVideoFrame(frame);
+            return OnCaptureVideoFrame == null ? true : OnCaptureVideoFrame(frame);
         }
 
         bool VideoFrameObserver.OnPreEncodeVideFrame(VideoFrame frame)
         {
             var result = OnPreEncodeVideFrame == null ? true : OnPreEncodeVideFrame(frame);
-            this.localVideo?.Render(frame);
+            localVideo?.Render(frame);
+            if (firstLocalVideoFrameElapsed.HasValue && localVideo != null)
+            {
+                TimeSpan elapsed = new TimeSpan(DateTime.Now.Ticks - firstLocalVideoFrameElapsed.Value.Ticks);
+                OnFirstLocalVideoFrame?.Invoke(frame.width, frame.height, (uint)elapsed.TotalMilliseconds);
+                firstLocalVideoFrameElapsed = null;
+            }
             return result;
         }
 
         bool VideoFrameObserver.OnRenderVideoFrame(ulong uid, VideoFrame frame)
         {
             var result = OnRenderVideoFrame == null ? true : OnRenderVideoFrame(uid, frame);
-            this.remoteVideo?.Render(frame);
+            var remoteVideo = this.remoteVideos[uid];
+            remoteVideo?.Render(frame);
+            if (firstRemoteVideoFrameElapsed.HasValue && remoteVideo != null)
+            {
+                TimeSpan elapsed = new TimeSpan(DateTime.Now.Ticks - firstRemoteVideoFrameElapsed.Value.Ticks);
+                OnFirstRemoteVideoFrame(uid, frame.width, frame.height, (uint)elapsed.TotalMilliseconds);
+                firstRemoteVideoFrameElapsed = null;
+            }
             return result;
         }
 
         VIDEO_FRAME_TYPE VideoFrameObserver.GetVideoFramePreference()
         {
-            return GetVideoFramePreference == null ? VIDEO_FRAME_TYPE.FRAME_TYPE_YUV420 : GetVideoFramePreference();   
+            return GetVideoFramePreference == null ? VIDEO_FRAME_TYPE.FRAME_TYPE_YUV420 : GetVideoFramePreference();
         }
 
         bool VideoFrameObserver.GetRotationApplied()

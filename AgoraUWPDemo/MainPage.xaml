@@ -37,6 +37,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -44,6 +45,7 @@
                 <Button x:Name="btnStart" Content="正常打开" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"/>
                 <Button x:Name="btnStartWithExternalAudio" Content="通过ExternalAudio打开" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" />
                 <Button x:Name="btnStartWithPullAudio" Content="使用PullAudioFrame打开" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" />
+                <Button x:Name="btnTest" Content="测试代码用" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"/>
             </Grid>
             <Grid Margin="12">
                 <Grid.ColumnDefinitions>

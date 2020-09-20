@@ -23,6 +23,7 @@ namespace AgoraUWP
     public delegate void OnLocalVideoStateChangedDelegate(LOCAL_VIDEO_STREAM_STATE state, LOCAL_VIDEO_STREAM_ERROR error);
     public delegate void OnFirstLocalAudioFramePublishedDelegate(uint elapsed);
     public delegate void OnFirstLocalVideoFramePublishedDelegate(uint elapsed);
+    public delegate void OnFirstLocalVideoFrameDelegate(uint width, uint height, uint elapsed);
     public delegate void OnAudioPublishStateChangedDelegate(string channel, STREAM_PUBLISH_STATE oldState, STREAM_PUBLISH_STATE newState, uint elapsed);
     public delegate void OnVideoPublishStateChangedDelegate(string channel, STREAM_PUBLISH_STATE oldState, STREAM_PUBLISH_STATE newState, uint elapsed);
     public delegate void OnRemoteAudioStateChangedDelegate(ulong uid, REMOTE_AUDIO_STATE state, REMOTE_AUDIO_STATE_REASON reason, uint elapsed);

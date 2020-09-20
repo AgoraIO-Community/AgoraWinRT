@@ -22,6 +22,7 @@ namespace AgoraWinRT
 		void OnLocalVideoStateChanged(AgoraWinRT.LOCAL_VIDEO_STREAM_STATE state, AgoraWinRT.LOCAL_VIDEO_STREAM_ERROR error);
 		void OnFirstLocalAudioFramePublished(UInt32 elapsed);
 		void OnFirstLocalVideoFramePublished(UInt32 elapsed);
+		void OnFirstLocalVideoFrame(UInt32 width, UInt32 height, UInt32 elapsed);
 		void OnAudioPublishStateChanged(String channel, AgoraWinRT.STREAM_PUBLISH_STATE oldState, AgoraWinRT.STREAM_PUBLISH_STATE newState, UInt32 elapsed);
 		void OnVideoPublishStateChanged(String channel, AgoraWinRT.STREAM_PUBLISH_STATE oldState, AgoraWinRT.STREAM_PUBLISH_STATE newState, UInt32 elapsed);
 		//Ô¶¶ËÃ½ÌåÊÂ¼þ

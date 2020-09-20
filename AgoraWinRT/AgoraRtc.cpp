@@ -586,6 +586,10 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		if (m_handler) m_handler.OnFirstLocalVideoFramePublished(elapsed);
 	}
+	void AgoraRtc::onFirstLocalVideoFrame(int width, int height, int elapsed)
+	{
+		if (m_handler) m_handler.OnFirstLocalVideoFrame(width, height, elapsed);
+	}
 	void AgoraRtc::onAudioPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed)
 	{
 		if (m_handler) m_handler.OnAudioPublishStateChanged(Utils::To(channel), (AgoraWinRT::STREAM_PUBLISH_STATE)oldState, (AgoraWinRT::STREAM_PUBLISH_STATE)newState, elapsed);

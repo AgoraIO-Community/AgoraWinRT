@@ -185,6 +185,7 @@ namespace winrt::AgoraWinRT::implementation
         void onLocalVideoStateChanged(agora::rtc::LOCAL_VIDEO_STREAM_STATE state, agora::rtc::LOCAL_VIDEO_STREAM_ERROR error) override;
         void onFirstLocalAudioFramePublished(int elapsed) override;
         void onFirstLocalVideoFramePublished(int elapsed) override;
+        void onFirstLocalVideoFrame(int width, int height, int elapsed) override;
         void onAudioPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed) override;
         void onVideoPublishStateChanged(const char* channel, agora::rtc::STREAM_PUBLISH_STATE oldState, agora::rtc::STREAM_PUBLISH_STATE newState, int elapsed) override;
         ////Ô¶¶ËÃ½ÌåÊÂ¼þ

@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using AgoraUWP;
 using Windows.UI.Xaml.Media.Imaging;
+using AgoraWinRT;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -24,7 +25,9 @@ namespace AgoraUWPDemo
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private AgoraRtc engine;
+        private AgoraUWPRtc engine;
+        private ulong remoteUser;
+        private bool localVideoEnabled = true;
 
         public MainPage()
         {
@@ -39,6 +42,14 @@ namespace AgoraUWPDemo
             remoteVideo.Source = new SoftwareBitmapSource();
             txtResult.TextChanged += TxtResult_TextChanged;
             btnStart.Click += StartEngineAndPreview;
+            btnTest.Click += TestCode;
+        }
+
+        private void TestCode(object sender, RoutedEventArgs e)
+        {
+            //engine.SetRemoteRenderMode(remoteUser, RENDER_MODE_TYPE.RENDER_MODE_FILL, VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED);
+            localVideoEnabled = !localVideoEnabled;
+            engine.EnableLocalVideo(localVideoEnabled);            
         }
 
         private void TxtResult_TextChanged(object sender, TextChangedEventArgs e)
@@ -58,20 +69,54 @@ namespace AgoraUWPDemo
 
         private void StartEngineAndPreview(object sender, RoutedEventArgs e)
         {
-            if (this.engine != null) this.engine.Dispose();
-            this.engine = new AgoraRtc(txtVendorKey.Text);
+            InitEngine();
             this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
             this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
             this.engine.SetupLocalVideo(new ImageVideoCanvas{ Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
-            //this.engine.SetupRemoteVideo(new ImageVideoCanvas { Target = remoteVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED });
-            this.engine.SetupRemoteVideo(new ImageBrushVideoCanvas { Target = remoteVideoBrush, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_FIT, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED });
             this.log("enable video", this.engine.EnableVideo());
             this.engine.StartPreview();
             log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
 
         }
 
-        private void log(String operation, int result)
+        private void InitEngine()
+        {
+            if (this.engine != null) this.engine.Dispose();
+            this.engine = new AgoraUWPRtc(txtVendorKey.Text);
+            this.engine.OnUserJoined += Engine_OnUserJoined;
+            this.engine.OnFirstLocalVideoFrame += Engine_OnFirstLocalVideoFrame;
+            this.engine.OnFirstRemoteVideoFrame += Engine_OnFirstRemoteVideoFrame;
+        }
+
+        private void Engine_OnFirstRemoteVideoFrame(ulong uid, uint width, uint height, uint elapsed)
+        {
+            log("onFirstRemoteVideoFrame", elapsed);
+        }
+
+        private void Engine_OnFirstLocalVideoFrame(uint width, uint height, uint elapsed)
+        {
+            log("onFirstLocalVideoFrame", elapsed);
+        }
+
+        private void Engine_OnUserJoined(ulong uid, uint elapsed)
+        {
+            remoteUser = uid;
+            _ = Dispatcher.RunAsync(
+                Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    this.engine.SetupRemoteVideo(new ImageBrushVideoCanvas
+                    {
+                        User = uid,
+                        Target = remoteVideoBrush,
+                        RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_FIT,
+                        MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED
+                    });
+
+                });
+        }
+
+        private void log(String operation, long result)
         {
             _ = txtResult.Dispatcher.RunAsync(
                 Windows.UI.Core.CoreDispatcherPriority.Normal,
