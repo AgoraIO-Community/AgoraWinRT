@@ -27,6 +27,7 @@ namespace AgoraUWP
         private Dictionary<ulong, VideoCanvas> remoteVideos = new Dictionary<ulong, VideoCanvas>();
         private MediaFrameReader videoFrameReader;
         private DateTime? firstRemoteVideoFrameElapsed = null;
+        private MediaCaptureVideoSource videoSource;
 
         public AgoraUWPRtc(string vendorKey) : base(vendorKey)
         {
@@ -34,11 +35,13 @@ namespace AgoraUWP
             base.RegisterVideoFrameObserver(this);
             base.RegisterAudioFrameObserver(this);
 
-            this.SetExternalVideoSource(true, false);
-            InitCaptureAsync();
+            //this.SetExternalVideoSource(true, false);
+            //InitCapture();
+            videoSource = new MediaCaptureVideoSource();
+            this.SetVideoSource(videoSource);
         }
 
-        private void InitCaptureAsync()
+        private void InitCapture()
         {
             var mediaCapture = new MediaCapture();
             var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
@@ -114,8 +117,8 @@ namespace AgoraUWP
 
         public void EnableLocalVideo(bool enabled)
         {
-            if (enabled) _ = videoFrameReader?.StartAsync();
-            else _ = videoFrameReader?.StopAsync();
+            //if (enabled) _ = videoFrameReader?.StartAsync();
+            //else _ = videoFrameReader?.StopAsync();
         }
 
         public void SetupLocalVideo(VideoCanvas videoCanvas)

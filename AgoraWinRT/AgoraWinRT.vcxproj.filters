@@ -24,6 +24,8 @@
     <ClCompile Include="RawAudioFrameObsever.cpp" />
     <ClCompile Include="RawVideoFrameObserver.cpp" />
     <ClCompile Include="ExternalVideoFrame.cpp" />
+    <ClCompile Include="VideoSourceConsumer.cpp" />
+    <ClCompile Include="RawVideoSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -39,6 +41,8 @@
     <ClInclude Include="RawAudioFrameObsever.h" />
     <ClInclude Include="RawVideoFrameObserver.h" />
     <ClInclude Include="ExternalVideoFrame.h" />
+    <ClInclude Include="VideoSourceConsumer.h" />
+    <ClInclude Include="RawVideoSource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />

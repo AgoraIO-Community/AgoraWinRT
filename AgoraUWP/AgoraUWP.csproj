@@ -137,6 +137,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VideoCanvas.cs" />
+    <Compile Include="MediaCaptureVideoSource.cs" />
     <EmbeddedResource Include="Properties\AgoraUWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>

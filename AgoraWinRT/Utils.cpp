@@ -450,5 +450,12 @@ namespace Utils {
 		return raw;
 	}
 
+	void* To(winrt::array_view<const uint8_t> const& value)
+	{
+		auto result = new byte[value.size()];
+		memcpy_s(result, value.size(), value.data(), value.size());
+		return result;
+	}
+
 
 }

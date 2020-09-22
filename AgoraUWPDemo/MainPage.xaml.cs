@@ -16,8 +16,6 @@ using AgoraUWP;
 using Windows.UI.Xaml.Media.Imaging;
 using AgoraWinRT;
 
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
-
 namespace AgoraUWPDemo
 {
     /// <summary>
@@ -42,7 +40,25 @@ namespace AgoraUWPDemo
             remoteVideo.Source = new SoftwareBitmapSource();
             txtResult.TextChanged += TxtResult_TextChanged;
             btnStart.Click += StartEngineAndPreview;
+            btnStartSelfAudio.Click += StartEngineAndSelfAudioProcess;
             btnTest.Click += TestCode;
+        }
+
+        /// <summary>
+        /// 演示如何进行音频自采集和自渲染
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StartEngineAndSelfAudioProcess(object sender, RoutedEventArgs e)
+        {
+            InitEngine();
+            this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
+            this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
+            this.engine.SetupLocalVideo(new ImageVideoCanvas { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
+            //this.engine.SetExternalAudioSource(true, )
+            this.log("enable video", this.engine.EnableVideo());
+            this.engine.StartPreview();
+            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
         }
 
         private void TestCode(object sender, RoutedEventArgs e)

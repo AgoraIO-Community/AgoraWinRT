@@ -3,6 +3,7 @@
 #include "AgoraRtc.g.h"
 #include "RawAudioFrameObsever.h"
 #include "RawVideoFrameObserver.h"
+#include "RawVideoSource.h"
 
 namespace winrt::AgoraWinRT::implementation
 {
@@ -112,6 +113,8 @@ namespace winrt::AgoraWinRT::implementation
         int16_t DisableLastmileTest();
         int16_t StartLastmileProbeTest(AgoraWinRT::LastmileProbeConfig const& config);
         int16_t StopLastmileProbeTest();
+        //设置视频源
+        bool SetVideoSource(AgoraWinRT::VideoSource const& source);
         //视频自采集
         int16_t SetExternalVideoSource(bool enable, bool useTexture);
         int16_t PushVideoFrame(AgoraWinRT::ExternalVideoFrame const& frame);
@@ -167,6 +170,7 @@ namespace winrt::AgoraWinRT::implementation
         AgoraWinRT::PacketObserver m_packetObserver{ nullptr };
         AgoraWinRT::implementation::RawAudioFrameObserver* m_rawAudioFrameObserver{ nullptr };
         AgoraWinRT::implementation::RawVideoFrameObserver* m_rawVideoFrameObserver{ nullptr };
+        AgoraWinRT::implementation::RawVideoSource* m_videoSource{ nullptr };
     private:
         //频道管理事件
         void onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason) override;

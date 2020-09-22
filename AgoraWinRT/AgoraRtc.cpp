@@ -76,6 +76,9 @@ namespace winrt::AgoraWinRT::implementation
 	void AgoraRtc::Close()
 	{
 		m_rtcEngine->release(true);
+		delete m_rawAudioFrameObserver;
+		delete m_rawVideoFrameObserver;
+		delete m_videoSource;
 	}
 	int16_t AgoraRtc::EnableAudio()
 	{
@@ -353,6 +356,13 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		return m_rtcEngine->stopLastmileProbeTest();
 	}
+	bool AgoraRtc::SetVideoSource(AgoraWinRT::VideoSource const& source)
+	{
+		if (m_videoSource != nullptr) delete m_videoSource;
+		m_videoSource = new AgoraWinRT::implementation::RawVideoSource(source);
+		return m_rtcEngine->setVideoSource(m_videoSource);
+	}
+
 	int16_t AgoraRtc::SetExternalVideoSource(bool enable, bool useTexture)
 	{
 		return m_mediaEngine->setExternalVideoSource(enable, useTexture);

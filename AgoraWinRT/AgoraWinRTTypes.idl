@@ -303,5 +303,18 @@ namespace AgoraWinRT
         Boolean autoSubscribeAudio;
         Boolean autoSubscribeVideo;
     };
-
+    runtimeclass VideoSourceConsumer
+    {
+        void ConsumeRawVideoFrame(UInt8[] buffer, AgoraWinRT.VIDEO_PIXEL_FORMAT type, UInt32 width, UInt32 height, UInt16 rotation, UInt64 timestamp);
+    };
+    interface VideoSource
+    {
+        Boolean OnInitialize(AgoraWinRT.VideoSourceConsumer consumer);
+        void OnDispose();
+        Boolean OnStart();
+        void OnStop();
+        AgoraWinRT.VIDEO_PIXEL_FORMAT GetBufferType();
+        AgoraWinRT.VIDEO_CAPTURE_TYPE GetVideoCaptureType();
+        AgoraWinRT.VIDEO_CONTENT_HINT GetVideoContentHint();
+    };
 }
