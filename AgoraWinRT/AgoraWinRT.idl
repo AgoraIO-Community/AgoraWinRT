@@ -126,7 +126,7 @@ namespace AgoraWinRT
 
 		//音频自采集
 		Int16 SetExternalAudioSource(Boolean enable, UInt32 sampleRate, UInt8 channels);
-		Int16 PushAuioFrame(AgoraWinRT.AudioFrame frame);
+		Int16 PushAudioFrame(AgoraWinRT.AudioFrame frame);
 
 		//音频自渲染
 		Int16 SetExternalAudioSink(Boolean enable, UInt32 sampleRate, UInt8 channels);

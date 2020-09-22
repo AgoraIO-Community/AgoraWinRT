@@ -14,7 +14,7 @@ namespace AgoraUWP
     class MediaCaptureVideoSource : AgoraWinRT.VideoSource
     {
         private VideoSourceConsumer m_consumer;
-        private MediaFrameReader videoFrameReader;
+        private GeneralMediaCapturer m_capturer;
 
         public bool OnInitialize(VideoSourceConsumer consumer)
         {
@@ -24,18 +24,18 @@ namespace AgoraUWP
 
         public void OnDispose()
         {
-            videoFrameReader.Dispose();
+            m_capturer?.Dispose();
         }
 
         public bool OnStart()
         {
-            var status = videoFrameReader.StartAsync().AsTask().GetAwaiter().GetResult();
-            return status == MediaFrameReaderStartStatus.Success;
+            m_capturer?.EnableVideo(true);
+            return true;
         }
 
         public void OnStop()
         {
-            videoFrameReader.StopAsync().AsTask().Wait();
+            m_capturer?.EnableVideo(false);
         }
 
         public VIDEO_PIXEL_FORMAT GetBufferType()
@@ -58,42 +58,23 @@ namespace AgoraUWP
             var mediaCapture = new MediaCapture();
             var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
             if (sourceGroup.Count == 0) return false;
-            mediaCapture.InitializeAsync(
-                new MediaCaptureInitializationSettings
-                {
-                    SourceGroup = sourceGroup[0],
-                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                    StreamingCaptureMode = StreamingCaptureMode.AudioAndVideo,
-                    MemoryPreference = MediaCaptureMemoryPreference.Cpu
-                }).AsTask().Wait();
-            foreach (MediaFrameSource source in mediaCapture.FrameSources.Values)
-            {
-                if (source.Info.SourceKind == MediaFrameSourceKind.Color)
-                {
-                    videoFrameReader = mediaCapture.CreateFrameReaderAsync(source, MediaEncodingSubtypes.Nv12).AsTask().GetAwaiter().GetResult();
-                    videoFrameReader.FrameArrived += VideoFrameArrivedEvent;
-                    return true;
-                }
-            }
-            return false;
+            m_capturer = new GeneralMediaCapturer(sourceGroup[0], StreamingCaptureMode.Video);
+            m_capturer.OnVideoFrameArrived += VideoFrameArrivedEvent;
+            return true;
         }
 
-        private void VideoFrameArrivedEvent(MediaFrameReader sender, MediaFrameArrivedEventArgs args)
+        private void VideoFrameArrivedEvent(MediaFrameReference frame)
         {
-            using (var frame = sender.TryAcquireLatestFrame())
-            {
-                if (frame == null) return;
-                var buffer = frame.BufferMediaFrame;
-                if (buffer == null) return;
-                var format = frame.VideoMediaFrame?.VideoFormat;
-                if (format == null) return;
-                m_consumer.ConsumeRawVideoFrame(
-                    buffer.Buffer.ToArray(),
-                    VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12,
-                    format.Width, format.Height,
-                    0,
-                    (ulong)new DateTimeOffset().ToUnixTimeMilliseconds());
-            }
+            var buffer = frame.BufferMediaFrame;
+            if (buffer == null) return;
+            var format = frame.VideoMediaFrame?.VideoFormat;
+            if (format == null) return;
+            m_consumer.ConsumeRawVideoFrame(
+                buffer.Buffer.ToArray(),
+                VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12,
+                format.Width, format.Height,
+                0,
+                (ulong)new DateTimeOffset().ToUnixTimeMilliseconds());
         }
     }
 }

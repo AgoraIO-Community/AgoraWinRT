@@ -25,9 +25,9 @@ namespace AgoraUWP
         private DateTime? firstLocalVideoFrameElapsed = null;
         private bool joinChanneled;
         private Dictionary<ulong, VideoCanvas> remoteVideos = new Dictionary<ulong, VideoCanvas>();
-        private MediaFrameReader videoFrameReader;
         private DateTime? firstRemoteVideoFrameElapsed = null;
-        private MediaCaptureVideoSource videoSource;
+        private GeneralMediaCapturer defaultMediaCapturer;
+        private bool useExternalVideoSoruce;
 
         public AgoraUWPRtc(string vendorKey) : base(vendorKey)
         {
@@ -35,55 +35,35 @@ namespace AgoraUWP
             base.RegisterVideoFrameObserver(this);
             base.RegisterAudioFrameObserver(this);
 
-            //this.SetExternalVideoSource(true, false);
-            //InitCapture();
-            videoSource = new MediaCaptureVideoSource();
-            this.SetVideoSource(videoSource);
+            InitDefaultCapture();
         }
 
-        private void InitCapture()
+        private void InitDefaultCapture()
         {
-            var mediaCapture = new MediaCapture();
             var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
             if (sourceGroup.Count == 0) return;
-            mediaCapture.InitializeAsync(
-                new MediaCaptureInitializationSettings
-                {
-                    SourceGroup = sourceGroup[0],
-                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                    StreamingCaptureMode = StreamingCaptureMode.AudioAndVideo,
-                    MemoryPreference = MediaCaptureMemoryPreference.Cpu
-                }).AsTask().Wait();
-            foreach (MediaFrameSource source in mediaCapture.FrameSources.Values)
-            {
-                if (source.Info.SourceKind == MediaFrameSourceKind.Color)
-                {
-                    videoFrameReader = mediaCapture.CreateFrameReaderAsync(source, MediaEncodingSubtypes.Nv12).AsTask().GetAwaiter().GetResult();
-                    videoFrameReader.FrameArrived += VideoFrameArrivedEvent;
-                }
-            }
+            defaultMediaCapturer = new GeneralMediaCapturer(sourceGroup[0], StreamingCaptureMode.AudioAndVideo);
+            defaultMediaCapturer.OnVideoFrameArrived += VideoFrameArrivedEvent;
+            base.SetExternalVideoSource(true, false);
         }
 
-        private void VideoFrameArrivedEvent(MediaFrameReader sender, MediaFrameArrivedEventArgs args)
+        private void VideoFrameArrivedEvent(MediaFrameReference frame)
         {
-            using (var frame = sender.TryAcquireLatestFrame())
+            if (frame == null) return;
+            var buffer = frame.BufferMediaFrame;
+            if (buffer == null) return;
+            var format = frame.VideoMediaFrame?.VideoFormat;
+            if (format == null) return;
+            using (var externalFrame = new ExternalVideoFrame())
             {
-                if (frame == null) return;
-                var buffer = frame.BufferMediaFrame;
-                if (buffer == null) return;
-                var format = frame.VideoMediaFrame?.VideoFormat;
-                if (format == null) return;
-                using (var externalFrame = new ExternalVideoFrame())
-                {
-                    externalFrame.format = VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12;
-                    externalFrame.type = VIDEO_BUFFER_TYPE.VIDEO_BUFFER_RAW_DATA;
-                    externalFrame.stride = format.Width;
-                    externalFrame.height = format.Height;
-                    externalFrame.buffer = buffer.Buffer.ToArray();
-                    PushVideoFrame(externalFrame);
-                }
-                Preview(frame);
+                externalFrame.format = VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12;
+                externalFrame.type = VIDEO_BUFFER_TYPE.VIDEO_BUFFER_RAW_DATA;
+                externalFrame.stride = format.Width;
+                externalFrame.height = format.Height;
+                externalFrame.buffer = buffer.Buffer.ToArray();
+                PushVideoFrame(externalFrame);
             }
+            Preview(frame);
         }
 
         private void Preview(MediaFrameReference frame)
@@ -92,6 +72,19 @@ namespace AgoraUWP
             {
                 this.localVideo.Render(frame);
             }
+        }
+
+        public new void Dispose()
+        {
+            defaultMediaCapturer.Dispose();
+            base.Dispose();
+        }
+
+        public new short SetExternalVideoSource(bool enabled, bool useTexture)
+        {
+            useExternalVideoSoruce = enabled;
+            defaultMediaCapturer.EnableVideo(!enabled);
+            return 0;
         }
 
         public new short JoinChannel(string token, string channel, string info, ulong uid)
@@ -117,8 +110,8 @@ namespace AgoraUWP
 
         public void EnableLocalVideo(bool enabled)
         {
-            //if (enabled) _ = videoFrameReader?.StartAsync();
-            //else _ = videoFrameReader?.StopAsync();
+            if (!useExternalVideoSoruce)
+                defaultMediaCapturer.EnableVideo(enabled);
         }
 
         public void SetupLocalVideo(VideoCanvas videoCanvas)

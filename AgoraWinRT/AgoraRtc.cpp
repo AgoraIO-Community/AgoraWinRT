@@ -383,7 +383,7 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		return m_rtcEngine->setExternalAudioSource(enable, sampleRate, channels);
 	}
-	int16_t AgoraRtc::PushAuioFrame(AgoraWinRT::AudioFrame const& frame)
+	int16_t AgoraRtc::PushAudioFrame(AgoraWinRT::AudioFrame const& frame)
 	{
 		frame.renderTimeMs(GetTickCount64());
 		auto raw = Utils::To(frame);

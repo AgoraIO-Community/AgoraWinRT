@@ -36,3 +36,12 @@ namespace winrt::AgoraWinRT::implementation
         int64_t m_avsync_type;
     };
 }
+
+namespace winrt::AgoraWinRT::factory_implementation
+{
+    struct AudioFrame : AudioFrameT<AudioFrame, implementation::AudioFrame>
+    {
+
+    };
+}
+

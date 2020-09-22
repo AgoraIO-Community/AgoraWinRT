@@ -120,7 +120,7 @@ namespace winrt::AgoraWinRT::implementation
         int16_t PushVideoFrame(AgoraWinRT::ExternalVideoFrame const& frame);
         //音频自采集
         int16_t SetExternalAudioSource(bool enable, uint32_t sampleRate, uint8_t channels);
-        int16_t PushAuioFrame(AgoraWinRT::AudioFrame const& frame);
+        int16_t PushAudioFrame(AgoraWinRT::AudioFrame const& frame);
         //音频自渲染
         int16_t SetExternalAudioSink(bool enable, uint32_t sampleRate, uint8_t channels);
         int16_t PullAudioFrame(AgoraWinRT::AudioFrame const& frame);

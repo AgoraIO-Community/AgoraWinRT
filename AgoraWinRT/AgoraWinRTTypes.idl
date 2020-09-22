@@ -218,6 +218,7 @@ namespace AgoraWinRT
     };
     runtimeclass AudioFrame : Windows.Foundation.IClosable
     {
+        AudioFrame();
         AgoraWinRT.AUDIO_FRAME_TYPE type;
         UInt32 samples;  //number of samples for each channel in this frame
         UInt8 bytesPerSample;  //number of bytes per sample: 2 for PCM16
