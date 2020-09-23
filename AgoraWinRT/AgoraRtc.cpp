@@ -399,9 +399,11 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		auto raw = Utils::To(frame);
 		auto length = raw->samples * raw->channels * raw->bytesPerSample;
-		raw->buffer = new byte[length];
-		int result = m_mediaEngine->pullAudioFrame(raw);
+		delete[] raw->buffer;
+		raw->buffer = new byte[length]();
+		int result = m_mediaEngine->pullAudioFrame(raw);		
 		if (result == 0) frame.buffer(Utils::To(raw->buffer, length));
+		Utils::Free(raw);
 		return result;
 	}
 	int16_t AgoraRtc::AddVideoWatermark(hstring const& file, AgoraWinRT::WatermarkOptions const& option)

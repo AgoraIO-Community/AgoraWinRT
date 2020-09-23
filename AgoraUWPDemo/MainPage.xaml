@@ -43,8 +43,8 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Button x:Name="btnStart" Content="正常打开" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"/>
-                <Button x:Name="btnStartSelfAudio" Content="使用音频自采集" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" />
-                <Button x:Name="btnStartWithPullAudio" Content="使用PullAudioFrame打开" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" />
+                <Button x:Name="btnStartSelfAudio" Content="演示音频自采集" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" />
+                <Button x:Name="btnStartPullAudio" Content="演示音频自渲染" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" />
                 <Button x:Name="btnTest" Content="测试代码用" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"/>
             </Grid>
             <Grid Margin="12">

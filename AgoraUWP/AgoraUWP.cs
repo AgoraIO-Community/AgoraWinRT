@@ -559,7 +559,8 @@ namespace AgoraUWP
 
         bool AudioFrameObserver.OnPlaybackAudioFrame(AudioFrame frame)
         {
-            return OnPlaybackAudioFrame == null ? true : OnPlaybackAudioFrame(frame);
+            var result = OnPlaybackAudioFrame == null ? true : OnPlaybackAudioFrame(frame);
+            return result;
         }
 
         bool AudioFrameObserver.OnMixedAudioFrame(AudioFrame frame)

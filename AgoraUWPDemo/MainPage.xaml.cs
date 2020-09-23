@@ -21,6 +21,12 @@ using System.Runtime.InteropServices;
 using Windows.Media;
 using Windows.Storage.Streams;
 using System.Reflection;
+using Windows.Media.Audio;
+using Windows.Media.Render;
+using Windows.Media.MediaProperties;
+using System.Runtime.ConstrainedExecution;
+using System.Timers;
+using System.Threading;
 
 namespace AgoraUWPDemo
 {
@@ -37,10 +43,15 @@ namespace AgoraUWPDemo
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        private static readonly uint DEFAULT_BITS_PER_SAMPLE = 16;
+        private static readonly uint DEFAULT_CHANNEL_COUNT = 1;
+        private static readonly uint DEFAULT_SAMPLE_RATE = 48000;
+
         private AgoraUWPRTC engine;
-        private ulong remoteUser;
-        private bool localVideoEnabled = true;
         private GeneralMediaCapturer m_audioCapture;
+        private AudioGraph m_audioGraph;
+        private AudioFrameInputNode m_audioInput;
 
         public MainPage()
         {
@@ -59,7 +70,16 @@ namespace AgoraUWPDemo
             txtResult.TextChanged += TxtResult_TextChanged;
             btnStart.Click += StartEngineAndPreview;
             btnStartSelfAudio.Click += StartEngineAndSelfAudioProcess;
+            btnStartPullAudio.Click += StartEngineAndPullAudioProcess;
             btnTest.Click += TestCode;
+        }
+
+        private void Clean()
+        {
+            if (m_audioInput != null) { m_audioInput.Stop(); m_audioInput.Dispose(); m_audioInput = null; }
+            if (m_audioGraph != null) { m_audioGraph.Stop(); m_audioGraph.Dispose(); m_audioGraph = null; }
+            if (m_audioCapture != null) { m_audioCapture.Dispose(); m_audioCapture = null; }
+            if (this.engine != null) { engine.LeaveChannel(); this.engine.Dispose(); this.engine = null; }
         }
         /// <summary>
         /// 演示平常情况下打开视频
@@ -69,6 +89,7 @@ namespace AgoraUWPDemo
         private void StartEngineAndPreview(object sender, RoutedEventArgs e)
         {
             InitEngine();
+
             this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
             this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
             this.engine.SetupLocalVideo(new ImageVideoCanvas { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
@@ -94,16 +115,89 @@ namespace AgoraUWPDemo
             this.engine.StartPreview();
             log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
         }
+        /// <summary>
+        /// 演示音频自渲染功能
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StartEngineAndPullAudioProcess(object sender, RoutedEventArgs e)
+        {
+            InitEngine();
+            InitAudioGraph();
+
+            this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
+            this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
+            this.engine.SetupLocalVideo(new ImageVideoCanvas { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
+            log("Set External Audio Sink", this.engine.SetExternalAudioSink(true, DEFAULT_SAMPLE_RATE, (byte)DEFAULT_CHANNEL_COUNT));
+            this.log("enable video", this.engine.EnableVideo());
+            this.engine.StartPreview();
+            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
+        }
+
+        private void InitAudioGraph()
+        {
+            var settings = new AudioGraphSettings(AudioRenderCategory.Media);
+            var createGraphResult = AudioGraph.CreateAsync(settings).AsTask().GetAwaiter().GetResult();
+            m_audioGraph = createGraphResult.Graph;
+            var outputResult = m_audioGraph.CreateDeviceOutputNodeAsync().AsTask().GetAwaiter().GetResult();
+
+            m_audioInput = m_audioGraph.CreateFrameInputNode(
+                new AudioEncodingProperties
+                {
+                    BitsPerSample = DEFAULT_BITS_PER_SAMPLE,
+                    ChannelCount = DEFAULT_CHANNEL_COUNT,
+                    SampleRate = DEFAULT_SAMPLE_RATE,
+                    Subtype = MediaEncodingSubtypes.Pcm,
+                });
+            m_audioInput.QuantumStarted += QuantumStartedEvent;
+            m_audioInput.AddOutgoingConnection(outputResult.DeviceOutputNode);
+            m_audioInput.Stop();
+        }
+
+        private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
+        {
+            using (var frame = new AgoraWinRT.AudioFrame())
+            {
+                frame.bytesPerSample = 2;
+                frame.channels = (byte)DEFAULT_CHANNEL_COUNT;
+                frame.samplesPerSec = DEFAULT_SAMPLE_RATE;
+                frame.type = AUDIO_FRAME_TYPE.FRAME_TYPE_PCM16;
+                frame.renderTimeMs = 0;
+                frame.samples = DEFAULT_SAMPLE_RATE / 100;// (uint)args.RequiredSamples;
+                var result = engine.PullAudioFrame(frame);
+                if (result == 0) PlayAudioFrame(frame);
+            }
+
+        }
+
+        private unsafe void PlayAudioFrame(AgoraWinRT.AudioFrame frame)
+        {
+            using (var audioFrame = new Windows.Media.AudioFrame((uint)frame.buffer.Length))
+            {
+                using (var buffer = audioFrame.LockBuffer(AudioBufferAccessMode.Write))
+                using (var reference = buffer.CreateReference())
+                {
+                    byte* data;
+                    uint size;
+                    ((IMemoryBufferByteAccess)reference).GetBuffer(out data, out size);
+                    fixed (byte* raw = frame.buffer)
+                    {
+                        System.Buffer.MemoryCopy(raw, data, size, size);
+                    }
+                }
+                m_audioInput?.AddFrame(audioFrame);
+            }
+        }
 
         private void InitAudioCapture()
         {
             var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
             if (sourceGroup.Count == 0) return;
             m_audioCapture = new GeneralMediaCapturer(sourceGroup[0], StreamingCaptureMode.Audio);
-            m_audioCapture.OnAudioFrameArrived += M_audioCapture_OnAudioFrameArrived;
+            m_audioCapture.OnAudioFrameArrived += AudioFrameArrivedEvent;
         }
 
-        private void M_audioCapture_OnAudioFrameArrived(AudioMediaFrame frame)
+        private void AudioFrameArrivedEvent(AudioMediaFrame frame)
         {
             using (Windows.Media.AudioFrame rawAudioFrame = frame.GetAudioFrame())
             using (AudioBuffer audioBuffer = rawAudioFrame.LockBuffer(AudioBufferAccessMode.Read))
@@ -141,9 +235,7 @@ namespace AgoraUWPDemo
             //localVideoEnabled = !localVideoEnabled;
             //engine.EnableLocalVideo(localVideoEnabled);    
             //log("Set External Video Source", engine.SetExternalVideoSource(localVideoEnabled, false));
-            this.engine.LeaveChannel();
-            this.engine.Dispose();
-            this.engine = null;
+            Clean();
         }
 
         private void TxtResult_TextChanged(object sender, TextChangedEventArgs e)
@@ -162,17 +254,26 @@ namespace AgoraUWPDemo
         }
         private void InitEngine()
         {
-            if (this.engine != null) this.engine.Dispose();
-            this.engine = new AgoraUWPRTC(txtVendorKey.Text);
-            this.engine.OnUserJoined += Engine_OnUserJoined;
-            this.engine.OnFirstLocalVideoFrame += Engine_OnFirstLocalVideoFrame;
-            this.engine.OnFirstRemoteVideoFrame += Engine_OnFirstRemoteVideoFrame;
-            this.engine.OnJoinChannelSuccess += Engine_OnJoinChannelSuccess;
+            Clean();
+            engine = new AgoraUWPRTC(txtVendorKey.Text);
+            engine.OnUserJoined += Engine_OnUserJoined;
+            engine.OnFirstLocalVideoFrame += Engine_OnFirstLocalVideoFrame;
+            engine.OnFirstRemoteVideoFrame += Engine_OnFirstRemoteVideoFrame;
+            engine.OnJoinChannelSuccess += Engine_OnJoinChannelSuccess;
+            engine.OnPlaybackAudioFrame += Engine_OnPlaybackAudioFrame;
+        }
+
+        private bool Engine_OnPlaybackAudioFrame(AgoraWinRT.AudioFrame frame)
+        {
+            PlayAudioFrame(frame);
+            return false;
         }
 
         private void Engine_OnJoinChannelSuccess(string channel, ulong uid, uint elapsed)
         {
             m_audioCapture?.EnableAudio(true);
+            m_audioGraph?.Start();
+            m_audioInput?.Start();
         }
 
         private void Engine_OnFirstRemoteVideoFrame(ulong uid, uint width, uint height, uint elapsed)
