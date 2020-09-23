@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media;
 
 namespace AgoraUWP
 {
-    public class AgoraUWPRtc : AgoraWinRT.AgoraRtc,
+    public class AgoraUWPRTC : AgoraWinRT.AgoraRtc,
         AgoraWinRT.AgoraRtcEventHandler,
         AgoraWinRT.VideoFrameObserver,
         AgoraWinRT.AudioFrameObserver
@@ -29,7 +29,16 @@ namespace AgoraUWP
         private GeneralMediaCapturer defaultMediaCapturer;
         private bool useExternalVideoSoruce;
 
-        public AgoraUWPRtc(string vendorKey) : base(vendorKey)
+        /// <summary>
+        /// 得到Camera的使用权限
+        /// </summary>
+        public static async void RequestCameraAccess()
+        {
+            var mediaCapture = new MediaCapture();
+            await mediaCapture.InitializeAsync();
+        }
+
+        public AgoraUWPRTC(string vendorKey) : base(vendorKey)
         {
             base.RegisterRtcEngineEventHandler(this);
             base.RegisterVideoFrameObserver(this);

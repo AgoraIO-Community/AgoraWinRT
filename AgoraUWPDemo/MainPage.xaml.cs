@@ -37,7 +37,7 @@ namespace AgoraUWPDemo
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private AgoraUWPRtc engine;
+        private AgoraUWPRTC engine;
         private ulong remoteUser;
         private bool localVideoEnabled = true;
         private GeneralMediaCapturer m_audioCapture;
@@ -48,24 +48,8 @@ namespace AgoraUWPDemo
 
             this.Init();
 
-            this.GetAuthorAsync();
-
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        private async void GetAuthorAsync()
-        {
-            var sourceGroups = await MediaFrameSourceGroup.FindAllAsync();
-            MediaCapture capture = new MediaCapture();
-            await capture.InitializeAsync(
-                new MediaCaptureInitializationSettings
-                {
-                    SourceGroup = sourceGroups[0],
-                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                    StreamingCaptureMode = StreamingCaptureMode.AudioAndVideo,
-                    MemoryPreference = MediaCaptureMemoryPreference.Cpu,
-                });
+            /// UWP需要权限，这个权限应当在主线程以异步的形式进行申请。这个部分需要用户自己解决
+            AgoraUWPRTC.RequestCameraAccess();
         }
 
         private void Init()
@@ -179,7 +163,7 @@ namespace AgoraUWPDemo
         private void InitEngine()
         {
             if (this.engine != null) this.engine.Dispose();
-            this.engine = new AgoraUWPRtc(txtVendorKey.Text);
+            this.engine = new AgoraUWPRTC(txtVendorKey.Text);
             this.engine.OnUserJoined += Engine_OnUserJoined;
             this.engine.OnFirstLocalVideoFrame += Engine_OnFirstLocalVideoFrame;
             this.engine.OnFirstRemoteVideoFrame += Engine_OnFirstRemoteVideoFrame;
