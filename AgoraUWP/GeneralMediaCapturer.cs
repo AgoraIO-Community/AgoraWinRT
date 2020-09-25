@@ -27,7 +27,7 @@ namespace AgoraUWP
                     SourceGroup = sourceGroup,
                     SharingMode = MediaCaptureSharingMode.SharedReadOnly,
                     StreamingCaptureMode = mode,
-                    MemoryPreference = MediaCaptureMemoryPreference.Auto
+                    MemoryPreference = MediaCaptureMemoryPreference.Cpu,
                 }).AsTask().Wait();
             foreach (MediaFrameSource source in mediaCapture.FrameSources.Values)
             {
@@ -76,8 +76,8 @@ namespace AgoraUWP
 
         public void Dispose()
         {
-            videoFrameReader.StopAsync().AsTask().Wait();
-            audioFrameReader.StopAsync().AsTask().Wait();
+            videoFrameReader?.StopAsync().AsTask().Wait();
+            audioFrameReader?.StopAsync().AsTask().Wait();
         }
     }
 }

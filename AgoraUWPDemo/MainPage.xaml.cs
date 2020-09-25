@@ -52,6 +52,28 @@ namespace AgoraUWPDemo
         private GeneralMediaCapturer m_audioCapture;
         private AudioGraph m_audioGraph;
         private AudioFrameInputNode m_audioInput;
+        private Dictionary<int, Action> m_modes;
+        private bool isAudioMuted = false;
+        private bool AudioMuted
+        {
+            get => isAudioMuted;
+            set
+            {
+                isAudioMuted = value;
+                btnMuteAudio.Content = isAudioMuted ? "关闭静音" : "开启静音";
+
+            }
+        }
+        private bool isVideoMuted = false;
+        private bool VideoMuted
+        {
+            get => isVideoMuted;
+            set
+            {
+                isVideoMuted = value;
+                btnMuteVideo.Content = isVideoMuted ? "发送视频" : "关闭视频";
+            }
+        }
 
         public MainPage()
         {
@@ -65,17 +87,53 @@ namespace AgoraUWPDemo
 
         private void Init()
         {
-            localVideo.Source = new SoftwareBitmapSource();
-            remoteVideo.Source = new SoftwareBitmapSource();
+            m_modes = new Dictionary<int, Action>();
+            m_modes.Add(0, () => { StartEngineAndPreview(); });
+            m_modes.Add(1, () => { StartEngineAndSelfAudioProcess(); });
+            m_modes.Add(2, () => { StartEngineAndPullAudioProcess(); });
+
             txtResult.TextChanged += TxtResult_TextChanged;
-            btnStart.Click += StartEngineAndPreview;
-            btnStartSelfAudio.Click += StartEngineAndSelfAudioProcess;
-            btnStartPullAudio.Click += StartEngineAndPullAudioProcess;
-            btnTest.Click += TestCode;
+
+            btnJoinChannel.Click += JoinChannel;
+            btnLeaveChannel.Click += LeaveChannel;
+            btnMuteAudio.Click += MuteAudio;
+            btnMuteVideo.Click += MuteVideo;
+        }
+
+        private void MuteVideo(object sender, RoutedEventArgs e)
+        {
+            this.VideoMuted = !this.VideoMuted;
+            engine.MuteLocalVideoStream(isVideoMuted);
+        }
+
+        private void MuteAudio(object sender, RoutedEventArgs e)
+        {
+            this.AudioMuted = !this.AudioMuted;
+            engine.MuteLocalAudioStream(this.AudioMuted);
+        }
+
+        private void LeaveChannel(object sender, RoutedEventArgs e)
+        {
+            //Clean();
+            engine.LeaveChannel();
+        }
+
+        private void JoinChannel(object sender, RoutedEventArgs e)
+        {
+            var action = m_modes[cbMediaMode.SelectedIndex];
+            action?.Invoke();
+            this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
+            this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
+            this.engine.SetupLocalVideo(new ImageBrushVideoCanvas { Target = localVideoBrush, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
+            this.log("enable video", this.engine.EnableVideo());
+            this.engine.StartPreview();
+            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
         }
 
         private void Clean()
         {
+            this.AudioMuted = false;
+            this.VideoMuted = false;
             if (m_audioInput != null) { m_audioInput.Stop(); m_audioInput.Dispose(); m_audioInput = null; }
             if (m_audioGraph != null) { m_audioGraph.Stop(); m_audioGraph.Dispose(); m_audioGraph = null; }
             if (m_audioCapture != null) { m_audioCapture.Dispose(); m_audioCapture = null; }
@@ -86,52 +144,32 @@ namespace AgoraUWPDemo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StartEngineAndPreview(object sender, RoutedEventArgs e)
+        private void StartEngineAndPreview()
         {
             InitEngine();
 
-            this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
-            this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
-            this.engine.SetupLocalVideo(new ImageVideoCanvas { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
-            this.log("enable video", this.engine.EnableVideo());
-            this.engine.StartPreview();
-            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
         }
         /// <summary>
         /// 演示如何进行音频自采集和自渲染
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StartEngineAndSelfAudioProcess(object sender, RoutedEventArgs e)
+        private void StartEngineAndSelfAudioProcess()
         {
             InitEngine();
             InitAudioCapture();
-
-            this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
-            this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
-            this.engine.SetupLocalVideo(new ImageVideoCanvas { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
             this.engine.SetExternalAudioSource(true, m_audioCapture.AudioFormat.AudioEncodingProperties.SampleRate, (byte)m_audioCapture.AudioFormat.AudioEncodingProperties.ChannelCount);
-            this.log("enable video", this.engine.EnableVideo());
-            this.engine.StartPreview();
-            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
         }
         /// <summary>
         /// 演示音频自渲染功能
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StartEngineAndPullAudioProcess(object sender, RoutedEventArgs e)
+        private void StartEngineAndPullAudioProcess()
         {
             InitEngine();
             InitAudioGraph();
-
-            this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
-            this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
-            this.engine.SetupLocalVideo(new ImageVideoCanvas { Target = localVideo, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
             log("Set External Audio Sink", this.engine.SetExternalAudioSink(true, DEFAULT_SAMPLE_RATE, (byte)DEFAULT_CHANNEL_COUNT));
-            this.log("enable video", this.engine.EnableVideo());
-            this.engine.StartPreview();
-            log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
         }
 
         private void InitAudioGraph()

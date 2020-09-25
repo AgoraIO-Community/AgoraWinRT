@@ -41,30 +41,35 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="btnStart" Content="正常打开" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"/>
-                <Button x:Name="btnStartSelfAudio" Content="演示音频自采集" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" />
-                <Button x:Name="btnStartPullAudio" Content="演示音频自渲染" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" />
-                <Button x:Name="btnTest" Content="测试代码用" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"/>
+                <ComboBox x:Name="cbMediaMode" Header="媒体采集模式" PlaceholderText="选择一个媒体采集模式" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
+                    <ComboBoxItem x:Name="cbiNormal" Content="使用SDK内部采集模式" IsSelected="True" />
+                    <ComboBoxItem x:Name="cbiAudioSelfCollect" Content="使用音频自采集" IsSelected="False" />
+                    <ComboBoxItem x:Name="cbiAudioSelfRender" Content="使用音频自渲染" IsSelected="False"/>
+                </ComboBox>
+                <Button x:Name="btnJoinChannel" Content="加入频道" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"/>
+                <Button x:Name="btnLeaveChannel" Content="离开频道" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
+                <Button x:Name="btnMuteAudio" Content="开启静音" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" />
+                <Button x:Name="btnMuteVideo" Content="关闭视频" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"/>
             </Grid>
             <Grid Margin="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition ></ColumnDefinition>
                     <ColumnDefinition ></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" MinHeight="200"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
                     <TextBlock Text="本地视频："/>
-                    <Image x:Name="localVideo" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    <Grid Height="320" Width="320" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.Background>
+                            <ImageBrush x:Name="localVideoBrush" />
+                        </Grid.Background>
+                    </Grid>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" >
-                    <TextBlock Text="远程视频:"/>
-                    <Image x:Name="remoteVideo" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="0" >
                     <TextBlock Text="远程视频:"/>
                     <Grid Height="320" Width="320" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.Background>
