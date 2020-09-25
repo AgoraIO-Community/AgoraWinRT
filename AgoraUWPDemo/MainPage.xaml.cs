@@ -65,6 +65,10 @@ namespace AgoraUWPDemo
             }
         }
         private bool isVideoMuted = false;
+        private Dictionary<int, FRAME_RATE> m_frameRates;
+        private Dictionary<int, VideoDimensions> m_dimensions;
+        private Dictionary<int, int> m_bitrates;
+
         private bool VideoMuted
         {
             get => isVideoMuted;
@@ -79,18 +83,45 @@ namespace AgoraUWPDemo
         {
             this.InitializeComponent();
 
+            this.InitParams();
             this.Init();
 
             /// UWP需要权限，这个权限应当在主线程以异步的形式进行申请。这个部分需要用户自己解决
             AgoraUWPRTC.RequestCameraAccess();
         }
 
-        private void Init()
+        private void InitParams()
         {
             m_modes = new Dictionary<int, Action>();
             m_modes.Add(0, () => { StartEngineAndPreview(); });
             m_modes.Add(1, () => { StartEngineAndSelfAudioProcess(); });
             m_modes.Add(2, () => { StartEngineAndPullAudioProcess(); });
+
+            m_frameRates = new Dictionary<int, FRAME_RATE>();
+            m_frameRates.Add(0, FRAME_RATE.FRAME_RATE_FPS_1);
+            m_frameRates.Add(1, FRAME_RATE.FRAME_RATE_FPS_7);
+            m_frameRates.Add(2, FRAME_RATE.FRAME_RATE_FPS_10);
+            m_frameRates.Add(3, FRAME_RATE.FRAME_RATE_FPS_15);
+            m_frameRates.Add(4, FRAME_RATE.FRAME_RATE_FPS_24);
+            m_frameRates.Add(5, FRAME_RATE.FRAME_RATE_FPS_30);
+
+            m_dimensions = new Dictionary<int, VideoDimensions>();
+            m_dimensions.Add(0, new VideoDimensions { width = 160, height = 120 });
+            m_dimensions.Add(1, new VideoDimensions { width = 320, height = 240 });
+            m_dimensions.Add(2, new VideoDimensions { width = 640, height = 360 });
+            m_dimensions.Add(3, new VideoDimensions { width = 640, height = 480 });
+            m_dimensions.Add(4, new VideoDimensions { width = 960, height = 720 });
+
+            m_bitrates = new Dictionary<int, int>();
+            m_bitrates.Add(0, 100);
+            m_bitrates.Add(1, 200);
+            m_bitrates.Add(2, 400);
+            m_bitrates.Add(3, 800);
+            m_bitrates.Add(4, 1600);
+        }
+
+        private void Init()
+        {
 
             txtResult.TextChanged += TxtResult_TextChanged;
 
@@ -124,7 +155,12 @@ namespace AgoraUWPDemo
             action?.Invoke();
             this.log("set channel profile", this.engine.SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING));
             this.log("set client role", this.engine.SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER));
-            this.engine.SetupLocalVideo(new ImageBrushVideoCanvas { Target = localVideoBrush, RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE, MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
+            this.engine.SetupLocalVideo(new ImageBrushVideoCanvas
+            {
+                Target = localVideoBrush,
+                RenderMode = AgoraWinRT.RENDER_MODE_TYPE.RENDER_MODE_FIT,
+                MirrorMode = AgoraWinRT.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED
+            });
             this.log("enable video", this.engine.EnableVideo());
             this.engine.StartPreview();
             log("join channel", this.engine.JoinChannel(txtChannelToken.Text, txtChannelName.Text, "", 0));
@@ -294,6 +330,18 @@ namespace AgoraUWPDemo
         {
             Clean();
             engine = new AgoraUWPRTC(txtVendorKey.Text);
+            log("Set Video Encoder Configuration",
+                engine.SetVideoEncoderConfiguration(new VideoEncoderConfiguration
+                {
+                    dimensions = m_dimensions[cbResolution.SelectedIndex],
+                    frameRate = m_frameRates[cbFrameRate.SelectedIndex],
+                    minFrameRate = -1,
+                    bitrate = m_bitrates[cbBitrate.SelectedIndex],
+                    minBitrate = 0,
+                    orientationMode = ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE,
+                    degradationPreference = DEGRADATION_PREFERENCE.MAINTAIN_QUALITY,
+                    mirrorMode = VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED,
+                }));
             engine.OnUserJoined += Engine_OnUserJoined;
             engine.OnFirstLocalVideoFrame += Engine_OnFirstLocalVideoFrame;
             engine.OnFirstRemoteVideoFrame += Engine_OnFirstRemoteVideoFrame;

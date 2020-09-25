@@ -32,7 +32,7 @@
                      HorizontalAlignment="Stretch" MaxHeight="200" AcceptsReturn="True" 
                      TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
-            <Grid Margin="12" ColumnSpacing="12">
+            <Grid Margin="12" ColumnSpacing="12" RowSpacing="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -47,6 +47,28 @@
                     <ComboBoxItem x:Name="cbiNormal" Content="使用SDK内部采集模式" IsSelected="True" />
                     <ComboBoxItem x:Name="cbiAudioSelfCollect" Content="使用音频自采集" IsSelected="False" />
                     <ComboBoxItem x:Name="cbiAudioSelfRender" Content="使用音频自渲染" IsSelected="False"/>
+                </ComboBox>
+                <ComboBox x:Name="cbResolution" Header="分辨率" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="0">
+                    <ComboBoxItem Content="160x120" />
+                    <ComboBoxItem Content="320x240" />
+                    <ComboBoxItem Content="640x360" />
+                    <ComboBoxItem Content="640x480" IsSelected="True" />
+                    <ComboBoxItem Content="960x720" />
+                </ComboBox>
+                <ComboBox x:Name="cbFrameRate" Header="帧率" HorizontalAlignment="Stretch" Grid.Column="2" Grid.Row="0">
+                    <ComboBoxItem Content="1 fps"/>
+                    <ComboBoxItem Content="7 fps"/>
+                    <ComboBoxItem Content="10 fps"/>
+                    <ComboBoxItem Content="15 fps"/>
+                    <ComboBoxItem Content="24 fps" IsSelected="True"/>
+                    <ComboBoxItem Content="30 fps"/>
+                </ComboBox>
+                <ComboBox x:Name="cbBitrate" Header="码率" HorizontalAlignment="Stretch" Grid.Column="3" Grid.Row="0">
+                    <ComboBoxItem Content="100"/>
+                    <ComboBoxItem Content="200"/>
+                    <ComboBoxItem Content="400" IsSelected="True"/>
+                    <ComboBoxItem Content="800"/>
+                    <ComboBoxItem Content="1600"/>
                 </ComboBox>
                 <Button x:Name="btnJoinChannel" Content="加入频道" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"/>
                 <Button x:Name="btnLeaveChannel" Content="离开频道" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>
