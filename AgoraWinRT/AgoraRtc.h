@@ -162,6 +162,8 @@ namespace winrt::AgoraWinRT::implementation
         void RegisterVideoFrameObserver(AgoraWinRT::VideoFrameObserver const& observer);
         //多频道
         AgoraWinRT::Channel CreateChannel(hstring const& channel);
+        //设备管理
+        AgoraWinRT::AudioDeviceManager GetAudioDeviceManager();
     private:
         agora::rtc::IRtcEngine* m_rtcEngine{ nullptr };
         agora::media::IMediaEngine* m_mediaEngine{ nullptr };
@@ -236,6 +238,9 @@ namespace winrt::AgoraWinRT::implementation
         void onWarning(int warn, const char* msg) override;
         void onError(int err, const char* msg) override;
         void onApiCallExecuted(int err, const char* api, const char* result) override;
+        //设备管理
+        void onAudioDeviceStateChanged(const char* deviceId, int deviceType, int deviceState) override;
+        void onAudioDeviceVolumeChanged(agora::rtc::MEDIA_DEVICE_TYPE type, int volume, bool muted) override;
     private:
         //IMetadataObserver实现部分
         int getMaxMetadataSize() override;

@@ -2,6 +2,7 @@ import "AgoraWinRTTypes.idl";
 import "AgoraWinRTEnums.idl";
 import "AgoraWinRTInterfaces.idl";
 import "AgoraWinRTChannel.idl";
+import "AgoraWinRTAudioDeviceManager.idl";
 
 namespace AgoraWinRT
 {
@@ -183,5 +184,8 @@ namespace AgoraWinRT
 
 		//多频道
 		AgoraWinRT.Channel CreateChannel(String channel);
+
+		//设备管理
+		AgoraWinRT.AudioDeviceManager GetAudioDeviceManager();
 	};
 }

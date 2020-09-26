@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Media.Capture.Frames;
 
 namespace AgoraUWP
@@ -15,6 +16,8 @@ namespace AgoraUWP
     {
         event VideoFrameArrivedDelegate OnVideoFrameArrived;
         event AudioFrameArrivedDelegate OnAudioFrameArrived;
+        DeviceInformation VideoDevice { get; }
+        DeviceInformation AudioDevice { get; }
         MediaFrameFormat AudioFormat { get; }
         VIDEO_PIXEL_FORMAT VideoFormat { get; }
         VIDEO_BUFFER_TYPE VideoBufferType { get; }

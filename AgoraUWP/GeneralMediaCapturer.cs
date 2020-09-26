@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
+using Windows.Devices.Sensors;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
 using Windows.Media.MediaProperties;
@@ -14,39 +16,67 @@ namespace AgoraUWP
     {
         private MediaFrameReader videoFrameReader;
         private MediaFrameReader audioFrameReader;
+        private MediaCapture mediaCapture;
 
         public event VideoFrameArrivedDelegate OnVideoFrameArrived;
         public event AudioFrameArrivedDelegate OnAudioFrameArrived;
 
         public GeneralMediaCapturer(MediaFrameSourceGroup sourceGroup, StreamingCaptureMode mode)
         {
-            var mediaCapture = new MediaCapture();
-            mediaCapture.InitializeAsync(
-                new MediaCaptureInitializationSettings
-                {
-                    SourceGroup = sourceGroup,
-                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                    StreamingCaptureMode = mode,
-                    MemoryPreference = MediaCaptureMemoryPreference.Cpu,
-                }).AsTask().Wait();
+            var settings = CreateSettings();
+            settings.SourceGroup = sourceGroup;
+            mediaCapture = new MediaCapture();
+            mediaCapture.InitializeAsync(settings).AsTask().Wait();
+            InitReader();
+        }
+        public GeneralMediaCapturer(DeviceInformation device, StreamingCaptureMode mode)
+        {
+            var settings = CreateSettings();
+
+            if (mode == StreamingCaptureMode.Video) settings.VideoDeviceId = device.Id;
+            else settings.AudioDeviceId = device.Id;
+
+            mediaCapture = new MediaCapture();
+            mediaCapture.InitializeAsync(settings).AsTask().Wait();
+            InitReader();
+        }
+        private MediaCaptureInitializationSettings CreateSettings()
+        {
+            return new MediaCaptureInitializationSettings
+            {
+                SharingMode = MediaCaptureSharingMode.SharedReadOnly,
+                StreamingCaptureMode = StreamingCaptureMode.Video,
+                MemoryPreference = MediaCaptureMemoryPreference.Cpu,
+            };
+        }
+        private void InitReader()
+        {
             foreach (MediaFrameSource source in mediaCapture.FrameSources.Values)
             {
                 if (source.Info.SourceKind == MediaFrameSourceKind.Color)
                 {
+                    VideoDevice = source.Info.DeviceInformation;
                     videoFrameReader = mediaCapture.CreateFrameReaderAsync(source, MediaEncodingSubtypes.Nv12).AsTask().GetAwaiter().GetResult();
                     videoFrameReader.FrameArrived += VideoFrameArrivedEvent;
                 }
                 else if (source.Info.SourceKind == MediaFrameSourceKind.Audio)
                 {
+                    AudioDevice = source.Info.DeviceInformation;
                     AudioFormat = source.CurrentFormat;
                     audioFrameReader = mediaCapture.CreateFrameReaderAsync(source).AsTask().GetAwaiter().GetResult();
                     audioFrameReader.FrameArrived += AudioFrameArrivedEvent;
                 }
             }
+
         }
-        public MediaFrameFormat AudioFormat { get; }
+        public MediaFrameFormat AudioFormat { get; private set; }
         public VIDEO_PIXEL_FORMAT VideoFormat { get=>VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12; }
         public VIDEO_BUFFER_TYPE VideoBufferType { get => VIDEO_BUFFER_TYPE.VIDEO_BUFFER_RAW_DATA; }
+
+        public DeviceInformation VideoDevice { get; private set; }
+
+        public DeviceInformation AudioDevice { get; private set; }
+
         public void EnableVideo(bool enabled)
         {
             if (enabled) videoFrameReader?.StartAsync().AsTask().Wait();
@@ -77,7 +107,10 @@ namespace AgoraUWP
         public void Dispose()
         {
             videoFrameReader?.StopAsync().AsTask().Wait();
+            videoFrameReader?.Dispose();
             audioFrameReader?.StopAsync().AsTask().Wait();
+            audioFrameReader?.Dispose();
+            mediaCapture?.Dispose();
         }
     }
 }

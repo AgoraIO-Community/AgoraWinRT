@@ -26,6 +26,8 @@
     <ClCompile Include="ExternalVideoFrame.cpp" />
     <ClCompile Include="VideoSourceConsumer.cpp" />
     <ClCompile Include="RawVideoSource.cpp" />
+    <ClCompile Include="AudioDeviceCollection.cpp" />
+    <ClCompile Include="AudioDeviceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -43,6 +45,8 @@
     <ClInclude Include="ExternalVideoFrame.h" />
     <ClInclude Include="VideoSourceConsumer.h" />
     <ClInclude Include="RawVideoSource.h" />
+    <ClInclude Include="AudioDeviceCollection.h" />
+    <ClInclude Include="AudioDeviceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />
@@ -60,5 +64,6 @@
     <Midl Include="AgoraWinRTTypes.idl" />
     <Midl Include="AgoraWinRTInterfaces.idl" />
     <Midl Include="AgoraWinRTChannel.idl" />
+    <Midl Include="AgoraWinRTAudioDeviceManager.idl" />
   </ItemGroup>
 </Project>

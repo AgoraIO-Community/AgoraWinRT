@@ -23,11 +23,9 @@ namespace AgoraUWP
     {
         public static unsafe SoftwareBitmap ConvertToImage(VideoMediaFrame input)
         {
-            using (var inputBitmap = input?.SoftwareBitmap)
-            {
-                if (inputBitmap == null) return null;
-                return SoftwareBitmap.Convert(inputBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
-            }
+            var inputBitmap = input?.SoftwareBitmap;
+            if (inputBitmap == null) return null;
+            return SoftwareBitmap.Convert(inputBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
         }
 
         public static byte[] ConvertToNv12(VideoFrame frame)

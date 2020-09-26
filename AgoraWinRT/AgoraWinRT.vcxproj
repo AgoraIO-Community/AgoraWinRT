@@ -118,6 +118,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AgoraRtc.h" />
+    <ClInclude Include="AudioDeviceCollection.h" />
+    <ClInclude Include="AudioDeviceManager.h" />
     <ClInclude Include="AudioFrame.h" />
     <ClInclude Include="Channel.h" />
     <ClInclude Include="ChannelMediaRelayConfiguration.h" />
@@ -135,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AgoraRtc.cpp" />
+    <ClCompile Include="AudioDeviceCollection.cpp" />
+    <ClCompile Include="AudioDeviceManager.cpp" />
     <ClCompile Include="AudioFrame.cpp" />
     <ClCompile Include="Channel.cpp" />
     <ClCompile Include="ChannelMediaRelayConfiguration.cpp" />
@@ -159,6 +163,7 @@
     <Midl Include="AgoraWinRTInterfaces.idl" />
     <Midl Include="AgoraWinRTTypes.idl" />
     <Midl Include="AgoraWinRTChannel.idl" />
+    <Midl Include="AgoraWinRTAudioDeviceManager.idl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AgoraWinRT.def" />

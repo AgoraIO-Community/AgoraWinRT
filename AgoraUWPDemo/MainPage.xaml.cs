@@ -1,32 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using AgoraUWP;
-using Windows.UI.Xaml.Media.Imaging;
+﻿using AgoraUWP;
 using AgoraWinRT;
-using Windows.Media.Capture;
-using Windows.Media.Capture.Frames;
+using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Windows.Media;
-using Windows.Storage.Streams;
-using System.Reflection;
 using Windows.Media.Audio;
-using Windows.Media.Render;
+using Windows.Media.Capture;
+using Windows.Media.Capture.Frames;
 using Windows.Media.MediaProperties;
-using System.Runtime.ConstrainedExecution;
-using System.Timers;
-using System.Threading;
+using Windows.Media.Render;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace AgoraUWPDemo
 {
@@ -48,7 +34,7 @@ namespace AgoraUWPDemo
         private static readonly uint DEFAULT_CHANNEL_COUNT = 1;
         private static readonly uint DEFAULT_SAMPLE_RATE = 48000;
 
-        private AgoraUWPRTC engine;
+        private AgoraUWP.AgoraRtc engine;
         private GeneralMediaCapturer m_audioCapture;
         private AudioGraph m_audioGraph;
         private AudioFrameInputNode m_audioInput;
@@ -87,7 +73,7 @@ namespace AgoraUWPDemo
             this.Init();
 
             /// UWP需要权限，这个权限应当在主线程以异步的形式进行申请。这个部分需要用户自己解决
-            AgoraUWPRTC.RequestCameraAccess();
+            AgoraUWP.AgoraRtc.RequestCameraAccess();
         }
 
         private void InitParams()
@@ -129,6 +115,7 @@ namespace AgoraUWPDemo
             btnLeaveChannel.Click += LeaveChannel;
             btnMuteAudio.Click += MuteAudio;
             btnMuteVideo.Click += MuteVideo;
+            btnTest.Click += TestCode;
         }
 
         private void MuteVideo(object sender, RoutedEventArgs e)
@@ -303,13 +290,42 @@ namespace AgoraUWPDemo
             }
         }
 
-        private void TestCode(object sender, RoutedEventArgs e)
+        private async void TestCode(object sender, RoutedEventArgs e)
         {
             //engine.SetRemoteRenderMode(remoteUser, RENDER_MODE_TYPE.RENDER_MODE_FILL, VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED);
             //localVideoEnabled = !localVideoEnabled;
             //engine.EnableLocalVideo(localVideoEnabled);    
             //log("Set External Video Source", engine.SetExternalVideoSource(localVideoEnabled, false));
-            Clean();
+            //Clean();
+            using (AudioDeviceManager manager = engine.GetAudioDeviceManager())
+            {
+                using (var collection = manager.enumeratePlaybackDevices())
+                {
+                    for (int i = 0; i < collection.GetCount(); i++)
+                    {
+                        collection.GetDevice(i, out string name, out string id);
+                        log(String.Format("audio device's name is {0} and id is {1} in ", name, id), i);
+                    }
+                }
+                using (var collection = manager.enumerateRecordingDevices())
+                {
+                    for (int i = 0; i < collection.GetCount(); i++)
+                    {
+                        collection.GetDevice(i, out string name, out string id);
+                        log(string.Format("recording device's name is {0} and id is {1} in ", name, id), i);
+                    }
+                }
+            }
+            using (var manager = engine.GetVideoDeviceManager())
+            using (var collection = await manager.EnumerateVideoDevices())
+            {
+                for (int i = 0; i < collection.GetCount(); i++)
+                {
+                    collection.GetDevice(i, out string name, out string id);
+                    log(string.Format("video device's name is {0} and id is {1} in ", name, id), i);
+                }
+                manager.StartDeviceTest(new ImageBrushVideoCanvas { Target = testVideoBrush, RenderMode = RENDER_MODE_TYPE.RENDER_MODE_FILL, MirrorMode = VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED });
+            }            
         }
 
         private void TxtResult_TextChanged(object sender, TextChangedEventArgs e)
@@ -329,7 +345,7 @@ namespace AgoraUWPDemo
         private void InitEngine()
         {
             Clean();
-            engine = new AgoraUWPRTC(txtVendorKey.Text);
+            engine = new AgoraUWP.AgoraRtc(txtVendorKey.Text);
             log("Set Video Encoder Configuration",
                 engine.SetVideoEncoderConfiguration(new VideoEncoderConfiguration
                 {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
 using Windows.Media.MediaProperties;
@@ -15,19 +16,21 @@ using Windows.UI.Xaml.Media;
 
 namespace AgoraUWP
 {
-    public class AgoraUWPRTC : AgoraWinRT.AgoraRtc,
+    public class AgoraRtc : AgoraWinRT.AgoraRtc,
         AgoraWinRT.AgoraRtcEventHandler,
         AgoraWinRT.VideoFrameObserver,
         AgoraWinRT.AudioFrameObserver
     {
         private VideoCanvas localVideo = null;
-        private bool previewing;
+        private bool previewing = false;
         private DateTime? firstLocalVideoFrameElapsed = null;
-        private bool joinChanneled;
+        private bool joinChanneled = false;
         private Dictionary<ulong, VideoCanvas> remoteVideos = new Dictionary<ulong, VideoCanvas>();
         private DateTime? firstRemoteVideoFrameElapsed = null;
         private GeneralMediaCapturer defaultMediaCapturer;
         private bool useExternalVideoSoruce;
+        private VideoCanvas testVideoCanvas;
+        private bool videoTesting = false;
 
         /// <summary>
         /// 得到Camera的使用权限
@@ -38,7 +41,7 @@ namespace AgoraUWP
             await mediaCapture.InitializeAsync();
         }
 
-        public AgoraUWPRTC(string vendorKey) : base(vendorKey)
+        public AgoraRtc(string vendorKey) : base(vendorKey)
         {
             base.RegisterRtcEngineEventHandler(this);
             base.RegisterVideoFrameObserver(this);
@@ -51,40 +54,71 @@ namespace AgoraUWP
         {
             var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
             if (sourceGroup.Count == 0) return;
-            defaultMediaCapturer = new GeneralMediaCapturer(sourceGroup[0], StreamingCaptureMode.AudioAndVideo);
+            InitVideoCapture(sourceGroup[0]);
+        }
+        private void InitVideoCapture(MediaFrameSourceGroup group)
+        {
+            defaultMediaCapturer?.Dispose();
+            defaultMediaCapturer = new GeneralMediaCapturer(group, StreamingCaptureMode.Video);
             defaultMediaCapturer.OnVideoFrameArrived += VideoFrameArrivedEvent;
             base.SetExternalVideoSource(true, false);
         }
-
+        private void InitVideoCapture(DeviceInformation device)
+        {            
+            defaultMediaCapturer?.Dispose();
+            defaultMediaCapturer = new GeneralMediaCapturer(device, StreamingCaptureMode.Video);
+            defaultMediaCapturer.OnVideoFrameArrived += VideoFrameArrivedEvent;
+            base.SetExternalVideoSource(true, false);
+        }
+        internal DeviceInformation CurrentVideoDevice
+        {
+            get
+            {
+                return defaultMediaCapturer.VideoDevice;
+            }
+            set
+            {
+                if (value == null || value.Id.Equals(CurrentVideoDevice?.Id)) return;
+                InitVideoCapture(value);
+            }
+        }
+        internal void StartVideoTest(VideoCanvas canvas)
+        {
+            testVideoCanvas = canvas;
+            videoTesting = true;
+        }
+        internal void StopVideoTest()
+        {
+            testVideoCanvas = null;
+            videoTesting = false;
+        }
         private void VideoFrameArrivedEvent(MediaFrameReference frame)
         {
             if (frame == null) return;
-            var buffer = frame.BufferMediaFrame;
-            if (buffer == null) return;
-            var format = frame.VideoMediaFrame?.VideoFormat;
-            if (format == null) return;
-            using (var externalFrame = new ExternalVideoFrame())
-            {
-                externalFrame.format = VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12;
-                externalFrame.type = VIDEO_BUFFER_TYPE.VIDEO_BUFFER_RAW_DATA;
-                externalFrame.stride = format.Width;
-                externalFrame.height = format.Height;
-                externalFrame.buffer = buffer.Buffer.ToArray();
-                PushVideoFrame(externalFrame);
-            }
-            Preview(frame);
-        }
 
-        private void Preview(MediaFrameReference frame)
-        {
-            if (this.previewing && !this.joinChanneled)
+            using (frame)
             {
-                this.localVideo.Render(frame);
+                var buffer = frame.BufferMediaFrame;
+                if (buffer == null) return;
+                var format = frame.VideoMediaFrame?.VideoFormat;
+                if (format == null) return;
+                using (var externalFrame = new ExternalVideoFrame())
+                {
+                    externalFrame.format = VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12;
+                    externalFrame.type = VIDEO_BUFFER_TYPE.VIDEO_BUFFER_RAW_DATA;
+                    externalFrame.stride = format.Width;
+                    externalFrame.height = format.Height;
+                    externalFrame.buffer = buffer.Buffer.ToArray();
+                    PushVideoFrame(externalFrame);
+                }
+                if (this.previewing && !this.joinChanneled) this.localVideo?.Render(frame);
+                if (this.videoTesting) this.testVideoCanvas?.Render(frame);
             }
         }
 
         public new void Dispose()
         {
+            videoTesting = false;
             defaultMediaCapturer.Dispose();
             base.Dispose();
         }
@@ -156,6 +190,11 @@ namespace AgoraUWP
             this.previewing = false;
         }
 
+        public IVideoDeviceManager GetVideoDeviceManager()
+        {
+            return new VideoDeviceManager(this);
+        }
+
         #region AgoraRtcEventHandler
 
         public event OnConnectionStateChangedDelegate OnConnectionStateChanged;
@@ -208,6 +247,9 @@ namespace AgoraUWP
         public event OnWarningDelegate OnWarning;
         public event OnErrorDelegate OnError;
         public event OnApiCallExecutedDelegate OnApiCallExecuted;
+        public event OnAudioDeviceStateChangedDelegate OnAudioDeviceStateChanged;
+        public event OnAudioDeviceVolumeChangedDelegate OnAudioDeviceVolumeChanged;
+        public event OnVideoDeviceStateChangedDelegate OnVideoDeviceStateChanged;
 
         void AgoraRtcEventHandler.OnConnectionStateChanged(CONNECTION_STATE_TYPE type, CONNECTION_CHANGED_REASON_TYPE reason)
         {
@@ -461,6 +503,21 @@ namespace AgoraUWP
         {
             OnApiCallExecuted?.Invoke(code, api, result);
         }
+
+        void AgoraRtcEventHandler.OnAudioDeviceStateChanged(string id, MEDIA_DEVICE_TYPE type, MEDIA_DEVICE_STATE_TYPE state)
+        {
+            OnAudioDeviceStateChanged?.Invoke(id, type, state);
+        }
+
+        void AgoraRtcEventHandler.OnAudioDeviceVolumeChanged(MEDIA_DEVICE_TYPE type, byte volume, bool muted)
+        {
+            OnAudioDeviceVolumeChanged?.Invoke(type, volume, muted);
+        }
+
+        void AgoraRtcEventHandler.OnVideoDeviceStateChanged(string id, MEDIA_DEVICE_TYPE type, MEDIA_DEVICE_STATE_TYPE state)
+        {
+            throw new NotImplementedException();
+        }
         #endregion AgoraRtcEventHandler
 
         #region VideoFrameObserver
@@ -582,6 +639,7 @@ namespace AgoraUWP
         {
             return OnPlaybackAudioFrameBeforeMixingEx == null ? true : OnPlaybackAudioFrameBeforeMixingEx(channel, uid, frame);
         }
+
         #endregion AudioFrameObserver
 
     }

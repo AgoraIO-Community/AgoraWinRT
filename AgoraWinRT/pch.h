@@ -13,3 +13,5 @@
 #include "../agorasdk/include/IAgoraRtcChannel.h"
 
 #pragma comment(lib, "../agorasdk/x86/agora_rtc_sdk.lib")
+
+#define MAX_ID_STRING 512

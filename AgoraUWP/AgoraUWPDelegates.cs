@@ -58,6 +58,9 @@ namespace AgoraUWP
     public delegate void OnWarningDelegate(long code, string msg);
     public delegate void OnErrorDelegate(long code, string msg);
     public delegate void OnApiCallExecutedDelegate(long code, string api, string result);
+    public delegate void OnAudioDeviceStateChangedDelegate(string id, MEDIA_DEVICE_TYPE type, MEDIA_DEVICE_STATE_TYPE state);
+    public delegate void OnAudioDeviceVolumeChangedDelegate(MEDIA_DEVICE_TYPE type, byte volume, bool muted);
+    public delegate void OnVideoDeviceStateChangedDelegate(string id, MEDIA_DEVICE_TYPE type, MEDIA_DEVICE_STATE_TYPE state);
     #endregion AgoraRtcEventHandler
 
     #region VideoFrameObserver

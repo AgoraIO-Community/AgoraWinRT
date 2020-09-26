@@ -69,6 +69,10 @@ namespace AgoraWinRT
 		void OnWarning(Int64 code, String msg);
 		void OnError(Int64 code, String msg);
 		void OnApiCallExecuted(Int64 code, String api, String result);
+		//设备管理
+		void OnAudioDeviceStateChanged(String id, AgoraWinRT.MEDIA_DEVICE_TYPE type, AgoraWinRT.MEDIA_DEVICE_STATE_TYPE state);
+		void OnAudioDeviceVolumeChanged(AgoraWinRT.MEDIA_DEVICE_TYPE type, UInt8 volume, Boolean muted);
+		void OnVideoDeviceStateChanged(String id, AgoraWinRT.MEDIA_DEVICE_TYPE type, AgoraWinRT.MEDIA_DEVICE_STATE_TYPE state);
 	};
 
 	interface MetadataObserver

@@ -3,6 +3,7 @@
 #include "AgoraRtc.g.cpp"
 #include "Utils.h"
 #include "Channel.h"
+#include "AudioDeviceManager.h"
 
 namespace winrt::AgoraWinRT::implementation
 {
@@ -536,6 +537,10 @@ namespace winrt::AgoraWinRT::implementation
 		auto innerChannel = engine2->createChannel(Utils::To(channel).c_str());
 		return winrt::make<AgoraWinRT::implementation::Channel>(innerChannel);
 	}
+	AgoraWinRT::AudioDeviceManager AgoraRtc::GetAudioDeviceManager()
+	{
+		return winrt::make<AgoraWinRT::implementation::AudioDeviceManager>(m_rtcEngine);
+	}
 	void AgoraRtc::onConnectionStateChanged(agora::rtc::CONNECTION_STATE_TYPE type, agora::rtc::CONNECTION_CHANGED_REASON_TYPE reason)
 	{
 		if (m_handler) m_handler.OnConnectionStateChanged((CONNECTION_STATE_TYPE)type, (CONNECTION_CHANGED_REASON_TYPE)reason);
@@ -745,6 +750,14 @@ namespace winrt::AgoraWinRT::implementation
 	void AgoraRtc::onApiCallExecuted(int err, const char* api, const char* result)
 	{
 		if (m_handler) m_handler.OnApiCallExecuted(err, Utils::To(api), Utils::To(result));
+	}
+	void AgoraRtc::onAudioDeviceStateChanged(const char* deviceId, int deviceType, int deviceState)
+	{
+		if (m_handler) m_handler.OnAudioDeviceStateChanged(Utils::To(deviceId), AgoraWinRT::MEDIA_DEVICE_TYPE(deviceType), AgoraWinRT::MEDIA_DEVICE_STATE_TYPE(deviceState));
+	}
+	void AgoraRtc::onAudioDeviceVolumeChanged(agora::rtc::MEDIA_DEVICE_TYPE type, int volume, bool muted)
+	{
+		if (m_handler) m_handler.OnAudioDeviceVolumeChanged(AgoraWinRT::MEDIA_DEVICE_TYPE(type), volume, muted);
 	}
 	int AgoraRtc::getMaxMetadataSize()
 	{
