@@ -21,11 +21,25 @@ namespace AgoraUWP
 
     public static class Utils
     {
-        public static unsafe SoftwareBitmap ConvertToImage(VideoMediaFrame input)
+        public static unsafe SoftwareBitmap ConvertToImageAsync(VideoMediaFrame input)
         {
-            var inputBitmap = input?.SoftwareBitmap;
-            if (inputBitmap == null) return null;
-            return SoftwareBitmap.Convert(inputBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
+            if (input != null)
+            {
+                var inputBitmap = input.SoftwareBitmap;
+                var surface = input.Direct3DSurface;
+                try
+                {
+                    if (surface != null) inputBitmap = SoftwareBitmap.CreateCopyFromSurfaceAsync(surface, BitmapAlphaMode.Ignore).AsTask().GetAwaiter().GetResult();
+                    if (inputBitmap != null) return SoftwareBitmap.Convert(inputBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
+                }
+                finally
+                {
+                    inputBitmap?.Dispose();
+                    surface?.Dispose();
+                }
+            }
+
+            return null;
         }
 
         public static byte[] ConvertToNv12(VideoFrame frame)

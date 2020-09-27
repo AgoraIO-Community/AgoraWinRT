@@ -46,7 +46,7 @@ namespace AgoraUWP
             {
                 SharingMode = MediaCaptureSharingMode.SharedReadOnly,
                 StreamingCaptureMode = StreamingCaptureMode.Video,
-                MemoryPreference = MediaCaptureMemoryPreference.Cpu,
+                MemoryPreference = MediaCaptureMemoryPreference.Auto,
             };
         }
         private void InitReader()

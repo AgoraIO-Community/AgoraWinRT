@@ -79,7 +79,7 @@ namespace AgoraUWP
         public override void Render(MediaFrameReference frame)
         {
             if (source == null) return;
-            RenderBitmap(Utils.ConvertToImage(frame?.VideoMediaFrame));
+            RenderBitmap(Utils.ConvertToImageAsync(frame?.VideoMediaFrame));
         }
 
         public override void Render(VideoFrame frame)
