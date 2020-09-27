@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Foundation;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
 using Windows.Media.MediaProperties;
@@ -31,6 +32,7 @@ namespace AgoraUWP
         private bool useExternalVideoSoruce;
         private VideoCanvas testVideoCanvas;
         private bool videoTesting = false;
+        private DeviceWatcher videoDeviceWatcher;
 
         /// <summary>
         /// 得到Camera的使用权限
@@ -48,6 +50,28 @@ namespace AgoraUWP
             base.RegisterAudioFrameObserver(this);
 
             InitDefaultCapture();
+            InitVideoDeviceWatcher();
+        }
+
+        private void InitVideoDeviceWatcher()
+        {
+            videoDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.VideoCapture);
+            videoDeviceWatcher.Removed += (watcher, info) =>
+            {
+                OnVideoDeviceStateChanged?.Invoke(info.Id, MEDIA_DEVICE_TYPE.VIDEO_CAPTURE_DEVICE, MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_UNPLUGGED);
+            };
+            videoDeviceWatcher.Updated += (watcher, update) =>
+            {
+                if (update.Properties.TryGetValue("System.Devices.Connected", out object connected))
+                {
+                    OnVideoDeviceStateChanged?.Invoke(update.Id, MEDIA_DEVICE_TYPE.VIDEO_CAPTURE_DEVICE, (bool)connected ? MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_ACTIVE : MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_DISABLED);
+                }
+                if (update.Properties.TryGetValue("System.Devices.InterfaceEnabled", out object enabled))
+                {
+                    OnVideoDeviceStateChanged?.Invoke(update.Id, MEDIA_DEVICE_TYPE.VIDEO_CAPTURE_DEVICE, (bool)enabled ? MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_ACTIVE : MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_DISABLED);
+                }
+            };
+            videoDeviceWatcher.Start();
         }
 
         private void InitDefaultCapture()
@@ -118,8 +142,9 @@ namespace AgoraUWP
 
         public new void Dispose()
         {
+            videoDeviceWatcher?.Stop();
             videoTesting = false;
-            defaultMediaCapturer.Dispose();
+            defaultMediaCapturer?.Dispose();
             base.Dispose();
         }
 
