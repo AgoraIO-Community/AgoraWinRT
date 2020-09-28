@@ -71,15 +71,13 @@
                     <ComboBoxItem Content="800"/>
                     <ComboBoxItem Content="1600"/>
                 </ComboBox>
-                <ComboBox x:Name="cbVideoDevices" Header="选择摄像头" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1"/>
-                <ComboBox x:Name="cbAudioDevices" Header="选择麦克风" HorizontalAlignment="Stretch" Grid.Column="1" Grid.Row="1"/>
-                <ComboBox x:Name="cbSpeakers" Header="选择音响" HorizontalAlignment="Stretch" Grid.Column="2" Grid.Row="1"/>
+
                 <Button x:Name="btnJoinChannel" Content="加入频道" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch"/>
                 <Button x:Name="btnLeaveChannel" Content="离开频道" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch"/>
                 <Button x:Name="btnMuteAudio" Content="开启静音" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Stretch" />
                 <Button x:Name="btnMuteVideo" Content="关闭视频" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch"/>
             </Grid>
-            <Button x:Name="btnTest" Content="测试代码" HorizontalAlignment="Stretch" Margin="15"/>
+            <Button x:Name="btnTest" Content="测试代码" HorizontalAlignment="Stretch" Margin="15" Visibility="Collapsed"/>
             <Grid Margin="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition ></ColumnDefinition>
