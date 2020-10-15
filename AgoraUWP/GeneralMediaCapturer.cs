@@ -23,7 +23,7 @@ namespace AgoraUWP
 
         public GeneralMediaCapturer(MediaFrameSourceGroup sourceGroup, StreamingCaptureMode mode)
         {
-            var settings = CreateSettings();
+            var settings = CreateSettings(mode);
             settings.SourceGroup = sourceGroup;
             mediaCapture = new MediaCapture();
             mediaCapture.InitializeAsync(settings).AsTask().Wait();
@@ -31,7 +31,7 @@ namespace AgoraUWP
         }
         public GeneralMediaCapturer(DeviceInformation device, StreamingCaptureMode mode)
         {
-            var settings = CreateSettings();
+            var settings = CreateSettings(mode);
 
             if (mode == StreamingCaptureMode.Video) settings.VideoDeviceId = device.Id;
             else settings.AudioDeviceId = device.Id;
@@ -40,12 +40,12 @@ namespace AgoraUWP
             mediaCapture.InitializeAsync(settings).AsTask().Wait();
             InitReader();
         }
-        private MediaCaptureInitializationSettings CreateSettings()
+        private MediaCaptureInitializationSettings CreateSettings(StreamingCaptureMode mode)
         {
             return new MediaCaptureInitializationSettings
             {
                 SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                StreamingCaptureMode = StreamingCaptureMode.Video,
+                StreamingCaptureMode = mode,
                 MemoryPreference = MediaCaptureMemoryPreference.Auto,
             };
         }
