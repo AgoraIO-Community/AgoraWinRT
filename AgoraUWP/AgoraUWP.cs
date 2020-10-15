@@ -28,7 +28,7 @@ namespace AgoraUWP
         private bool joinChanneled = false;
         private Dictionary<ulong, VideoCanvas> remoteVideos = new Dictionary<ulong, VideoCanvas>();
         private DateTime? firstRemoteVideoFrameElapsed = null;
-        private GeneralMediaCapturer defaultMediaCapturer;
+        private IMediaCapturer defaultMediaCapturer;
         private bool useExternalVideoSoruce;
         private VideoCanvas testVideoCanvas;
         private bool videoTesting = false;
@@ -98,7 +98,7 @@ namespace AgoraUWP
         {
             get
             {
-                return defaultMediaCapturer.VideoDevice;
+                return defaultMediaCapturer?.VideoDevice;
             }
             set
             {

@@ -35,7 +35,7 @@ namespace AgoraUWPDemo
         private static readonly uint DEFAULT_SAMPLE_RATE = 48000;
 
         private AgoraUWP.AgoraRtc engine;
-        private GeneralMediaCapturer m_audioCapture;
+        private IMediaCapturer m_audioCapture;
         private AudioGraph m_audioGraph;
         private AudioFrameInputNode m_audioInput;
         private Dictionary<int, Action> m_modes;
