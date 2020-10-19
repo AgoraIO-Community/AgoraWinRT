@@ -261,13 +261,7 @@ namespace AgoraWinRT
     {
         UInt8[] buffer;
     };
-    interface PacketObserver
-    {
-        Boolean OnSendAudioPacket(AgoraWinRT.Packet packet);
-        Boolean OnSendVideoPacket(AgoraWinRT.Packet packet);
-        Boolean OnReceiveAudioPacket(AgoraWinRT.Packet packet);
-        Boolean OnReceiveVideoPacket(AgoraWinRT.Packet packet);
-    };
+
     struct InjectStreamConfig 
     {
         Int64 width;

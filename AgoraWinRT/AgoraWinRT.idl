@@ -118,7 +118,7 @@ namespace AgoraWinRT
 		Int16 StartLastmileProbeTest(AgoraWinRT.LastmileProbeConfig config);
 		Int16 StopLastmileProbeTest();
 
-		//自定义i视频模块
+		//自定义视频模块
 		Boolean SetVideoSource(AgoraWinRT.VideoSource source);
 
 		//视频自采集
