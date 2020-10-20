@@ -240,6 +240,8 @@ Note left of UWP: 释放
 UWP->>SDK: Dispose
 ```
 
+![快速开始流程](images\image-20201020161921981.png)
+
 请注意，因为UWP平台限制，必须对摄像头和麦克风权限进行申请才可以使用，所以在初始化之前，用户需要先调用AgoraUWP.AgoraRtc.RequestCameraAccess异步方法进行权限申请，因为是异步，这个方法推荐在程序一开始比如界面显示时进行，而把真正初始化AgoraRtc对象放置在真正开始需要进行视频通话的时候再进行，否则会造成AgoraRtc无法获得设备权限。
 
 ### 使用音频自采集
@@ -269,6 +271,8 @@ SDK->>Agora: 请求离开频道
 Note left of UWP: 释放
 UWP->>SDK: Dispose
 ```
+
+![自采集音频流程](images\image-20201020162134496.png)
 
 在演示中
 
@@ -363,6 +367,8 @@ SDK->>Agora: 请求离开频道
 Note left of UWP: 释放
 UWP->>SDK: Dispose
 ```
+![音频自渲染流程](images/image-20201020162339492.png)
+
 在演示中
 
 ```c#
