@@ -128,8 +128,8 @@ namespace AgoraUWP
                 if (format == null) return;
                 using (var externalFrame = new ExternalVideoFrame())
                 {
-                    externalFrame.format = VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_NV12;
-                    externalFrame.type = VIDEO_BUFFER_TYPE.VIDEO_BUFFER_RAW_DATA;
+                    externalFrame.format = defaultMediaCapturer.VideoFormat;
+                    externalFrame.type = defaultMediaCapturer.VideoBufferType;
                     externalFrame.stride = format.Width;
                     externalFrame.height = format.Height;
                     externalFrame.buffer = buffer.Buffer.ToArray();

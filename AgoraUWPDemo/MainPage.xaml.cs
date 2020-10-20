@@ -194,7 +194,9 @@ namespace AgoraUWPDemo
             InitAudioGraph();
             log("Set External Audio Sink", this.engine.SetExternalAudioSink(true, DEFAULT_SAMPLE_RATE, (byte)DEFAULT_CHANNEL_COUNT));
         }
-
+        /// <summary>
+        /// 初始化音频播放器
+        /// </summary>
         private void InitAudioGraph()
         {
             var settings = new AudioGraphSettings(AudioRenderCategory.Media);
@@ -214,7 +216,13 @@ namespace AgoraUWPDemo
             m_audioInput.AddOutgoingConnection(outputResult.DeviceOutputNode);
             m_audioInput.Stop();
         }
-
+        /// <summary>
+        /// 当音频播放路由准备好数据处理时才从PullAudioFrame得到音频数据，
+        /// 正确的做法应当是根据两次QuantumStartedEvent的间隔处理frame.samples数据
+        /// 本示例中为简化做法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
         {
             using (var frame = new AgoraWinRT.AudioFrame())
@@ -230,7 +238,10 @@ namespace AgoraUWPDemo
             }
 
         }
-
+        /// <summary>
+        /// 播放音频数据
+        /// </summary>
+        /// <param name="frame"></param>
         private unsafe void PlayAudioFrame(AgoraWinRT.AudioFrame frame)
         {
             using (var audioFrame = new Windows.Media.AudioFrame((uint)frame.buffer.Length))
@@ -249,7 +260,9 @@ namespace AgoraUWPDemo
                 m_audioInput?.AddFrame(audioFrame);
             }
         }
-
+        /// <summary>
+        /// 初始化音频采集器
+        /// </summary>
         private void InitAudioCapture()
         {
             var sourceGroup = MediaFrameSourceGroup.FindAllAsync().AsTask().GetAwaiter().GetResult();
@@ -257,7 +270,10 @@ namespace AgoraUWPDemo
             m_audioCapture = new GeneralMediaCapturer(sourceGroup[0], StreamingCaptureMode.Audio);
             m_audioCapture.OnAudioFrameArrived += AudioFrameArrivedEvent;
         }
-
+        /// <summary>
+        /// 音频自采集时，当音频数据到达时需要把原生的PCM32数据处理成PCM16数据
+        /// </summary>
+        /// <param name="frame"></param>
         private void AudioFrameArrivedEvent(AudioMediaFrame frame)
         {
             using (Windows.Media.AudioFrame rawAudioFrame = frame.GetAudioFrame())
@@ -290,6 +306,11 @@ namespace AgoraUWPDemo
             }
         }
 
+        /// <summary>
+        /// 一些测试代码，可以不用关心。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void TestCode(object sender, RoutedEventArgs e)
         {
             //engine.SetRemoteRenderMode(remoteUser, RENDER_MODE_TYPE.RENDER_MODE_FILL, VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED);
@@ -328,6 +349,11 @@ namespace AgoraUWPDemo
             }            
         }
 
+        /// <summary>
+        /// 将运行结果窗口自动下拉至最后
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TxtResult_TextChanged(object sender, TextChangedEventArgs e)
         {
             var grid = VisualTreeHelper.GetChild(txtResult, 0);
@@ -342,6 +368,9 @@ namespace AgoraUWPDemo
                 }
             }
         }
+        /// <summary>
+        /// 初始化Rtc引擎
+        /// </summary>
         private void InitEngine()
         {
             Clean();
@@ -362,13 +391,6 @@ namespace AgoraUWPDemo
             engine.OnFirstLocalVideoFrame += Engine_OnFirstLocalVideoFrame;
             engine.OnFirstRemoteVideoFrame += Engine_OnFirstRemoteVideoFrame;
             engine.OnJoinChannelSuccess += Engine_OnJoinChannelSuccess;
-            engine.OnPlaybackAudioFrame += Engine_OnPlaybackAudioFrame;
-        }
-
-        private bool Engine_OnPlaybackAudioFrame(AgoraWinRT.AudioFrame frame)
-        {
-            PlayAudioFrame(frame);
-            return false;
         }
 
         private void Engine_OnJoinChannelSuccess(string channel, ulong uid, uint elapsed)
@@ -387,7 +409,11 @@ namespace AgoraUWPDemo
         {
             log("onFirstLocalVideoFrame", elapsed);
         }
-
+        /// <summary>
+        /// 远程用户加入时创建对应的视频窗口
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="elapsed"></param>
         private void Engine_OnUserJoined(ulong uid, uint elapsed)
         {
             _ = Dispatcher.RunAsync(

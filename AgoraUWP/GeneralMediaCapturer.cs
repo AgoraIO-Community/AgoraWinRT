@@ -112,5 +112,6 @@ namespace AgoraUWP
             audioFrameReader?.Dispose();
             mediaCapture?.Dispose();
         }
+
     }
 }

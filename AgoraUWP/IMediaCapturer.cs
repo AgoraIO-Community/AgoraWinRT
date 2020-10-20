@@ -24,4 +24,5 @@ namespace AgoraUWP
         void EnableVideo(bool enabled);
         void EnableAudio(bool enabled);
     }
+
 }
