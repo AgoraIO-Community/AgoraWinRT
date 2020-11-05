@@ -1,284 +1,284 @@
-# AgoraWinRT¿ª·¢ËµÃ÷ÊÖ²á
+# AgoraWinRTå¼€å‘è¯´æ˜æ‰‹å†Œ
 
-ÒòÎªUWPµÄÌØÊâĞÔ£¬Ô­ÉúAgora C++¿ª·¢°üÎŞ·¨ÔÚÃ»ÓĞÃ÷È·ÉêÇëÈ¨ÏŞµÄ»ù´¡ÉÏ¾ÍµÃµ½ÉãÏñÍ·ºÍÂó¿Ë·çµÄÊ¹ÓÃÈ¨ÏŞ£¬²¢ÇÒÒòÎª´°¿Ú¾ä±úµÄÈ¡Ïû£¬Ò²ÎŞ·¨È±Ê¡µÄÊµÏÖ¶ÔÊÓÆµµÄäÖÈ¾£¬ÁíÒ»·½Ãæ£¬UWP¿ª·¢Ã÷ÏÔ¶ÔÓÚC#µÄÓÃ»§¸ü¼ÓÓÑºÃ£¬ÌØ´Ë¶ÔAgora C++½øĞĞWinRT·â×°£¬²¢ÔÚWinRT·â×°µÄ»ù´¡ÉÏÕë¶ÔUWPµÄÉè±¸¹ÜÀíºÍÒôÊÓÆµäÖÈ¾ÔÙ¶È·â×°£¬´Ó¶ø·½±ãC#ÓÃ»§ÔÚUWPÆ½Ì¨ÉÏ½øĞĞAgoraÓ¦ÓÃµÄ¿ª·¢£¬C++ÓÃ»§Ò²¿ÉÒÔ²Î¿¼»òÖ±½ÓÊ¹ÓÃWinRT·â×°½øĞĞ¿ª·¢¡£
+å› ä¸ºUWPçš„ç‰¹æ®Šæ€§ï¼ŒåŸç”ŸAgora C++å¼€å‘åŒ…æ— æ³•åœ¨æ²¡æœ‰æ˜ç¡®ç”³è¯·æƒé™çš„åŸºç¡€ä¸Šå°±å¾—åˆ°æ‘„åƒå¤´å’Œéº¦å…‹é£çš„ä½¿ç”¨æƒé™ï¼Œå¹¶ä¸”å› ä¸ºçª—å£å¥æŸ„çš„å–æ¶ˆï¼Œä¹Ÿæ— æ³•ç¼ºçœçš„å®ç°å¯¹è§†é¢‘çš„æ¸²æŸ“ï¼Œå¦ä¸€æ–¹é¢ï¼ŒUWPå¼€å‘æ˜æ˜¾å¯¹äºC#çš„ç”¨æˆ·æ›´åŠ å‹å¥½ï¼Œç‰¹æ­¤å¯¹Agora C++è¿›è¡ŒWinRTå°è£…ï¼Œå¹¶åœ¨WinRTå°è£…çš„åŸºç¡€ä¸Šé’ˆå¯¹UWPçš„è®¾å¤‡ç®¡ç†å’ŒéŸ³è§†é¢‘æ¸²æŸ“å†åº¦å°è£…ï¼Œä»è€Œæ–¹ä¾¿C#ç”¨æˆ·åœ¨UWPå¹³å°ä¸Šè¿›è¡ŒAgoraåº”ç”¨çš„å¼€å‘ï¼ŒC++ç”¨æˆ·ä¹Ÿå¯ä»¥å‚è€ƒæˆ–ç›´æ¥ä½¿ç”¨WinRTå°è£…è¿›è¡Œå¼€å‘ã€‚
 
-## ¼Ü¹¹ËµÃ÷
+## æ¶æ„è¯´æ˜
 
-Õû¸ö¼Ü¹¹·ÖÎªÁ½¸öÖ÷Òª²¿·Ö£¬AgoraWinRTºÍAgoraUWP¡£
+æ•´ä¸ªæ¶æ„åˆ†ä¸ºä¸¤ä¸ªä¸»è¦éƒ¨åˆ†ï¼ŒAgoraWinRTå’ŒAgoraUWPã€‚
 
-AgoraWinRTÊÇ¶ÔAgora C++µÄ·â×°£¬¶øAgoraUWPÔòÊÇ¶ÔAgoraWinRTµÄ·â×°¡£
+AgoraWinRTæ˜¯å¯¹Agora C++çš„å°è£…ï¼Œè€ŒAgoraUWPåˆ™æ˜¯å¯¹AgoraWinRTçš„å°è£…ã€‚
 
-### AgoraWinRTËµÃ÷
+### AgoraWinRTè¯´æ˜
 
-AgoraWinRTÕë¶ÔAgora C++µÄAPI½øĞĞ·â×°£¬·â×°Ê±³ıÁËÃû×Ö¿Õ¼äÔÚAgoraWinRTÃû×Ö¿Õ¼äÏÂÖ®Íâ£¬ÆäÖĞµÄº¯ÊıÃû³Æ¡¢ÀàĞÍÃû³Æ¶¼ÓëAgora C++Ò»ÖÂ£¬Ê¹ÓÃÕß¿ÉÖ±½Ó²Î¿¼[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)ÖĞ¶ÔÓ¦µÄÀàĞÍ¡¢º¯ÊıËµÃ÷½øĞĞ²éÕÒ¼´¿É¡£
+AgoraWinRTé’ˆå¯¹Agora C++çš„APIè¿›è¡Œå°è£…ï¼Œå°è£…æ—¶é™¤äº†åå­—ç©ºé—´åœ¨AgoraWinRTåå­—ç©ºé—´ä¸‹ä¹‹å¤–ï¼Œå…¶ä¸­çš„å‡½æ•°åç§°ã€ç±»å‹åç§°éƒ½ä¸Agora C++ä¸€è‡´ï¼Œä½¿ç”¨è€…å¯ç›´æ¥å‚è€ƒ[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)ä¸­å¯¹åº”çš„ç±»å‹ã€å‡½æ•°è¯´æ˜è¿›è¡ŒæŸ¥æ‰¾å³å¯ã€‚
 
-#### AgoraWinRTÃ»ÓĞ·â×°µÄ²¿·Ö
+#### AgoraWinRTæ²¡æœ‰å°è£…çš„éƒ¨åˆ†
 
-ÔÚAgoraWinRTÖĞ£¬ÒòÎª¸÷ÖÖÔ­ÒòÓĞ¸ö±ğAPIÃ»ÓĞ½øĞĞ·â×°£¬ÒÔÏÂÊÇÁĞ±í¼°Ô­ÒòËµÃ÷
+åœ¨AgoraWinRTä¸­ï¼Œå› ä¸ºå„ç§åŸå› æœ‰ä¸ªåˆ«APIæ²¡æœ‰è¿›è¡Œå°è£…ï¼Œä»¥ä¸‹æ˜¯åˆ—è¡¨åŠåŸå› è¯´æ˜
 
-| APIÃû³Æ                             | Ô­ÒòËµÃ÷                                                     |
+| APIåç§°                             | åŸå› è¯´æ˜                                                     |
 | ----------------------------------- | ------------------------------------------------------------ |
-| setVideoProfile                     | 2.3ºó·ÏÆú                                                    |
-| ÆÁÄ»¹²Ïí                            | ¼¼ÊõÔ­Òò£¬ÔİÊ±²»·â×°                                         |
-| ÈËÁ³¼ì²â                            | AndroidºÍiOS                                                 |
-| ÒôÆµ²¥·ÅÂ·ÓÉ                        | AndroidºÍiOS                                                 |
-| ¶ú·µ¿ØÖÆ                            | AndroidºÍiOS                                                 |
-| ÉãÏñÍ·¿ØÖÆ                          | AndroidºÍiOS                                                 |
+| setVideoProfile                     | 2.3ååºŸå¼ƒ                                                    |
+| å±å¹•å…±äº«                            | æŠ€æœ¯åŸå› ï¼Œæš‚æ—¶ä¸å°è£…                                         |
+| äººè„¸æ£€æµ‹                            | Androidå’ŒiOS                                                 |
+| éŸ³é¢‘æ’­æ”¾è·¯ç”±                        | Androidå’ŒiOS                                                 |
+| è€³è¿”æ§åˆ¶                            | Androidå’ŒiOS                                                 |
+| æ‘„åƒå¤´æ§åˆ¶                          | Androidå’ŒiOS                                                 |
 | setAudioSessionOperationRestriction | iOS                                                          |
-| queryInterface                      | COM¼Ü¹¹                                                      |
-| IVideoDeviceManager                 | ÊÓÆµÉè±¸¹ÜÀí²¿·ÖÒò¾ßÌåÆ½Ì¨²îÒì£¬×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| initialize                          | ¼¯³ÉÖÁÀà´´½¨ÖĞ                                               |
-| release                             | ¼¯³ÉÖÁdispose·½·¨ÖĞ                                          |
-| setupLocalVideo                     | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| setupRemoteVideo                    | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| setLocalRenderMode                  | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| setRemoteRenderMode                 | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| startPreview                        | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| stopPreview                         | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| enableLocalVideo                    | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
-| onVideoDeviceStateChanged           | ×ªÒÆÖÁ¾ßÌåÆ½Ì¨µÄ·â×°ÖĞÊµÏÖ£¬±ÈÈçUWPÆ½Ì¨ÉÏ£¬ÏêÇé²Î¿¼[AgoraUWPËµÃ÷](#AgoraUWPËµÃ÷) |
+| queryInterface                      | COMæ¶æ„                                                      |
+| IVideoDeviceManager                 | è§†é¢‘è®¾å¤‡ç®¡ç†éƒ¨åˆ†å› å…·ä½“å¹³å°å·®å¼‚ï¼Œè½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| initialize                          | é›†æˆè‡³ç±»åˆ›å»ºä¸­                                               |
+| release                             | é›†æˆè‡³disposeæ–¹æ³•ä¸­                                          |
+| setupLocalVideo                     | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| setupRemoteVideo                    | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| setLocalRenderMode                  | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| setRemoteRenderMode                 | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| startPreview                        | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| stopPreview                         | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| enableLocalVideo                    | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
+| onVideoDeviceStateChanged           | è½¬ç§»è‡³å…·ä½“å¹³å°çš„å°è£…ä¸­å®ç°ï¼Œæ¯”å¦‚UWPå¹³å°ä¸Šï¼Œè¯¦æƒ…å‚è€ƒ[AgoraUWPè¯´æ˜](#AgoraUWPè¯´æ˜) |
 
-#### AgoraWinRTÏîÄ¿ÎÄ¼şËµÃ÷
+#### AgoraWinRTé¡¹ç›®æ–‡ä»¶è¯´æ˜
 
-AgoraWinRTÏîÄ¿ÎªWindows Runtime Component£¨C++ WinRT£©ÏîÄ¿£¬Æä½Ó¿Ú¶¨ÒåÔÚ¼¸¸öidlÎÄ¼şÖĞ¡£
+AgoraWinRTé¡¹ç›®ä¸ºWindows Runtime Componentï¼ˆC++ WinRTï¼‰é¡¹ç›®ï¼Œå…¶æ¥å£å®šä¹‰åœ¨å‡ ä¸ªidlæ–‡ä»¶ä¸­ã€‚
 
-| ÎÄ¼şÃû                           | ÓÃÍ¾ËµÃ÷                                                     |
+| æ–‡ä»¶å                           | ç”¨é€”è¯´æ˜                                                     |
 | -------------------------------- | ------------------------------------------------------------ |
-| AgoraWinRT.idl                   | Ö÷½Ó¿ÚÎÄ¼ş£¬¶¨ÒåÁËAgoraRtcµÄ½Ó¿Ú£¬ÎªAgora C++ SDKµÄWinRTÖØ¶¨Òå°æ±¾ |
-| AgoraWinRTInterfaces.idl         | ÊÂ¼ş½Ó¿Ú¶¨ÒåÎÄ¼ş£¬ÖØ¶¨ÒåÁËAgoraRtcEventHandler¡¢MetadataObserver¡¢AudioFrameObserver¡¢VideoFrameObserver, PacketObserver£¬Ê¹ÓÃÕßÔÚ×Ô¼ºµÄÀàÖĞ¿ÉÑ¡Ôñ½Ó¿Ú½øĞĞÊµÏÖ£¬²¢µ÷ÓÃÏàÓ¦µÄ×¢²á·½·¨£¬ÊµÏÖÊÂ¼ş¶©ÔÄ |
-| AgoraWinRTAudioDeviceManager.idl | Agora C++ IAudioDeviceManagerµÄWinRTÖØ¶¨ÒåÎÄ¼ş               |
-| AgoraWinRTChannel.idl            | Agora C++ IChannelºÍIChannelEventHandlerµÄWinRTÖØ¶¨ÒåÎÄ¼ş    |
-| AgoraWinRTTypes.idl              | Agora C++ SDKÖĞ¸÷ÖÖÆäËûÀàĞÍµÄWinRTÖØ¶¨ÒåÎÄ¼ş                 |
-| AgoraWinRTEnums.idl              | Agora C++ SDKÖĞ¸÷ÖÖÃ¶¾ÙÀàĞÍµÄWinRTÖØ¶¨ÒåÎÄ¼ş                 |
+| AgoraWinRT.idl                   | ä¸»æ¥å£æ–‡ä»¶ï¼Œå®šä¹‰äº†AgoraRtcçš„æ¥å£ï¼Œä¸ºAgora C++ SDKçš„WinRTé‡å®šä¹‰ç‰ˆæœ¬ |
+| AgoraWinRTInterfaces.idl         | äº‹ä»¶æ¥å£å®šä¹‰æ–‡ä»¶ï¼Œé‡å®šä¹‰äº†AgoraRtcEventHandlerã€MetadataObserverã€AudioFrameObserverã€VideoFrameObserver, PacketObserverï¼Œä½¿ç”¨è€…åœ¨è‡ªå·±çš„ç±»ä¸­å¯é€‰æ‹©æ¥å£è¿›è¡Œå®ç°ï¼Œå¹¶è°ƒç”¨ç›¸åº”çš„æ³¨å†Œæ–¹æ³•ï¼Œå®ç°äº‹ä»¶è®¢é˜… |
+| AgoraWinRTAudioDeviceManager.idl | Agora C++ IAudioDeviceManagerçš„WinRTé‡å®šä¹‰æ–‡ä»¶               |
+| AgoraWinRTChannel.idl            | Agora C++ IChannelå’ŒIChannelEventHandlerçš„WinRTé‡å®šä¹‰æ–‡ä»¶    |
+| AgoraWinRTTypes.idl              | Agora C++ SDKä¸­å„ç§å…¶ä»–ç±»å‹çš„WinRTé‡å®šä¹‰æ–‡ä»¶                 |
+| AgoraWinRTEnums.idl              | Agora C++ SDKä¸­å„ç§æšä¸¾ç±»å‹çš„WinRTé‡å®šä¹‰æ–‡ä»¶                 |
 
-#### AgoraWinRT::AgoraRtcµÄÊÂ¼ş×¢²á
+#### AgoraWinRT::AgoraRtcçš„äº‹ä»¶æ³¨å†Œ
 
-AgoraRtcÎªAgoraWinRTµÄºËĞÄ·â×°Àà£¬ÆäÖĞ¼¯ÖĞÁË¶ÔAgora C++ SDKµÄ·â×°£¬²¢ÇÒÍ¨¹ıÏÂ±íÌá¹©Agora C++ RTC²¿·ÖµÄÊÂ¼ş×¢²áÖ§³Ö
+AgoraRtcä¸ºAgoraWinRTçš„æ ¸å¿ƒå°è£…ç±»ï¼Œå…¶ä¸­é›†ä¸­äº†å¯¹Agora C++ SDKçš„å°è£…ï¼Œå¹¶ä¸”é€šè¿‡ä¸‹è¡¨æä¾›Agora C++ RTCéƒ¨åˆ†çš„äº‹ä»¶æ³¨å†Œæ”¯æŒ
 
-| ×¢²á·½·¨                      | ×¢²áÊÂ¼ş                                                     |
+| æ³¨å†Œæ–¹æ³•                      | æ³¨å†Œäº‹ä»¶                                                     |
 | ----------------------------- | ------------------------------------------------------------ |
 | RegisterRtcEngineEventHandler | AgoraRtcEventHandler                                         |
 | RegisterMediaMetadataObserver | MetadataObserver                                             |
-| RegisterPacketObserver        | PacketObserver£¬»ùÓÚAgoraµÄÄÚ²¿»úÖÆ£¬¹â×¢²á²¢²»»áÈÃÕâ¸ö½Ó¿ÚÉúĞ§£¬ĞèÒªÔÚµ÷ÓÃEnableEncryption²¢ÇÒenableÎªtrueºó£¬±¾½Ó¿ÚÖĞµÄº¯ÊıÊÂ¼ş²Å»áµ÷ÓÃ |
+| RegisterPacketObserver        | PacketObserverï¼ŒåŸºäºAgoraçš„å†…éƒ¨æœºåˆ¶ï¼Œå…‰æ³¨å†Œå¹¶ä¸ä¼šè®©è¿™ä¸ªæ¥å£ç”Ÿæ•ˆï¼Œéœ€è¦åœ¨è°ƒç”¨EnableEncryptionå¹¶ä¸”enableä¸ºtrueåï¼Œæœ¬æ¥å£ä¸­çš„å‡½æ•°äº‹ä»¶æ‰ä¼šè°ƒç”¨ |
 | RegisterAudioFrameObserver    | AudioFrameObserver                                           |
 | RegisterVideoFrameObserver    | VideoFrameObserver                                           |
 
-#### AgoraWinRT::AgoraRtcµÄÌØÊâÊµÏÖµã
+#### AgoraWinRT::AgoraRtcçš„ç‰¹æ®Šå®ç°ç‚¹
 
-AgoraRtc¶Ô±ÈAgora C++ÊµÏÖ£¬È¥³ıÁËinitializeºÍreleaseÁ½¸ö½Ó¿Ú¡£ÒòÎªC++ WinRT±¾Éí¿ÉÒÔÀûÓÃC++Ãæ¶Ô¶ÔÏóµÄÌØĞÔ£¬ÊµÏÖÔÚAgoraRtcÀà´´½¨Ê±×Ô¶¯³õÊ¼RTCÒıÇæ£¬²¢ÇÒÔÚÀàÎö¹¹Ê±×Ô¶¯µ÷ÓÃÒıÇæµÄrelease·½·¨¡£Í¬Ê±ÎªÁË·½±ã.NETÆ½Ì¨µÄ×ÊÔ´¹ÜÀí£¬AgoraRtcÊµÏÖÁËIDispose½Ó¿Ú£¬´Ó¶øÓÃ»§¿ÉÒÔÊ¹ÓÃusing»òÖ±½Óµ÷ÓÃdispose·½·¨½øĞĞ×ÊÔ´µÄÊÍ·Å¡£**×¢Òâ£¬ÒòÎªÕâÖÖÊµÏÖ£¬ÓÃ»§ÔÚµ÷ÓÃdisposeÊÍ·ÅAgoraRtcÖ®ºó£¬ÏëÒªÔÙ´ÎÀûÓÃAgoraRtc£¬±ØĞëÖØĞÂ´´½¨ĞÂµÄAgoraRtcÀà£¬²¢×¢²áÊÂ¼ş£¬¶ø²»ÊÇÏñAgora C++ SDKÖĞÄÇÑù×Ó¿ÉÒÔ³ÖÓĞÒıÓÃ£¬²¢ÖØĞÂinitialize¡£**
+AgoraRtcå¯¹æ¯”Agora C++å®ç°ï¼Œå»é™¤äº†initializeå’Œreleaseä¸¤ä¸ªæ¥å£ã€‚å› ä¸ºC++ WinRTæœ¬èº«å¯ä»¥åˆ©ç”¨C++é¢å¯¹å¯¹è±¡çš„ç‰¹æ€§ï¼Œå®ç°åœ¨AgoraRtcç±»åˆ›å»ºæ—¶è‡ªåŠ¨åˆå§‹RTCå¼•æ“ï¼Œå¹¶ä¸”åœ¨ç±»ææ„æ—¶è‡ªåŠ¨è°ƒç”¨å¼•æ“çš„releaseæ–¹æ³•ã€‚åŒæ—¶ä¸ºäº†æ–¹ä¾¿.NETå¹³å°çš„èµ„æºç®¡ç†ï¼ŒAgoraRtcå®ç°äº†IDisposeæ¥å£ï¼Œä»è€Œç”¨æˆ·å¯ä»¥ä½¿ç”¨usingæˆ–ç›´æ¥è°ƒç”¨disposeæ–¹æ³•è¿›è¡Œèµ„æºçš„é‡Šæ”¾ã€‚**æ³¨æ„ï¼Œå› ä¸ºè¿™ç§å®ç°ï¼Œç”¨æˆ·åœ¨è°ƒç”¨disposeé‡Šæ”¾AgoraRtcä¹‹åï¼Œæƒ³è¦å†æ¬¡åˆ©ç”¨AgoraRtcï¼Œå¿…é¡»é‡æ–°åˆ›å»ºæ–°çš„AgoraRtcç±»ï¼Œå¹¶æ³¨å†Œäº‹ä»¶ï¼Œè€Œä¸æ˜¯åƒAgora C++ SDKä¸­é‚£æ ·å­å¯ä»¥æŒæœ‰å¼•ç”¨ï¼Œå¹¶é‡æ–°initializeã€‚**
 
-#### AgoraWinRT::AgoraRtcµÄº¯ÊıºÍÊÂ¼ş½Ó¿ÚÎÄµµ
+#### AgoraWinRT::AgoraRtcçš„å‡½æ•°å’Œäº‹ä»¶æ¥å£æ–‡æ¡£
 
-[ÈçÇ°ËùÊö](#AgoraWinRTËµÃ÷)AgoraRtcÖĞ£¬³ıÁËÃû×Ö¿Õ¼äÎªAgoraWinRTÍâ£¬ÆäÏÂËùÓĞµÄº¯Êı¡¢ÀàĞÍ¡¢Ã¶¾ÙÀàĞÍ¡¢½Ó¿Ú¶¨ÒåµÄÃû³Æ¶¼ÓëAgora C++ SDKÖĞµÄÒ»ÖÂ¡£ÆäÒâÍ¼¾ÍÊÇ·½±ã¿ª·¢ÕßÖ±½ÓÍ¨¹ı¹Ù·½µÄ[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)ÎÄµµ²éÕÒ¾ßÌåµÄº¯Êı¡¢ÀàĞÍ¡¢Ã¶¾ÙÀàĞÍ¡¢½Ó¿Ú¶¨ÒåµÄ¾ßÌåËµÃ÷¡£ËùÒÔ±¾´¦²¢²»Ìá¹©º¯Êı¡¢ÀàĞÍ¡¢Ã¶¾ÙÀàĞÍ¡¢½Ó¿Ú¶¨ÒåµÄËµÃ÷ÎÄµµ£¬¿ª·¢Õß¿ÉÖ±½Ó²Î¿¼[¹Ù·½ÎÄµµ](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)¡£
+[å¦‚å‰æ‰€è¿°](#AgoraWinRTè¯´æ˜)AgoraRtcä¸­ï¼Œé™¤äº†åå­—ç©ºé—´ä¸ºAgoraWinRTå¤–ï¼Œå…¶ä¸‹æ‰€æœ‰çš„å‡½æ•°ã€ç±»å‹ã€æšä¸¾ç±»å‹ã€æ¥å£å®šä¹‰çš„åç§°éƒ½ä¸Agora C++ SDKä¸­çš„ä¸€è‡´ã€‚å…¶æ„å›¾å°±æ˜¯æ–¹ä¾¿å¼€å‘è€…ç›´æ¥é€šè¿‡å®˜æ–¹çš„[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)æ–‡æ¡£æŸ¥æ‰¾å…·ä½“çš„å‡½æ•°ã€ç±»å‹ã€æšä¸¾ç±»å‹ã€æ¥å£å®šä¹‰çš„å…·ä½“è¯´æ˜ã€‚æ‰€ä»¥æœ¬å¤„å¹¶ä¸æä¾›å‡½æ•°ã€ç±»å‹ã€æšä¸¾ç±»å‹ã€æ¥å£å®šä¹‰çš„è¯´æ˜æ–‡æ¡£ï¼Œå¼€å‘è€…å¯ç›´æ¥å‚è€ƒ[å®˜æ–¹æ–‡æ¡£](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)ã€‚
 
-### AgoraUWPËµÃ÷
+### AgoraUWPè¯´æ˜
 
-AgoraUWPÊÇÕë¶ÔUWPÆ½Ì¨ÊµÏÖµÄ¶ÔAgoraWinRTµÄC#·â×°£¬²¢ÔÚAgoraWinRTµÄ»ù´¡ÉÏ£¬Ìá¹©ÁËVideoDeviceManager¡¢ÊÓÆµ²É¼¯ÓëäÖÈ¾¹¦ÄÜ¡£Í¬Ê±£¬È±Ê¡µÄÊµÏÖÁËAgoraRtcEventHandler¡¢VideoFrameObserver¡¢AudioFrameObserverÈı¸ö½Ó¿Ú£¬²¢½«ÆäÖĞµÄº¯Êı×ª¶øÊµÏÖÎªC#·ç¸ñµÄÊÂ¼ş¡£
+AgoraUWPæ˜¯é’ˆå¯¹UWPå¹³å°å®ç°çš„å¯¹AgoraWinRTçš„C#å°è£…ï¼Œå¹¶åœ¨AgoraWinRTçš„åŸºç¡€ä¸Šï¼Œæä¾›äº†VideoDeviceManagerã€è§†é¢‘é‡‡é›†ä¸æ¸²æŸ“åŠŸèƒ½ã€‚åŒæ—¶ï¼Œç¼ºçœçš„å®ç°äº†AgoraRtcEventHandlerã€VideoFrameObserverã€AudioFrameObserverä¸‰ä¸ªæ¥å£ï¼Œå¹¶å°†å…¶ä¸­çš„å‡½æ•°è½¬è€Œå®ç°ä¸ºC#é£æ ¼çš„äº‹ä»¶ã€‚
 
-ÆäÊµÏÖÊ±µÄº¯Êı¡¢ÀàĞÍ¡¢·½·¨µÈÃû³ÆÔ­ÔòÓëAgoraWinRTÖĞÒ»Ñù£¬³ıÁËÃû×Ö¿Õ¼äÎªAgoraUWPÍâ£¬¶¼ÓëAgora C++ SDKÖĞ±£³ÖÒ»ÖÂ¡£
+å…¶å®ç°æ—¶çš„å‡½æ•°ã€ç±»å‹ã€æ–¹æ³•ç­‰åç§°åŸåˆ™ä¸AgoraWinRTä¸­ä¸€æ ·ï¼Œé™¤äº†åå­—ç©ºé—´ä¸ºAgoraUWPå¤–ï¼Œéƒ½ä¸Agora C++ SDKä¸­ä¿æŒä¸€è‡´ã€‚
 
-#### AgoraUWPÏîÄ¿ÎÄ¼şËµÃ÷
+#### AgoraUWPé¡¹ç›®æ–‡ä»¶è¯´æ˜
 
-AgoraUWPÏîÄ¿ÎªÀà¿â£¨Í¨ÓÃWindows£©ÏîÄ¿ÀàĞÍ£¬ÆäÖĞ¸÷¸öÎÄ¼şµÄËµÃ÷Îª£º
+AgoraUWPé¡¹ç›®ä¸ºç±»åº“ï¼ˆé€šç”¨Windowsï¼‰é¡¹ç›®ç±»å‹ï¼Œå…¶ä¸­å„ä¸ªæ–‡ä»¶çš„è¯´æ˜ä¸ºï¼š
 
-| ÎÄ¼şÃû                     | ÓÃÍ¾ËµÃ÷                                                     |
+| æ–‡ä»¶å                     | ç”¨é€”è¯´æ˜                                                     |
 | -------------------------- | ------------------------------------------------------------ |
-| AgoraUWP.cs                | ±¾ÎÄ¼şÎªAgoraUWPµÄÖ÷ÎÄ¼ş£¬ÆäÖĞ°üÀ¨ÁËAgoraWinRTÖĞAgoraRtcµÄÍ¬ÃûUWP·â×°£¬·â×°ÖĞÈ±Ê¡ÊµÏÖAgoraRtcEventHandler¡¢VideoFrameObserver¡¢AudioFrameObserverÈı¸öAgoraWinRT½Ó¿Ú£¬²¢½«Æä×ª»¯ÎªC#·ç¸ñµÄ¶ÔÓ¦ÊÂ¼ş¡£²¢ÔÚ·â×°ÖĞÌá¹©ÁË¶ÔUWPÆ½Ì¨µÄÊÓÆµ²É¼¯ÓëäÖÈ¾µÄÈ±Ê¡ÊµÏÖ£¬ÈÃÊ¹ÓÃÕß¿ÉÒÔÏñÊ¹ÓÃAgora C++ SDKÄÇÑù£¬²»ÓÃ¿¼ÂÇÊÓÆµ²É¼¯ÓëäÖÈ¾ÎÊÌâ£¬Ö±½Óµ÷ÓÃSDKµÄ¹¦ÄÜ¼´¿ÉÍê³ÉÕı³£µÄÊÓÆµÍ¨Ñ¶ÓëÖ±²¥¡£ |
-| AgoraUWPDelegate.cs        | AgoraRtcEventHandler¡¢VideoFrameObserver¡¢AudioFrameObserverÈı¸ö½Ó¿Ú¶ÔÓ¦µÄC#·ç¸ñÊÂ¼şµÄ¶¨ÒåÎÄ¼ş |
-| IVideoDeviceCollection.cs  | Agora C++ SDKµÄIVideoDeviceCollectionÔÚC#ÉÏµÄÖØ¶¨Òå          |
-| VideoDeviceManager.cs      | Agora C++ SDKµÄIVideoDevicemangerÔÚC#ÉÏµÄÖØ¶¨Òå£¬²¢ÇÒÌá¹©IVideoDeviceCollectionºÍIVideoDeviceManagerÔÚUWPÆ½Ì¨ÉÏµÄC#ÊµÏÖ |
-| VideoCanvas.cs             | ÒòÎªUWPÆ½Ì¨ÉÏÃ»ÓĞ´°¿ÚµÄhandle£¬´«Í³µÄÍ¨¹ı´«Èë´°¿Úhandle£¬ÔÚ´°¿ÚÖĞ½øĞĞÊÓÆµäÖÈ¾µÄ×ö·¨ÎŞ·¨ÊµÏÖ¡£Òò´Ë¶¨ÒåÁËVideoCanvas³éÏóÀà£¬Í³Ò»UWPÆ½Ì¨ÉÏÊÓÆÁäÖÈ¾µÄÊµÏÖ½Ó¿Ú£¬¾ßÌåËµÃ÷²Î¿¼[VideoCanvas](#VideoCanvasÀàËµÃ÷) |
-| ImageBrushVideoCanvas.cs   | Ìá¹©»ùÓÚImageBrushµÄVideoCanvasÊÓÆµäÖÈ¾ÊµÏÖ£¬ÓÃ»§¿ÉÒÔÊ¹ÓÃÕâ¸öÀàÔÚImageBrushÉÏÊµÏÖÊÓÆÁäÖÈ¾£¬Ò²¿ÉÒÔ²Î¿¼Õâ¸öÀàµÄÊµÏÖ£¬ÊµÏÖ×Ô¼ºµÄÊÓÆµäÖÈ¾ÊµÏÖ |
-| IMediaCapturer.cs          | AgoraUWPÊ¹ÓÃµÄÃ½Ìå²¶×½Æ÷µÄ½Ó¿Ú£¬ÓÃ»§¿ÉÒÔÍ¨¹ıÊµÏÖ×Ô¼ºµÄÃ½Ìå²¶×½Æ÷ÒÔÌæ»»AgoraUWPÖĞÈ±Ê¡µÄÃ½Ìå²¶×½Æ÷ |
-| GeneralMediaCapturer.cs    | IMediaCapturer½Ó¿ÚµÄÈ±Ê¡ÊµÏÖ£¬Ò²ÊÇAgoraUWPÈ±Ê¡Ê¹ÓÃµÄÃ½Ìå²¶×½Æ÷£¬ÓÃ»§¿ÉÒÔ²Î¿¼Õâ¸öÀàµÄÊµÏÖ£¬ÊµÏÖ×Ô¼ºµÄÃ½Ìå²¶×½Æ÷ |
-| MediaCaptureVideoSource.cs | »ùÓÚGeneralMediaCapturerµÄÒ»¸öAgora VideoSourceµÄÊµÏÖ        |
+| AgoraUWP.cs                | æœ¬æ–‡ä»¶ä¸ºAgoraUWPçš„ä¸»æ–‡ä»¶ï¼Œå…¶ä¸­åŒ…æ‹¬äº†AgoraWinRTä¸­AgoraRtcçš„åŒåUWPå°è£…ï¼Œå°è£…ä¸­ç¼ºçœå®ç°AgoraRtcEventHandlerã€VideoFrameObserverã€AudioFrameObserverä¸‰ä¸ªAgoraWinRTæ¥å£ï¼Œå¹¶å°†å…¶è½¬åŒ–ä¸ºC#é£æ ¼çš„å¯¹åº”äº‹ä»¶ã€‚å¹¶åœ¨å°è£…ä¸­æä¾›äº†å¯¹UWPå¹³å°çš„è§†é¢‘é‡‡é›†ä¸æ¸²æŸ“çš„ç¼ºçœå®ç°ï¼Œè®©ä½¿ç”¨è€…å¯ä»¥åƒä½¿ç”¨Agora C++ SDKé‚£æ ·ï¼Œä¸ç”¨è€ƒè™‘è§†é¢‘é‡‡é›†ä¸æ¸²æŸ“é—®é¢˜ï¼Œç›´æ¥è°ƒç”¨SDKçš„åŠŸèƒ½å³å¯å®Œæˆæ­£å¸¸çš„è§†é¢‘é€šè®¯ä¸ç›´æ’­ã€‚ |
+| AgoraUWPDelegate.cs        | AgoraRtcEventHandlerã€VideoFrameObserverã€AudioFrameObserverä¸‰ä¸ªæ¥å£å¯¹åº”çš„C#é£æ ¼äº‹ä»¶çš„å®šä¹‰æ–‡ä»¶ |
+| IVideoDeviceCollection.cs  | Agora C++ SDKçš„IVideoDeviceCollectionåœ¨C#ä¸Šçš„é‡å®šä¹‰          |
+| VideoDeviceManager.cs      | Agora C++ SDKçš„IVideoDevicemangeråœ¨C#ä¸Šçš„é‡å®šä¹‰ï¼Œå¹¶ä¸”æä¾›IVideoDeviceCollectionå’ŒIVideoDeviceManageråœ¨UWPå¹³å°ä¸Šçš„C#å®ç° |
+| VideoCanvas.cs             | å› ä¸ºUWPå¹³å°ä¸Šæ²¡æœ‰çª—å£çš„handleï¼Œä¼ ç»Ÿçš„é€šè¿‡ä¼ å…¥çª—å£handleï¼Œåœ¨çª—å£ä¸­è¿›è¡Œè§†é¢‘æ¸²æŸ“çš„åšæ³•æ— æ³•å®ç°ã€‚å› æ­¤å®šä¹‰äº†VideoCanvasæŠ½è±¡ç±»ï¼Œç»Ÿä¸€UWPå¹³å°ä¸Šè§†å±æ¸²æŸ“çš„å®ç°æ¥å£ï¼Œå…·ä½“è¯´æ˜å‚è€ƒ[VideoCanvas](#VideoCanvasç±»è¯´æ˜) |
+| ImageBrushVideoCanvas.cs   | æä¾›åŸºäºImageBrushçš„VideoCanvasè§†é¢‘æ¸²æŸ“å®ç°ï¼Œç”¨æˆ·å¯ä»¥ä½¿ç”¨è¿™ä¸ªç±»åœ¨ImageBrushä¸Šå®ç°è§†å±æ¸²æŸ“ï¼Œä¹Ÿå¯ä»¥å‚è€ƒè¿™ä¸ªç±»çš„å®ç°ï¼Œå®ç°è‡ªå·±çš„è§†é¢‘æ¸²æŸ“å®ç° |
+| IMediaCapturer.cs          | AgoraUWPä½¿ç”¨çš„åª’ä½“æ•æ‰å™¨çš„æ¥å£ï¼Œç”¨æˆ·å¯ä»¥é€šè¿‡å®ç°è‡ªå·±çš„åª’ä½“æ•æ‰å™¨ä»¥æ›¿æ¢AgoraUWPä¸­ç¼ºçœçš„åª’ä½“æ•æ‰å™¨ |
+| GeneralMediaCapturer.cs    | IMediaCaptureræ¥å£çš„ç¼ºçœå®ç°ï¼Œä¹Ÿæ˜¯AgoraUWPç¼ºçœä½¿ç”¨çš„åª’ä½“æ•æ‰å™¨ï¼Œç”¨æˆ·å¯ä»¥å‚è€ƒè¿™ä¸ªç±»çš„å®ç°ï¼Œå®ç°è‡ªå·±çš„åª’ä½“æ•æ‰å™¨ |
+| MediaCaptureVideoSource.cs | åŸºäºGeneralMediaCapturerçš„ä¸€ä¸ªAgora VideoSourceçš„å®ç°        |
 
 #### AgoraUWP.AgoraRtc
 
-±¾ÀàÊÇAgora RTCÔÚUWPÆ½Ì¨ÉÏµÄºËĞÄ·â×°Àà£¬Æä¼Ì³ĞÁËAgoraWinRT::AgoraRtcÀà£¬²¢ÊµÏÖÁËAgoraRtcEventHandler¡¢VideoFrameObserver¡¢AudioFrameObserverÈı¸öAgoraWinRT½Ó¿Ú£¬Í¬Ê±½«Æä×ª»¯ÎªC#·ç¸ñµÄ¶ÔÓ¦ÊÂ¼ş¡£²¹³äÁËÔÚAgoraWinRTÉÏÃ»ÓĞÊµÏÖµÄÕë¶ÔUWPÆ½Ì¨µÄÊÓÆµ²¶×½¡¢äÖÈ¾¡¢ÊÓÆµÉè±¸¹ÜÀí¹¦ÄÜ£¬ÊµÏÖÁËsetupLocalVideo¡¢setupRemoteVideo¡¢setLocalRenderMode¡¢setRemoteRenderMode¡¢startPreview¡¢stopPreview¡¢enableLocalVideoº¯Êı£¬¾ßÌå¹¦ÄÜÇë²Î¿¼[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)ÖĞÍ¬Ãûº¯ÊıËµÃ÷¡£
+æœ¬ç±»æ˜¯Agora RTCåœ¨UWPå¹³å°ä¸Šçš„æ ¸å¿ƒå°è£…ç±»ï¼Œå…¶ç»§æ‰¿äº†AgoraWinRT::AgoraRtcç±»ï¼Œå¹¶å®ç°äº†AgoraRtcEventHandlerã€VideoFrameObserverã€AudioFrameObserverä¸‰ä¸ªAgoraWinRTæ¥å£ï¼ŒåŒæ—¶å°†å…¶è½¬åŒ–ä¸ºC#é£æ ¼çš„å¯¹åº”äº‹ä»¶ã€‚è¡¥å……äº†åœ¨AgoraWinRTä¸Šæ²¡æœ‰å®ç°çš„é’ˆå¯¹UWPå¹³å°çš„è§†é¢‘æ•æ‰ã€æ¸²æŸ“ã€è§†é¢‘è®¾å¤‡ç®¡ç†åŠŸèƒ½ï¼Œå®ç°äº†setupLocalVideoã€setupRemoteVideoã€setLocalRenderModeã€setRemoteRenderModeã€startPreviewã€stopPreviewã€enableLocalVideoå‡½æ•°ï¼Œå…·ä½“åŠŸèƒ½è¯·å‚è€ƒ[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)ä¸­åŒåå‡½æ•°è¯´æ˜ã€‚
 
-ÔÚÊ¹ÓÃAgoraUWP.AgoraRtcÀàÊ±ÓëÊ¹ÓÃAgora C++Ô­ÉúÊµÏÖÊ±ÓĞ¼¸¸ö²»Í¬µã£º
+åœ¨ä½¿ç”¨AgoraUWP.AgoraRtcç±»æ—¶ä¸ä½¿ç”¨Agora C++åŸç”Ÿå®ç°æ—¶æœ‰å‡ ä¸ªä¸åŒç‚¹ï¼š
 
-1. ÒòÎªUWPÆ½Ì¨µÄÈ¨ÏŞ¹ÜÀíÔ­Òò£¬Ê¹ÓÃÉãÏñÍ·ºÍÂó¿Ë·çĞèÒªÉêÇëÈ¨ÏŞ¡£¾­¹ı²âÊÔ£¬ÉêÇëÈ¨ÏŞ²¿·ÖÒòÎªÓĞµ¯´°È·ÈÏµÄÁ÷³Ì£¬ÎŞ·¨Ê¹ÓÃÍ¬²½´úÂë£¬ÌØ±ğÌí¼ÓRequestCameraAccessÒì²½¾²Ì¬º¯Êı£¬Ê¹ÓÃÕßÔÚÊ¹ÓÃÖ®Ç°ĞèÒªÒì²½µ÷ÓÃ±¾º¯ÊıÒÑÉêÇëÈ¨ÏŞ¡£
-2. ÒòÎªUWPÆ½Ì¨ÉÏÎŞ´°¿Úhandle£¬setupLocalVideoÓësetupRemoteVideoº¯Êı²ÎÊı¸ÄÎª½ÓÊÜVideoCanvas²ÎÊı£¬ÈÎºÎ¼Ì³Ğ²¢ÊµÏÖÁËVideoCanvasµÄÀà¶¼¿ÉÒÔÕıÈ·µÃµ½ĞèÒªäÖÈ¾µÄÊÓÆµÖ¡Êı¾İ£¬ÓÃ»§ĞèÒª×Ô¼ºÊµÏÖÆäÔÚUWP´°ÌåÉÏµÄÊÓÆµäÖÈ¾£¬»òÕßÊ¹ÓÃAgoraUWP.ImageBrushVideoCanvas´Ó¶øÖ±½ÓÔÚImageBrushÉÏÊµÏÖÊÓÆµäÖÈ¾¡£
+1. å› ä¸ºUWPå¹³å°çš„æƒé™ç®¡ç†åŸå› ï¼Œä½¿ç”¨æ‘„åƒå¤´å’Œéº¦å…‹é£éœ€è¦ç”³è¯·æƒé™ã€‚ç»è¿‡æµ‹è¯•ï¼Œç”³è¯·æƒé™éƒ¨åˆ†å› ä¸ºæœ‰å¼¹çª—ç¡®è®¤çš„æµç¨‹ï¼Œæ— æ³•ä½¿ç”¨åŒæ­¥ä»£ç ï¼Œç‰¹åˆ«æ·»åŠ RequestCameraAccesså¼‚æ­¥é™æ€å‡½æ•°ï¼Œä½¿ç”¨è€…åœ¨ä½¿ç”¨ä¹‹å‰éœ€è¦å¼‚æ­¥è°ƒç”¨æœ¬å‡½æ•°å·²ç”³è¯·æƒé™ã€‚
+2. å› ä¸ºUWPå¹³å°ä¸Šæ— çª—å£handleï¼ŒsetupLocalVideoä¸setupRemoteVideoå‡½æ•°å‚æ•°æ”¹ä¸ºæ¥å—VideoCanvaså‚æ•°ï¼Œä»»ä½•ç»§æ‰¿å¹¶å®ç°äº†VideoCanvasçš„ç±»éƒ½å¯ä»¥æ­£ç¡®å¾—åˆ°éœ€è¦æ¸²æŸ“çš„è§†é¢‘å¸§æ•°æ®ï¼Œç”¨æˆ·éœ€è¦è‡ªå·±å®ç°å…¶åœ¨UWPçª—ä½“ä¸Šçš„è§†é¢‘æ¸²æŸ“ï¼Œæˆ–è€…ä½¿ç”¨AgoraUWP.ImageBrushVideoCanvasä»è€Œç›´æ¥åœ¨ImageBrushä¸Šå®ç°è§†é¢‘æ¸²æŸ“ã€‚
 
-#### AgoraUWP.IMediaCapturerºÍAgoraUWP.GeneralMediaCapturer
+#### AgoraUWP.IMediaCapturerå’ŒAgoraUWP.GeneralMediaCapturer
 
-IMediaCapturer¶¨ÒåÁËÒ»¸öÔÚUWPÉÏµÄÒôÊÓÆµÖ¡²¶×½Æ÷£¬¶øGeneralMediaCapturerÔòÊÇËüµÄÈ±Ê¡ÊµÏÖÁË¡£
+IMediaCapturerå®šä¹‰äº†ä¸€ä¸ªåœ¨UWPä¸Šçš„éŸ³è§†é¢‘å¸§æ•æ‰å™¨ï¼Œè€ŒGeneralMediaCaptureråˆ™æ˜¯å®ƒçš„ç¼ºçœå®ç°äº†ã€‚
 
-GeneralMediaCapturer±¾Éí²»µ«±»AgoraUWP.AgoraRtc×÷ÎªÄÚ²¿ÊÓÆµÖ¡²¶×½Æ÷Ê¹ÓÃ£¬Í¬Ê±Ò²¿ÉÒÔ×÷ÎªÒôÊÓÆµ×Ô²É¼¯Ê±µÄÒôÊÓÆµÖ¡²¶×½Æ÷¶ÀÁ¢Ê¹ÓÃ¡£
+GeneralMediaCaptureræœ¬èº«ä¸ä½†è¢«AgoraUWP.AgoraRtcä½œä¸ºå†…éƒ¨è§†é¢‘å¸§æ•æ‰å™¨ä½¿ç”¨ï¼ŒåŒæ—¶ä¹Ÿå¯ä»¥ä½œä¸ºéŸ³è§†é¢‘è‡ªé‡‡é›†æ—¶çš„éŸ³è§†é¢‘å¸§æ•æ‰å™¨ç‹¬ç«‹ä½¿ç”¨ã€‚
 
-IMediaCapturer¶¨ÒåËµÃ÷ÈçÏÂ£º
+IMediaCapturerå®šä¹‰è¯´æ˜å¦‚ä¸‹ï¼š
 
 1. VideoDevice
 
-   µÃµ½µ±Ç°²¶×½Æ÷ËùÊ¹ÓÃµÄÊÓÆµÉè±¸£¬¿ÉÄÜÎªnull
+   å¾—åˆ°å½“å‰æ•æ‰å™¨æ‰€ä½¿ç”¨çš„è§†é¢‘è®¾å¤‡ï¼Œå¯èƒ½ä¸ºnull
 
 2. AudioDevice
 
-   µÃµ½µ±Ç°²¶×½Æ÷ËùÊ¹ÓÃµÄÒôÆµÉè±¸£¬¿ÉÄÜÎªnull
+   å¾—åˆ°å½“å‰æ•æ‰å™¨æ‰€ä½¿ç”¨çš„éŸ³é¢‘è®¾å¤‡ï¼Œå¯èƒ½ä¸ºnull
 
 3. AudioFormat
 
-   µ±Ç°Ê¹ÓÃµÄÒôÆµ¸ñÊ½Êı¾İ£¬Èç²ÉÑùÂÊ¡¢ÉùµÀÊıµÈ£¬¾ßÌå¿É²Î¿¼msdnÖĞ¹ØÓÚ[MediaFrameFormat](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture.Frames.MediaFrameFormat?redirectedfrom=MSDN&view=winrt-19041)²¿·Ö
+   å½“å‰ä½¿ç”¨çš„éŸ³é¢‘æ ¼å¼æ•°æ®ï¼Œå¦‚é‡‡æ ·ç‡ã€å£°é“æ•°ç­‰ï¼Œå…·ä½“å¯å‚è€ƒmsdnä¸­å…³äº[MediaFrameFormat](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture.Frames.MediaFrameFormat?redirectedfrom=MSDN&view=winrt-19041)éƒ¨åˆ†
 
 4. VideoFormat
 
-   µ±Ç°Ê¹ÓÃµÄÊÓÆµ¸ñÊ½Êı¾İ
+   å½“å‰ä½¿ç”¨çš„è§†é¢‘æ ¼å¼æ•°æ®
 
 5. VideoBufferType
 
-   µ±Ç°¸ø³öµÄÊÓÆµÊı¾İbufferµÄ¸ñÊ½£¬È±Ê¡Îª VIDEO_BUFFER_RAW_DATA
+   å½“å‰ç»™å‡ºçš„è§†é¢‘æ•°æ®bufferçš„æ ¼å¼ï¼Œç¼ºçœä¸º VIDEO_BUFFER_RAW_DATA
 
 6. OnVideoFrameArrived
 
-   µ±²É¼¯µ½ÊÓÆµÖ¡Êı¾İÊ±´¥·¢
+   å½“é‡‡é›†åˆ°è§†é¢‘å¸§æ•°æ®æ—¶è§¦å‘
 
 7. EnableVideo
 
-   ÊÇ·ñ¿ªÆôÊÓÆµÖ¡²É¼¯£¬È±Ê¡Îªtrue£¬Èç¹ûÉèÖÃÎªfalse£¬ÔòOnVideoFrameArrived²»»á´¥·¢
+   æ˜¯å¦å¼€å¯è§†é¢‘å¸§é‡‡é›†ï¼Œç¼ºçœä¸ºtrueï¼Œå¦‚æœè®¾ç½®ä¸ºfalseï¼Œåˆ™OnVideoFrameArrivedä¸ä¼šè§¦å‘
 
 8. OnAudioFrameArrived 
 
-   µ«²É¼¯µ½ÒôÆµÖ¡Êı¾İÊ±´¥·¢
+   ä½†é‡‡é›†åˆ°éŸ³é¢‘å¸§æ•°æ®æ—¶è§¦å‘
 
 9. EnableAudio
 
-   ÊÇ·ñ¿ªÆô²É¼¯ÒôÆµÖ¡£¬È±Ê¡Îªtrue£¬Èç¹ûÉèÖÃÎªfalse£¬ÔòOnAudioFrameArrived²»»á´¥·¢
+   æ˜¯å¦å¼€å¯é‡‡é›†éŸ³é¢‘å¸§ï¼Œç¼ºçœä¸ºtrueï¼Œå¦‚æœè®¾ç½®ä¸ºfalseï¼Œåˆ™OnAudioFrameArrivedä¸ä¼šè§¦å‘
 
-#### VideoCanvasºÍImageBrushVideoCanvas
+#### VideoCanvaså’ŒImageBrushVideoCanvas
 
-VideoCanvas¶¨ÒåÁË¿É±»AgoraUWP.AgoraRtc½ÓÊÜÎª±¾µØSetupLocalVideoÓëÔ¶³ÌSetupRemoteVideoÊÓÆµäÖÈ¾´°¿ÚËùÒòÊµÏÖµÄ·½·¨ºÍÊôĞÔ¡£
+VideoCanvaså®šä¹‰äº†å¯è¢«AgoraUWP.AgoraRtcæ¥å—ä¸ºæœ¬åœ°SetupLocalVideoä¸è¿œç¨‹SetupRemoteVideoè§†é¢‘æ¸²æŸ“çª—å£æ‰€å› å®ç°çš„æ–¹æ³•å’Œå±æ€§ã€‚
 
-ImageBrushVideoCanvasÔòÊÇ»ùÓÚImageBrushÖ®ÉÏµÄVideoCanvasÊµÏÖÀà¡£
+ImageBrushVideoCanvasåˆ™æ˜¯åŸºäºImageBrushä¹‹ä¸Šçš„VideoCanvaså®ç°ç±»ã€‚
 
-VideoCanvas¶¨ÒåËµÃ÷ÈçÏÂ£º
+VideoCanvaså®šä¹‰è¯´æ˜å¦‚ä¸‹ï¼š
 
 1. Target
 
-   ĞèÒªÔÚÆäÉÏ½øĞĞäÖÈ¾µÄ¶ÔÏó£¬±ÈÈçImageBrushVideoCanvasÖĞµÄImageBrush¶ÔÏó
+   éœ€è¦åœ¨å…¶ä¸Šè¿›è¡Œæ¸²æŸ“çš„å¯¹è±¡ï¼Œæ¯”å¦‚ImageBrushVideoCanvasä¸­çš„ImageBrushå¯¹è±¡
 
 2. RenderMode
 
-   ÊÓÆµÔÚÊÓÆµäÖÈ¾´°¿ÚµÄÌî³ä·½Ê½
+   è§†é¢‘åœ¨è§†é¢‘æ¸²æŸ“çª—å£çš„å¡«å……æ–¹å¼
 
 3. Channel
 
-   ÊÓÆµ¶ÔÓ¦À´Ô´µÄÆµµÀ
+   è§†é¢‘å¯¹åº”æ¥æºçš„é¢‘é“
 
 4. User
 
-   ÊÓÆµ¶ÔÓ¦µÄÓÃ»§id
+   è§†é¢‘å¯¹åº”çš„ç”¨æˆ·id
 
 5. MirrorMode
 
-   ÊÓÆµÊÇ·ñĞèÒª¾µÏñÏÔÊ¾
+   è§†é¢‘æ˜¯å¦éœ€è¦é•œåƒæ˜¾ç¤º
 
 6. Render(MediaFrameReference)
 
-   ±¾µØµÄÊÓÆµÔ¤ÀÀÊ±ËùÊ¹ÓÃµÄäÖÈ¾·½·¨
+   æœ¬åœ°çš„è§†é¢‘é¢„è§ˆæ—¶æ‰€ä½¿ç”¨çš„æ¸²æŸ“æ–¹æ³•
 
 7. Render(VideoFrame)
 
-   AgoraUWP.AgoraRtc½øĞĞ±¾µØºÍÔ¶³ÌÊÓÆµäÖÈ¾Ê±µ÷ÓÃµÄ·½·¨
+   AgoraUWP.AgoraRtcè¿›è¡Œæœ¬åœ°å’Œè¿œç¨‹è§†é¢‘æ¸²æŸ“æ—¶è°ƒç”¨çš„æ–¹æ³•
 
-VideoCanvasÀàÎª³éÏóÀà£¬ÆäÖĞÁ½¸öRender±»ÊµÏÖÎªĞé·½·¨£¬·½±ãÓÃ»§¸ù¾İĞèÒª¶ÔÁ½¸ö·½·¨½øĞĞÓĞÑ¡ÔñµÄµ¥¶ÀÊµÏÖ£¬±ÈÈçVideoDeviceManagerµÄStartDeviceTestÖĞµÄVideoCanvas¾Í¿ÉÒÔÖ»ÊµÏÖRender(MediaFrameReference)£¬ÒòÎªÕâ¸öº¯ÊıÖĞVideoCanvasÖ»ÔÚ±¾µØÊÓÆµ²âÊÔÖĞÊ¹ÓÃ¡£
+VideoCanvasç±»ä¸ºæŠ½è±¡ç±»ï¼Œå…¶ä¸­ä¸¤ä¸ªRenderè¢«å®ç°ä¸ºè™šæ–¹æ³•ï¼Œæ–¹ä¾¿ç”¨æˆ·æ ¹æ®éœ€è¦å¯¹ä¸¤ä¸ªæ–¹æ³•è¿›è¡Œæœ‰é€‰æ‹©çš„å•ç‹¬å®ç°ï¼Œæ¯”å¦‚VideoDeviceManagerçš„StartDeviceTestä¸­çš„VideoCanvaså°±å¯ä»¥åªå®ç°Render(MediaFrameReference)ï¼Œå› ä¸ºè¿™ä¸ªå‡½æ•°ä¸­VideoCanvasåªåœ¨æœ¬åœ°è§†é¢‘æµ‹è¯•ä¸­ä½¿ç”¨ã€‚
 
 #### MediaCaptureVideoSource
 
-Agora C++ÖĞÌá¹©ÁËÒ»¸ösetVideoSourceµÄ·½·¨£¬ÈÃÓÃ»§¿ÉÒÔÌá¹©×Ô¼ºµÄVideoSource£¬µ«ÊÇÔÚAgoraµÄÊ¾ÀıÖĞ£¬×Ô¶¨ÒåµÄÊÓÆµ²É¼¯ÊÇÒÔÊÓÆµ×Ô²É¼¯setExternalVideoSourceºÍpushVideoFrameÁ½¸ö·½·¨½øĞĞµÄ¡£±¾ÀàÖ»ÊÇÌá¹©ÁËÒ»¸ö»ùÓÚGeneralMeidaCapturer½øĞĞ×Ô¶¨ÒåµÄVideoSourceµÄÀı×Ó£¬ÓÃ»§¿ÉÒÔ²Î¿¼ÆäÊµÏÖ×Ô¼ºµÄVideoSource¡£
+Agora C++ä¸­æä¾›äº†ä¸€ä¸ªsetVideoSourceçš„æ–¹æ³•ï¼Œè®©ç”¨æˆ·å¯ä»¥æä¾›è‡ªå·±çš„VideoSourceï¼Œä½†æ˜¯åœ¨Agoraçš„ç¤ºä¾‹ä¸­ï¼Œè‡ªå®šä¹‰çš„è§†é¢‘é‡‡é›†æ˜¯ä»¥è§†é¢‘è‡ªé‡‡é›†setExternalVideoSourceå’ŒpushVideoFrameä¸¤ä¸ªæ–¹æ³•è¿›è¡Œçš„ã€‚æœ¬ç±»åªæ˜¯æä¾›äº†ä¸€ä¸ªåŸºäºGeneralMeidaCapturerè¿›è¡Œè‡ªå®šä¹‰çš„VideoSourceçš„ä¾‹å­ï¼Œç”¨æˆ·å¯ä»¥å‚è€ƒå…¶å®ç°è‡ªå·±çš„VideoSourceã€‚
 
-## Ê¹ÓÃÊµÀıËµÃ÷
+## ä½¿ç”¨å®ä¾‹è¯´æ˜
 
-AgoraUWPDemoÎªµ÷ÓÃAgoraUWPµÄÊ¾Àı¡£
+AgoraUWPDemoä¸ºè°ƒç”¨AgoraUWPçš„ç¤ºä¾‹ã€‚
 
-Àı×ÓÖĞÑİÊ¾ÁËÈıÖÖÄ£Ê½£º
+ä¾‹å­ä¸­æ¼”ç¤ºäº†ä¸‰ç§æ¨¡å¼ï¼š
 
-1. Ê¹ÓÃSDKÄÚ²¿²É¼¯Ä£Ê½
+1. ä½¿ç”¨SDKå†…éƒ¨é‡‡é›†æ¨¡å¼
 
-   Ö±½ÓÊ¹ÓÃSDKÄÚ²¿µÄÒôÊÓÆµ²É¼¯£¬ÓÃ»§²»ÓÃ¹ØĞÄ²É¼¯²¿·Ö£¬Ö»ÓÃ¹ØĞÄÒµÎñ²¿·Ö¡£
+   ç›´æ¥ä½¿ç”¨SDKå†…éƒ¨çš„éŸ³è§†é¢‘é‡‡é›†ï¼Œç”¨æˆ·ä¸ç”¨å…³å¿ƒé‡‡é›†éƒ¨åˆ†ï¼Œåªç”¨å…³å¿ƒä¸šåŠ¡éƒ¨åˆ†ã€‚
 
-2. Ê¹ÓÃÒôÆµ×Ô²É¼¯
+2. ä½¿ç”¨éŸ³é¢‘è‡ªé‡‡é›†
 
-   ÑİÊ¾ÁËÈçºÎ½øĞĞÊ¹ÓÃGeneralMediaCapturer½øĞĞÒôÆµ×Ô²É¼¯£¬×÷ÎªÊ¾Àı£¬Ê¹ÓÃÕß¿É²Î¿¼²¢ÊµÏÖ×Ô¼ºµÄÒôÆµ×Ô²É¼¯·½·¨¡£
+   æ¼”ç¤ºäº†å¦‚ä½•è¿›è¡Œä½¿ç”¨GeneralMediaCapturerè¿›è¡ŒéŸ³é¢‘è‡ªé‡‡é›†ï¼Œä½œä¸ºç¤ºä¾‹ï¼Œä½¿ç”¨è€…å¯å‚è€ƒå¹¶å®ç°è‡ªå·±çš„éŸ³é¢‘è‡ªé‡‡é›†æ–¹æ³•ã€‚
 
-3. Ê¹ÓÃÒôÆµ×ÔäÖÈ¾
+3. ä½¿ç”¨éŸ³é¢‘è‡ªæ¸²æŸ“
 
-   ÑİÊ¾ÁËÈçºÎÊ¹ÓÃ[AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041)½áºÏ[PullAudioFrame](https://docs.agora.io/cn/Video/API%20Reference/cpp/classagora_1_1media_1_1_i_media_engine.html#aaf43fc265eb4707bb59f1bf0cbe01940)¶ÔÍâ²¿ÒôÆµ½øĞĞäÖÈ¾¡£
+   æ¼”ç¤ºäº†å¦‚ä½•ä½¿ç”¨[AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041)ç»“åˆ[PullAudioFrame](https://docs.agora.io/cn/Video/API%20Reference/cpp/classagora_1_1media_1_1_i_media_engine.html#aaf43fc265eb4707bb59f1bf0cbe01940)å¯¹å¤–éƒ¨éŸ³é¢‘è¿›è¡Œæ¸²æŸ“ã€‚
 
-Í¬Ê±Ê¾ÀıÖĞ»¹ÑİÊ¾ÁËÈçºÎµ÷Õû·Ö±æÂÊ¡¢Ö¡ÂÊ¡¢ÂëÂÊµÈ¡£
+åŒæ—¶ç¤ºä¾‹ä¸­è¿˜æ¼”ç¤ºäº†å¦‚ä½•è°ƒæ•´åˆ†è¾¨ç‡ã€å¸§ç‡ã€ç ç‡ç­‰ã€‚
 
-### Ê¹ÓÃSDKÄÚ²¿²É¼¯Ä£Ê½Á÷³Ì
+### ä½¿ç”¨SDKå†…éƒ¨é‡‡é›†æ¨¡å¼æµç¨‹
 
-±¾Á÷³Ì¶ÔÓ¦×Å[ÈçºÎ¿ìËÙ¿ªÊ¼](https://docs.agora.io/cn/Video/start_call_windows?platform=Windows)Ò»½Ú
+æœ¬æµç¨‹å¯¹åº”ç€[å¦‚ä½•å¿«é€Ÿå¼€å§‹](https://docs.agora.io/cn/Video/start_call_windows?platform=Windows)ä¸€èŠ‚
 
 ```mermaid
 sequenceDiagram
 participant UWP as UWP App
 participant SDK as Agora UWP SDK
 participant Agora as SD-RTN
-Note left of UWP: ÉêÇëÉãÏñÍ·ºÍÂó¿Ë·çÈ¨ÏŞ
+Note left of UWP: ç”³è¯·æ‘„åƒå¤´å’Œéº¦å…‹é£æƒé™
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
-Note left of UWP: ³õÊ¼»¯
+Note left of UWP: åˆå§‹åŒ–
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: ÉèÖÃ±¾µØÊÓÍ¼
+Note left of UWP: è®¾ç½®æœ¬åœ°è§†å›¾
 UWP->>SDK: SetupLocalVideo(new ImageBrushVideoCanvas)
 UWP->>SDK: EnableVideo
-UWP->>SDK: StartPreview ¿ÉÑ¡
-Note left Of UWP: ¼ÓÈëÆµµÀ
+UWP->>SDK: StartPreview å¯é€‰
+Note left Of UWP: åŠ å…¥é¢‘é“
 UWP->>SDK: JoinChannel
-SDK->>Agora: ÇëÇó¼ÓÈëÆµµÀ
+SDK->>Agora: è¯·æ±‚åŠ å…¥é¢‘é“
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: ÉèÖÃÔ¶³ÌÊÓÍ¼
-Note right of Agora: Ô¶³ÌÓÃ»§¼ÓÈë
-Agora-->>UWP: OnFirstRemoteVideoDecoded »òÕß OnUserJoined
+Note left of UWP: è®¾ç½®è¿œç¨‹è§†å›¾
+Note right of Agora: è¿œç¨‹ç”¨æˆ·åŠ å…¥
+Agora-->>UWP: OnFirstRemoteVideoDecoded æˆ–è€… OnUserJoined
 UWP->>SDK: SetupRemoteVideo(new ImageBrushVideoCanvas)
-Note left of UWP: Àë¿ªÆµµÀ
+Note left of UWP: ç¦»å¼€é¢‘é“
 UWP->>SDK: LeaveChannel
-SDK->>Agora: ÇëÇóÀë¿ªÆµµÀ
-Note left of UWP: ÊÍ·Å
+SDK->>Agora: è¯·æ±‚ç¦»å¼€é¢‘é“
+Note left of UWP: é‡Šæ”¾
 UWP->>SDK: Dispose
 ```
 
-![¿ìËÙ¿ªÊ¼Á÷³Ì](images/image-20201020161921981.png)
+![å¿«é€Ÿå¼€å§‹æµç¨‹](images/image-20201020161921981.png)
 
-Çë×¢Òâ£¬ÒòÎªUWPÆ½Ì¨ÏŞÖÆ£¬±ØĞë¶ÔÉãÏñÍ·ºÍÂó¿Ë·çÈ¨ÏŞ½øĞĞÉêÇë²Å¿ÉÒÔÊ¹ÓÃ£¬ËùÒÔÔÚ³õÊ¼»¯Ö®Ç°£¬ÓÃ»§ĞèÒªÏÈµ÷ÓÃAgoraUWP.AgoraRtc.RequestCameraAccessÒì²½·½·¨½øĞĞÈ¨ÏŞÉêÇë£¬ÒòÎªÊÇÒì²½£¬Õâ¸ö·½·¨ÍÆ¼öÔÚ³ÌĞòÒ»¿ªÊ¼±ÈÈç½çÃæÏÔÊ¾Ê±½øĞĞ£¬¶ø°ÑÕæÕı³õÊ¼»¯AgoraRtc¶ÔÏó·ÅÖÃÔÚÕæÕı¿ªÊ¼ĞèÒª½øĞĞÊÓÆµÍ¨»°µÄÊ±ºòÔÙ½øĞĞ£¬·ñÔò»áÔì³ÉAgoraRtcÎŞ·¨»ñµÃÉè±¸È¨ÏŞ¡£
+è¯·æ³¨æ„ï¼Œå› ä¸ºUWPå¹³å°é™åˆ¶ï¼Œå¿…é¡»å¯¹æ‘„åƒå¤´å’Œéº¦å…‹é£æƒé™è¿›è¡Œç”³è¯·æ‰å¯ä»¥ä½¿ç”¨ï¼Œæ‰€ä»¥åœ¨åˆå§‹åŒ–ä¹‹å‰ï¼Œç”¨æˆ·éœ€è¦å…ˆè°ƒç”¨AgoraUWP.AgoraRtc.RequestCameraAccesså¼‚æ­¥æ–¹æ³•è¿›è¡Œæƒé™ç”³è¯·ï¼Œå› ä¸ºæ˜¯å¼‚æ­¥ï¼Œè¿™ä¸ªæ–¹æ³•æ¨èåœ¨ç¨‹åºä¸€å¼€å§‹æ¯”å¦‚ç•Œé¢æ˜¾ç¤ºæ—¶è¿›è¡Œï¼Œè€ŒæŠŠçœŸæ­£åˆå§‹åŒ–AgoraRtcå¯¹è±¡æ”¾ç½®åœ¨çœŸæ­£å¼€å§‹éœ€è¦è¿›è¡Œè§†é¢‘é€šè¯çš„æ—¶å€™å†è¿›è¡Œï¼Œå¦åˆ™ä¼šé€ æˆAgoraRtcæ— æ³•è·å¾—è®¾å¤‡æƒé™ã€‚
 
-### Ê¹ÓÃÒôÆµ×Ô²É¼¯
+### ä½¿ç”¨éŸ³é¢‘è‡ªé‡‡é›†
 
-±¾Á÷³Ì¶ÔÓ¦[×Ô¶¨ÒåÒôÆµ²É¼¯ºÍäÖÈ¾](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)Ò»½ÚÖĞµÄÇ°°ë²¿£¬×Ô¶¨ÒåÒôÆµ²É¼¯
+æœ¬æµç¨‹å¯¹åº”[è‡ªå®šä¹‰éŸ³é¢‘é‡‡é›†å’Œæ¸²æŸ“](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)ä¸€èŠ‚ä¸­çš„å‰åŠéƒ¨ï¼Œè‡ªå®šä¹‰éŸ³é¢‘é‡‡é›†
 
 ```mermaid
 sequenceDiagram
 participant UWP as UWP App
 participant SDK as Agora UWP SDK
 participant Agora as SD-RTN
-Note left of UWP: ÉêÇëÉãÏñÍ·ºÍÂó¿Ë·çÈ¨ÏŞ
+Note left of UWP: ç”³è¯·æ‘„åƒå¤´å’Œéº¦å…‹é£æƒé™
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
-Note left of UWP: ³õÊ¼»¯
+Note left of UWP: åˆå§‹åŒ–
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: ÉèÖÃÊ¹ÓÃÍâ²¿ÒôÆµÔ´
+Note left of UWP: è®¾ç½®ä½¿ç”¨å¤–éƒ¨éŸ³é¢‘æº
 UWP->>SDK: SetExternalAudioSource
-Note left of UWP: ¼ÓÈëÆµµÀ
+Note left of UWP: åŠ å…¥é¢‘é“
 UWP->>SDK: JoinChannel
-SDK->>Agora: ÇëÇó¼ÓÈëÆµµÀ
+SDK->>Agora: è¯·æ±‚åŠ å…¥é¢‘é“
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: ½«´¦ÀíºóµÄÒôÆµÊı¾İ·¢ËÍ¸øSDK
+Note left of UWP: å°†å¤„ç†åçš„éŸ³é¢‘æ•°æ®å‘é€ç»™SDK
 UWP->>SDK: PushAudioFrame
-Note left of UWP: Àë¿ªÆµµÀ
+Note left of UWP: ç¦»å¼€é¢‘é“
 UWP->>SDK: LeaveChannel
-SDK->>Agora: ÇëÇóÀë¿ªÆµµÀ
-Note left of UWP: ÊÍ·Å
+SDK->>Agora: è¯·æ±‚ç¦»å¼€é¢‘é“
+Note left of UWP: é‡Šæ”¾
 UWP->>SDK: Dispose
 ```
 
-![×Ô²É¼¯ÒôÆµÁ÷³Ì](images/image-20201020162134496.png)
+![è‡ªé‡‡é›†éŸ³é¢‘æµç¨‹](images/image-20201020162134496.png)
 
-ÔÚÑİÊ¾ÖĞ
+åœ¨æ¼”ç¤ºä¸­
 
 ```c#
 /// <summary>
-/// ÑİÊ¾ÈçºÎ½øĞĞÒôÆµ×Ô²É¼¯ºÍ×ÔäÖÈ¾
+/// æ¼”ç¤ºå¦‚ä½•è¿›è¡ŒéŸ³é¢‘è‡ªé‡‡é›†å’Œè‡ªæ¸²æŸ“
 /// </summary>
 /// <param name="sender"></param>
 /// <param name="e"></param>
@@ -290,7 +290,7 @@ private void StartEngineAndSelfAudioProcess()
 }
 ```
 
-³ıÁË³õÊ¼»¯ÒıÇæÍâ£¬»¹³õÊ¼»¯ÁËÒ»¸ö»ùÓÚGeneralMediaCapturerÊµÏÖµÄÒôÆµ²É¼¯Æ÷
+é™¤äº†åˆå§‹åŒ–å¼•æ“å¤–ï¼Œè¿˜åˆå§‹åŒ–äº†ä¸€ä¸ªåŸºäºGeneralMediaCapturerå®ç°çš„éŸ³é¢‘é‡‡é›†å™¨
 
 ```c#
 private void InitAudioCapture()
@@ -302,7 +302,7 @@ private void InitAudioCapture()
 }
 ```
 
-ÔÚÕâ¸öÒôÆµ²É¼¯Æ÷ÖĞ£¬µ±²É¼¯µ½ÒôÆµÊı¾İÊ±£¬AudioFrameArrivedEvent±»´¥·¢£¬½«²É¼¯µ½µÄPCM32µÄÒôÆµÊı¾İ×ª»¯ÎªAgoraÄÜ´¦ÀíµÄPCM16µÄÒôÆµÊı¾İºó£¬Í¨¹ıPushAudioFrame½øĞĞ·¢ËÍ
+åœ¨è¿™ä¸ªéŸ³é¢‘é‡‡é›†å™¨ä¸­ï¼Œå½“é‡‡é›†åˆ°éŸ³é¢‘æ•°æ®æ—¶ï¼ŒAudioFrameArrivedEventè¢«è§¦å‘ï¼Œå°†é‡‡é›†åˆ°çš„PCM32çš„éŸ³é¢‘æ•°æ®è½¬åŒ–ä¸ºAgoraèƒ½å¤„ç†çš„PCM16çš„éŸ³é¢‘æ•°æ®åï¼Œé€šè¿‡PushAudioFrameè¿›è¡Œå‘é€
 
 ```c#
 private void AudioFrameArrivedEvent(AudioMediaFrame frame)
@@ -338,38 +338,38 @@ private void AudioFrameArrivedEvent(AudioMediaFrame frame)
 }
 ```
 
-±¾Ê¾ÀıºÍ¹Ù·½µÄÊ¾ÀıÊÇÓĞ²î±ğµÄ£¬¹Ù·½Ê¹ÓÃÁËÒ»¸ö¶ÓÁĞ£¬È·±£ÉùÒôÊı¾İ²»Òò´¦ÀíµÄÊ±¼äÎÊÌâ¶ø¶ªÊ§£¬±¾Ê¾ÀıÃ»ÓĞ½øĞĞÕâ·½ÃæµÄ´¦Àí£¬Ê¹ÓÃÕß¿ÉÒÔ¸ù¾İ×Ô¼ºÓ¦ÓÃµÄĞèÒª²Î¿¼[¹Ù·½Ê¾Àı](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)ÊµÏÖ¡£
+æœ¬ç¤ºä¾‹å’Œå®˜æ–¹çš„ç¤ºä¾‹æ˜¯æœ‰å·®åˆ«çš„ï¼Œå®˜æ–¹ä½¿ç”¨äº†ä¸€ä¸ªé˜Ÿåˆ—ï¼Œç¡®ä¿å£°éŸ³æ•°æ®ä¸å› å¤„ç†çš„æ—¶é—´é—®é¢˜è€Œä¸¢å¤±ï¼Œæœ¬ç¤ºä¾‹æ²¡æœ‰è¿›è¡Œè¿™æ–¹é¢çš„å¤„ç†ï¼Œä½¿ç”¨è€…å¯ä»¥æ ¹æ®è‡ªå·±åº”ç”¨çš„éœ€è¦å‚è€ƒ[å®˜æ–¹ç¤ºä¾‹](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)å®ç°ã€‚
 
-### Ê¹ÓÃÒôÆµ×ÔäÖÈ¾
+### ä½¿ç”¨éŸ³é¢‘è‡ªæ¸²æŸ“
 
-±¾Á÷³Ì¶ÔÓ¦[×Ô¶¨ÒåÒôÆµ²É¼¯ºÍäÖÈ¾](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)Ò»½ÚÖĞµÄºó°ë²¿·Ö£¬×Ô¶¨ÒåÒôÆµäÖÈ¾
+æœ¬æµç¨‹å¯¹åº”[è‡ªå®šä¹‰éŸ³é¢‘é‡‡é›†å’Œæ¸²æŸ“](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)ä¸€èŠ‚ä¸­çš„ååŠéƒ¨åˆ†ï¼Œè‡ªå®šä¹‰éŸ³é¢‘æ¸²æŸ“
 
 ```mermaid
 sequenceDiagram
 participant UWP as UWP App
 participant SDK as Agora UWP SDK
 participant Agora as SD-RTN
-Note left of UWP: ÉêÇëÉãÏñÍ·ºÍÂó¿Ë·çÈ¨ÏŞ
+Note left of UWP: ç”³è¯·æ‘„åƒå¤´å’Œéº¦å…‹é£æƒé™
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
-Note left of UWP: ³õÊ¼»¯
+Note left of UWP: åˆå§‹åŒ–
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: ÉèÖÃÊ¹ÓÃÍâ²¿ÒôÆµäÖÈ¾
+Note left of UWP: è®¾ç½®ä½¿ç”¨å¤–éƒ¨éŸ³é¢‘æ¸²æŸ“
 UWP->>SDK: SetExternalAudioSink
-Note left of UWP: ¼ÓÈëÆµµÀ
+Note left of UWP: åŠ å…¥é¢‘é“
 UWP->>SDK: JoinChannel
-SDK->>Agora: ÇëÇó¼ÓÈëÆµµÀ
+SDK->>Agora: è¯·æ±‚åŠ å…¥é¢‘é“
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: À­È¡Ô¶¶ËÒôÆµÊı¾İ£¬×ÔĞĞ´¦Àíºó½øĞĞ²¥·Å
+Note left of UWP: æ‹‰å–è¿œç«¯éŸ³é¢‘æ•°æ®ï¼Œè‡ªè¡Œå¤„ç†åè¿›è¡Œæ’­æ”¾
 UWP->>SDK: PullAudioFrame
-Note left of UWP: Àë¿ªÆµµÀ
+Note left of UWP: ç¦»å¼€é¢‘é“
 UWP->>SDK: LeaveChannel
-SDK->>Agora: ÇëÇóÀë¿ªÆµµÀ
-Note left of UWP: ÊÍ·Å
+SDK->>Agora: è¯·æ±‚ç¦»å¼€é¢‘é“
+Note left of UWP: é‡Šæ”¾
 UWP->>SDK: Dispose
 ```
-![ÒôÆµ×ÔäÖÈ¾Á÷³Ì](images/image-20201020162339492.png)
+![éŸ³é¢‘è‡ªæ¸²æŸ“æµç¨‹](images/image-20201020162339492.png)
 
-ÔÚÑİÊ¾ÖĞ
+åœ¨æ¼”ç¤ºä¸­
 
 ```c#
 private void StartEngineAndPullAudioProcess()
@@ -380,7 +380,7 @@ private void StartEngineAndPullAudioProcess()
 }
 ```
 
-³ıÁË³õÊ¼»¯AgoraRtcÒıÇæÍâ£¬»¹³õÊ¼»¯ÁËÒ»¸ö[AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041)×÷ÎªÒôÆµ²¥·ÅÆ÷¡£
+é™¤äº†åˆå§‹åŒ–AgoraRtcå¼•æ“å¤–ï¼Œè¿˜åˆå§‹åŒ–äº†ä¸€ä¸ª[AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041)ä½œä¸ºéŸ³é¢‘æ’­æ”¾å™¨ã€‚
 
 ```c#
 private void InitAudioGraph()
@@ -404,7 +404,7 @@ private void InitAudioGraph()
 }
 ```
 
-ÆäÖĞm_audioInput×÷ÎªPCMÊı¾İµÄÊäÈë¶Ë£¬Á´½ÓÖÁÈ±Ê¡µÄÏµÍ³ÒôÆµÊä³ö¶Ë£¬±ÈÈçÑïÉùÆ÷»ò¶ú»ú¡£Ã¿µ±m_audioInput×¼±¸ºÃ¿ÉÒÔ´¦ÀíĞÂµÄÒôÆµÊı¾İÊ±£¬»á´¥·¢QuantumStartedÊÂ¼ş£¬ÔÚÕâ¸öÊÂ¼şÖĞ¾Í¿ÉÒÔµ÷ÓÃAgoraµÄPullAudioFrameµÃµ½ÒôÆµÊı¾İ²¢½øĞĞ´¦Àíºó²¥·Å¡£
+å…¶ä¸­m_audioInputä½œä¸ºPCMæ•°æ®çš„è¾“å…¥ç«¯ï¼Œé“¾æ¥è‡³ç¼ºçœçš„ç³»ç»ŸéŸ³é¢‘è¾“å‡ºç«¯ï¼Œæ¯”å¦‚æ‰¬å£°å™¨æˆ–è€³æœºã€‚æ¯å½“m_audioInputå‡†å¤‡å¥½å¯ä»¥å¤„ç†æ–°çš„éŸ³é¢‘æ•°æ®æ—¶ï¼Œä¼šè§¦å‘QuantumStartedäº‹ä»¶ï¼Œåœ¨è¿™ä¸ªäº‹ä»¶ä¸­å°±å¯ä»¥è°ƒç”¨Agoraçš„PullAudioFrameå¾—åˆ°éŸ³é¢‘æ•°æ®å¹¶è¿›è¡Œå¤„ç†åæ’­æ”¾ã€‚
 
 ```c#
 private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
