@@ -58,7 +58,7 @@ AgoraWinRT project is a Windows Runtime Component (C++ WinRT) project, and it's 
 
 AgoraWinRT::AgoraRtc is the core class of AgoraWinRT, which encapsulate AgoraRtc in Agora C++, and provides event registration methods that user can  those methods to subscript events.
 
-| Event Registration Metho      | Event Interface                                              |
+| Event Registration Method     | Event Interface                                              |
 | ----------------------------- | ------------------------------------------------------------ |
 | RegisterRtcEngineEventHandler | AgoraRtcEventHandler                                         |
 | RegisterMediaMetadataObserver | MetadataObserver                                             |
