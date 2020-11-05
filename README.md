@@ -148,7 +148,7 @@ IMediaCapturer定义说明如下：
 
 #### VideoCanvas和ImageBrushVideoCanvas
 
-VideoCanvas定义了可被AgoraUWP.AgoraRtc接受为本地SetupLocalVideo与远程SetupRemoteVideo视频渲染窗口所因实现的方法和属性。
+VideoCanvas定义了可被AgoraUWP.AgoraRtc接受为本地SetupLocalVideo与远程SetupRemoteVideo视频渲染窗口所应实现的方法和属性。
 
 ImageBrushVideoCanvas则是基于ImageBrush之上的VideoCanvas实现类。
 
