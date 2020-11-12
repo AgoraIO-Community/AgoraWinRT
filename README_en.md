@@ -1,24 +1,24 @@
 # AgoraWinRT Development Manual
 
-In UWP, Agora C++ Native Development kit cannot get the camera and microphone permission because they should be explicitly applying,  and because window has not the handle property in UWP, Agora C++ Native also cannot render video data by default function like setupLocalVideo and setupRemoteVideo. On the other hand, UWP development is more friendly to C# users. 
+In UWP, Agora C++ Native Development kit cannot get the camera and microphone permission because they should be explicitly applying, and there is no handle property in UWP on Windows, Agora C++ Native also cannot render video data by default function like setupLocalVideo and setupRemoteVideo. On the other hand, UWP development is more friendly to C# users.
 
-Based on those reasons, this project encapsulates native c++ kit to WinRT kit, and based of WinRT kit, it encapsulates UWP kit to manage video and audio devices. If you are c++ user, you can also directly use WinRT kit for development.
+Based on those reasons, this project encapsulates native c++ kit to WinRT kit, and based on the WinRT kit, it encapsulates the UWP kit to manage video and audio devices. If you are a C++ user, you can also directly use the WinRT kit for development.
 
 ## Architecture Description
 
 The whole architecture is divided into two main parts: AgoraWinRT and AgoraUWP.
 
-AgoraWinRT encapsulated for Agora C++ Native.
+AgoraWinRT is encapsulated from Agora C++ Native.
 
-AgoraUWP is based on AgoraWinRT , and add device managemet and video render on UWP.
+AgoraUWP is based on AgoraWinRT, and add device management and video render on UWP.
 
 ### AgoraWinRT Description
 
-When AgoraWinRT encapsulated  the Agora C++ API, it use same function names and type names with Agora C++ expect for the namespace. Users can directly refer to [Agora C++ API Reference for All Platforms](https://docs.agora.io/en/Audio%20Broadcast/API%20Reference/cpp/index.html) to find the corresponding type and function description.
+The AgoraWinRT SDK is encapsulated with the Agora C++ API, it uses the same function names and type names as Agora C++ SDK except for the namespace. Users can directly refer to [Agora C++ API Reference for All Platforms](https://docs.agora.io/en/Audio%20Broadcast/API%20Reference/cpp/index.html) to find the corresponding type and function description.
 
-#### AgoraWinRT Doesn't Encapsulated Parts
+#### AgoraWinRT Unencapsulated Parts
 
-In AgoraWinRT, some Agora C++ API are not encapsulated, the following list is those function's name and reason.
+In AgoraWinRT, some Agora C++ API is not encapsulated, the following list is those function's name and reason.
 
 | Name                                | Reason                                                       |
 | ----------------------------------- | ------------------------------------------------------------ |
@@ -43,46 +43,46 @@ In AgoraWinRT, some Agora C++ API are not encapsulated, the following list is th
 
 #### AgoraWinRT Project Files Description
 
-AgoraWinRT project is a Windows Runtime Component (C++ WinRT) project, and it's interfaces are defined in serval idl files.
+AgoraWinRT project is a Windows Runtime Component (C++ WinRT) project, and the interfaces are defined in several idl files.
 
 | File Name                        | Description                                                  |
 | -------------------------------- | ------------------------------------------------------------ |
-| AgoraWinRT.idl                   | the main interface file, which is a WinRT redefinition version of  the interface of AgoraRtc in Agora C++ |
-| AgoraWinRTInterfaces.idl         | the event interfaces definition file, it includes  AgoraRtcEventHandler、MetadataObserver、AudioFrameObserver、VideoFrameObserver, PacketObserver. User can implement interface and call registration method to subscript events. |
-| AgoraWinRTAudioDeviceManager.idl | include redefinition version of Agora C++ IAudioDeviceManager |
-| AgoraWinRTChannel.idl            | include redefinition version of Agora C++ IChannel and IChannelEventHandler |
-| AgoraWinRTTypes.idl              | include types redefiniton version of Agora C++ SDK           |
-| AgoraWinRTEnums.idl              | include enums redefinition version of  Agora C++ SDK         |
+| AgoraWinRT.idl                   | the main interface file, which is a WinRT redefinition of AgoraRtc in Agora C++ |
+| AgoraWinRTInterfaces.idl         | the event interfaces definition file, includes  AgoraRtcEventHandler、MetadataObserver、AudioFrameObserver、VideoFrameObserver, PacketObserver. Users can implement interface and call registration method to subscribe events. |
+| AgoraWinRTAudioDeviceManager.idl | include redefinition of Agora C++ IAudioDeviceManager |
+| AgoraWinRTChannel.idl            | include redefinition of Agora C++ IChannel and IChannelEventHandler |
+| AgoraWinRTTypes.idl              | include types redefiniton of Agora C++ SDK           |
+| AgoraWinRTEnums.idl              | include enums redefinition of Agora C++ SDK         |
 
 #### AgoraWinRT::AgoraRtc Event Registration Method Description
 
-AgoraWinRT::AgoraRtc is the core class of AgoraWinRT, which encapsulate AgoraRtc in Agora C++, and provides event registration methods that user can  those methods to subscript events.
+AgoraWinRT::AgoraRtc is the core class of AgoraWinRT, which encapsulate AgoraRtc in Agora C++, and provides event registration methods that users can use those methods to subscribe to events.
 
 | Event Registration Method     | Event Interface                                              |
 | ----------------------------- | ------------------------------------------------------------ |
 | RegisterRtcEngineEventHandler | AgoraRtcEventHandler                                         |
 | RegisterMediaMetadataObserver | MetadataObserver                                             |
-| RegisterPacketObserver        | PacketObserver，based on the internal implementation of Agora, only registration will not make this interface work. User must be call enableEncryption to make enable is true,  then PacketObserver's event can take effect. |
+| RegisterPacketObserver        | PacketObserver，based on the internal implementation of Agora, only registration will not make this interface work. User need to call enableEncryption and set enable as true, then PacketObserver's event can take effect. |
 | RegisterAudioFrameObserver    | AudioFrameObserver                                           |
 | RegisterVideoFrameObserver    | VideoFrameObserver                                           |
 
 #### Special Feature of AgoraWinRT::AgoraRtc
 
-AgoraWinRT::AgoraRtc removes initialize and release functions. Instead of that, it automatically initialize the RTC engine when AgoraWinRT::AgoraRtc class is created in constructor and automatically call the engine's release function when AgoraWinRT::AgoraRtc instance be destructed.
+AgoraWinRT::AgoraRtc removes initialize and release functions. Instead of that, it automatically initializes the RTC engine when AgoraWinRT::AgoraRtc class is created in the constructor and automatically call the engine's release function when AgoraWinRT::AgoraRtc instance be destructed.
 
 At the same time, AgoraWinRT::AgoraRtc implements the IDispose interface, so users can use Using or directly call the dispose method to release resources. 
 
-**NOTE: user can not use AgoraWinRT::AgoraRtc instance again after calling Dispose method, instead of that , user must recreate a new instance of AgoraWinRT::AgoraRtc.**
+**NOTE: user can not use AgoraWinRT::AgoraRtc instance again after calling Dispose method, instead of that, the user must recreate a new instance of AgoraWinRT::AgoraRtc.**
 
-#### AgoraWinRT::AgoraRtc's Functions and Event Interfaces Document
+#### AgoraWinRT::AgoraRtc Functions and Event Interfaces Document
 
-[As mentioned above](#AgoarWinRT description), the name of all funcitons, types, enums and interfaces definitions  in AgoraWinRT::AgoraRtc are consistent with those in Agora C++ Naive SDK. Developers can use [the official documents](https://docs.agora.io/en/Audio%20Broadcast/API%20Reference/cpp/index.html) to find specific information of functions, types, enums and interfaces.
+[As mentioned above](#AgoarWinRT description), the name of all functions, types, enums, and interfaces definitions in AgoraWinRT::AgoraRtc is consistent with those in Agora C++ Naive SDK. Developers can use [the official documents](https://docs.agora.io/en/Audio%20Broadcast/API%20Reference/cpp/index.html) to find specific information of functions, types, enums, and interfaces.
 
 ### AgoraUWP Description
 
-AgoraUWP is based on AgoraWinRT , implemented by C#. It provides VideoDeviceManager, permission request, video capture and rendering in UWP platform. At the same time,  the three interfaces, AgoraRtcEventHandler, VideoFrameObserver, AudioFrameObserver, are implemented by default, and the functions among them are converted to C# style events from callback function.
+AgoraUWP is based on AgoraWinRT , implemented by C#. It provides VideoDeviceManager, permission request, video capture, and rendering in the UWP platform. At the same time,  there are three interfaces, AgoraRtcEventHandler, VideoFrameObserver, AudioFrameObserver, implemented by default, and the functions among them are converted to C# style events from the callback function.
 
-AgoraUWP use same function names and type names with Agora C++ like AgoraWinRT, expect for the namespace. 
+AgoraUWP uses the same function names and type names with Agora C++ like AgoraWinRT, except for the namespace. 
 
 #### AgoraUWP Project Files Description
 
@@ -90,14 +90,14 @@ AgoraUWP is a DLL(Universal Windows) project
 
 | 文件名                     | 用途说明                                                     |
 | -------------------------- | ------------------------------------------------------------ |
-| AgoraUWP.cs                | The main file of AgoraUWP, which includes AgoraUWP.AgoraRtc class. This class implements three AgoraWinRT interfaces: AgoraWinRT::AgoraRtcEventHandler、AgoraWinRT::VideoFrameObserver、AgoraWinRT::AudioFrameObserver in privately, and exposes those intefaces by events. It also provide video capture and rendering capabilities on UWP platform, so the development can simply use this SDK to implements video and audio communication app like using Agora C++ SDK. |
-| AgoraUWPDelegate.cs        | include redefinition version of AgoraWinRT::AgoraRtcEventHandler、AgoraWinRT::VideoFrameObserver、AgoraWinRT::AudioFrameObserver |
-| IVideoDeviceCollection.cs  | include redefinition version of AgoraWinRT::IVideoDeviceCollection |
-| VideoDeviceManager.cs      | include redefinition version of AgoraWinRT::IVideoDevicemanger，and include a implementation of AgoraWinRT::IVideoDeviceCollection and AgoraWinRT::IVideoDeviceManager on UWP platform |
+| AgoraUWP.cs                | The main file of AgoraUWP, which includes AgoraUWP.AgoraRtc class. This class implements three AgoraWinRT interfaces: AgoraWinRT::AgoraRtcEventHandler、AgoraWinRT::VideoFrameObserver、AgoraWinRT::AudioFrameObserver in privately, and transfer those intefaces to events. It also provide video capture and rendering capabilities on UWP platform, so the user can simply use this SDK to implements video and audio communication app like using Agora C++ SDK. |
+| AgoraUWPDelegate.cs        | include redefinition of AgoraWinRT::AgoraRtcEventHandler、AgoraWinRT::VideoFrameObserver、AgoraWinRT::AudioFrameObserver |
+| IVideoDeviceCollection.cs  | include redefinition of AgoraWinRT::IVideoDeviceCollection |
+| VideoDeviceManager.cs      | include redefinition of AgoraWinRT::IVideoDevicemanger，and include a implementation of AgoraWinRT::IVideoDeviceCollection and AgoraWinRT::IVideoDeviceManager on UWP platform |
 | VideoCanvas.cs             | because there is no window handle on UWP platform, therefore, the VideoCanvas abstract class is defined to unify the implementation interface of video rendering on UWP platform, for specific instruction, refer to [VideoCanas](#VideoCanvas) |
 | ImageBrushVideoCanvas.cs   | a VideoCanvas implementation based on ImageBrush.            |
 | IMediaCapturer.cs          | the media capture interface used by AgoraUWP.AgoraRtc        |
-| GeneralMediaCapturer.cs    | a default implementation of AgoraWinRT::IMediaCapturer interface, it also is the default media capture used by AgoraUWP.AgoraRtc |
+| GeneralMediaCapturer.cs    | a default implementation of AgoraWinRT::IMediaCapturer interface, it is also the default media capture used by AgoraUWP.AgoraRtc |
 | MediaCaptureVideoSource.cs | a implementation of Agora C++ VideoSource based on GeneralMediaCapturer |
 
 #### AgoraUWP.AgoraRtc
@@ -108,28 +108,28 @@ This class provides video capture, video rendering and device management functio
 
 These are serval differences between AgoraUWP.AgoraRtc and Agora C++ SDK:
 
-1. User need to apply for permission to use camera and microphone on UWP platform. After testing, in progress of applying permission, a pop-up confirmation windows cannot show in synchronous function     . Therefore, AgoraUWP add RequestCameraAccess asynchronous static function, user must call this function to apply permission before create and using AgoraUWP.AgoraRtc instance.
-2. the SetupLocalVideo and SetupRemoteVideo functions's parameters are changed to accept AgoraUWP.VideCanvas, because it has not window handle on UWP platform.  User can use AgoraUWP.ImageBrushVideoCanvas to implement video rendering on ImageBrush, and user can inherits VideoCanvas to implement video rendering for they own.
+1. Users need to apply for permission to use the camera and microphone on the UWP platform. After testing, in the progress of applying for permission, pop-up confirmation windows cannot show in synchronous function. Therefore, AgoraUWP adds RequestCameraAccess asynchronous static function, the user must call this function to apply for permission before create and using AgoraUWP.AgoraRtc instance.
+2. the parameters of SetupLocalVideo and SetupRemoteVideo functions are modified to accept parameters of AgoraUWP.VideCanvas, because there is no window handle on the UWP platform.  Users can use AgoraUWP.ImageBrushVideoCanvas to implement video rendering on ImageBrush, and the user can inherit VideoCanvas to implement video rendering on their own.
 
 #### AgoraUWP.IMediaCapturer and AgoraUWP.GeneralMediaCapturer
 
-IMediaCapturer defines an audio and video frame capturer on UWP, and GeneralMediaCapturer is its default implementation.
+IMediaCapturer defines an audio and video frame capturer on UWP, and GeneralMediaCapturer is the default implementation.
 
-GeneralMediaCapturer itself is not only used by AgoraUWP.AgoraRtc as an internal video frame capture, but also can be used independently as an audio and video frame capture for audio and video self-capturing.
+GeneralMediaCapturer is not only used by AgoraUWP.AgoraRtc as an internal video frame capture, but also can be used independently as an audio and video frame capture for audio and video self-capturing.
 
 The definition of IMediaCapturer is as follows:
 
 1. VideoDevice
 
-   Get the video device used by the current capture, which may be null
+   Get the video device used by the current capture, which can be null
 
 2. AudioDevice
 
-   Get the audio device used by the current capture, which may be null
+   Get the audio device used by the current capture, which can be null
 
 3. AudioFormat
 
-   The currently used audio format data, such as sampling rate, number of channels, etc., can be found in msdn about [MediaFrameFormat](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture. Frames.MediaFrameFormat?redirectedfrom=MSDN&view=winrt-19041) part
+   The currently used audio format data, such as sampling rate, number of channels, etc., can be found in MSDN about [MediaFrameFormat](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture. Frames.MediaFrameFormat?redirectedfrom=MSDN&view=winrt-19041) part
 
 4. VideoFormat
 
@@ -145,7 +145,7 @@ The definition of IMediaCapturer is as follows:
 
 7. EnableVideo
 
-   Whether to enable video frame capture, the default is true, if set to false, OnVideoFrameArrived will not  be triggered
+   Whether to enable video frame capture, the default is true, if set to false, OnVideoFrameArrived will not be triggered
 
 8. OnAudioFrameArrived
 
@@ -173,7 +173,7 @@ The definition of VideoCanvas is as follows:
 
 3. Channel
 
-   The channel of the source of the video
+   The channel of the source video
 
 4. User
 
@@ -181,7 +181,7 @@ The definition of VideoCanvas is as follows:
 
 5. MirrorMode
 
-   Does the video need to be mirrored
+   Video mirror display
 
 6. Render(MediaFrameReference)
 
@@ -199,7 +199,7 @@ Agora C++ provides a setVideoSource method, which allows users to provide their 
 
 So this class only provides an example of a custom VideoSource based on GeneralMeidaCapturer. Users can refer to it to implement their own VideoSource.
 
-## Demo description
+## About AgoraUWPDemo
 
 AgoraUWPDemo is an example of using AgoraUWP.
 
@@ -253,7 +253,7 @@ UWP->>SDK: Dispose
 
 ![image-20201105165511709](images/image-20201105165511709.png)
 
-Please note that due to UWP platform restrictions, you must apply for camera and microphone permissions before you can use it. Therefore, at the very beginning of program, user must to call the AgoraUWP.AgoraRtc.RequestCameraAccess asynchronous method to apply for permission, otherwise it will cause AgoraUWP.AgoraRtc to fail to obtain device permissions.
+Please note that due to UWP platform restrictions, you must apply for camera and microphone permissions before you can use it. Therefore, at the very beginning of the program, the user must call AgoraUWP.AgoraRtc.RequestCameraAccess asynchronous method to apply for permission, otherwise, it will cause AgoraUWP.AgoraRtc to fail to obtain device permissions.
 
 ### Use Audio Self-collection
 
@@ -268,7 +268,7 @@ Note left of UWP: Apply for camera and microphone permissions
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
 Note left of UWP: Initialization
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: Set to use external audio source
+Note left of UWP: Set to use an external audio source
 UWP->>SDK: SetExternalAudioSource
 Note left of UWP: Join the channel
 UWP->>SDK: JoinChannel
@@ -308,7 +308,7 @@ private void InitAudioCapture()
 }
 ```
 
-In this audio collector, when audio data is collected, AudioFrameArrivedEvent is triggered. After the collected PCM32 audio data is converted into PCM16 audio data that Agora C++ SDK can process, it is sent to  PushAudioFrame function.
+In this audio collector, when audio data is collected, AudioFrameArrivedEvent is triggered. After the collected PCM32 audio data is converted into PCM16 audio data that Agora C++ SDK can process, it is sent to PushAudioFrame function.
 
 ```c#
 private void AudioFrameArrivedEvent(AudioMediaFrame frame)
@@ -344,11 +344,11 @@ private void AudioFrameArrivedEvent(AudioMediaFrame frame)
 }
 ```
 
-This example has different from [the official example](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows). [The official example](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows) uses a queue to ensure that the sound data is not lost due to processing time issues, this example does not deal with this aspect. 
+This example is different from [the official example](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows). [The official example](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows) uses a queue to ensure that the sound data won't be lost due to processing time issues, this example does not deal with this aspect. 
 
 ### Use Audio Self-rendering
 
-This process corresponds to the first half of the section [Custom Audio Capture and Rendering](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows), the Custom Audio Rendering.
+This process corresponds to the second half of the section [Custom Audio Capture and Rendering](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows), the Custom Audio Rendering.
 
 ```mermaid
 sequenceDiagram
@@ -365,7 +365,7 @@ Note left of UWP: Join the channel
 UWP->>SDK: JoinChannel
 SDK->>Agora: Request to join the channel
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: Pull remote audio data, process it and play it
+Note left of UWP: Pull remote audio data, process it, and play it
 UWP->>SDK: PullAudioFrame
 Note left of UWP: Leave the channel
 UWP->>SDK: LeaveChannel
@@ -387,7 +387,7 @@ private void StartEngineAndPullAudioProcess()
 }
 ```
 
-In this function, in addition to initializing the engine, it also create an [AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041) as an audio player.
+In this function, in addition to initializing the engine, it also creates an [AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041) as an audio player.
 
 ```c#
 private void InitAudioGraph()
@@ -411,7 +411,7 @@ private void InitAudioGraph()
 }
 ```
 
-The m_audioInput is used as the input terminal of PCM data and is linked to the default system audio output terminal, such as speakers or headphones. Whenever m_audioInput is ready to process new audio data, it will trigger the QuantumStarted event. In this event, you can call Agora's PullAudioFrame to get the audio data and play it.
+The m_audioInput is used as the input of PCM data and is linked to the default system audio outputs, such as speakers or headphones. Whenever m_audioInput is ready to process new audio data, it will trigger the QuantumStarted event. In this event, you can call Agora's PullAudioFrame to get the audio data and play it.
 
 ```c#
 private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
@@ -448,4 +448,3 @@ private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuant
      }
  }
 ```
-
