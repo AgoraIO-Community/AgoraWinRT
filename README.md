@@ -442,3 +442,67 @@ private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuant
  }
 ```
 
+## 如何在UWP 项目中使用
+
+如果要在一个新的或已经存在的 UWP 项目中使用 AgoraUWP 和 AgoraWinRT，只需如下几步，这里以一个新的 UWP 项目为例
+
+### 生成库文件
+
+编译完 AgoraWinRT 和 AgoraUWP 项目后，在 AgoraUWP 项目的 bin/x86 或 bin/x64 下生成 debug 或 release 目录，具体活动解决方案配置与活动解决方案平台依编译时的设置而定。
+
+![image-20201114120001641](images/image-20201114120001641.png)
+
+其中需要的文件是
+
+1. AgoraUWP.dll
+2. AgoraWinRT.dll
+3. AgoraWinRT.winmd
+
+### 新建 UWP 项目
+
+通过Visual Studio新建一个 UWP 项目
+
+![image-20201114120452111](images/image-20201114120452111.png)
+
+### 添加 Agora C++ RTC 库文件
+
+在 AgoraWinRTTest 项目中选择添加现在项
+
+![image-20201114120645626](images/image-20201114120645626.png)
+
+找到从 Agora 官网上下载的 Agora RTC SDK，选择其中的 agora_rtc_sdk.dll，注意要选择对应的 x86 或x64 版本。
+
+![image-20201114120857750](images/image-20201114120857750.png)
+
+将 agora_rtc_sdk.dll 的属性中的复制到输出目录选择为“始终复制”
+
+![image-20201114121008509](images/image-20201114121008509.png)
+
+### 添加 AgoraWinRT 和 AgoraUWP 引用
+
+在项目中选择添加引用
+
+![image-20201114121056564](images/image-20201114121056564.png)
+
+选择浏览
+
+![image-20201114121149713](images/image-20201114121149713.png)
+
+点击“浏览”按键后，在文件浏览器中找到生成的库文件目录，选择 AgoraUWP.dll 和 AgoraWinRT.winmd这两个文件
+
+![image-20201114121437673](images/image-20201114121437673.png)
+
+点击“添加”
+
+![image-20201114121515872](images/image-20201114121515872.png)
+
+点击“确定”，就可以将 AgoraUWP 和 AgoraWinRT 库添加到项目中了。
+
+![image-20201114121858351](images/image-20201114121858351.png)
+
+### 最后
+
+之后的使用就可以参考 AgoraWinRT 工程里的 AgoraUWPDemo 项目 了，注意，项目需要添加麦克风和网络摄像头的功能才可以。
+
+![image-20201114121818384](images/image-20201114121818384.png)
+
