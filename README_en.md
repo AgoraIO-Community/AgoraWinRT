@@ -448,3 +448,67 @@ private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuant
      }
  }
 ```
+
+## How To Use In Your UWP Project
+
+If you want to use AgoraUWP and AgoraWinRT in a new or existing UWP project, you only need to take the following steps, here is a new UWP project as an example
+
+### Generate library files
+
+After compiling the AgoraWinRT and AgoraUWP projects, generate the debug or release directory under bin/x86 or bin/x64 of the AgoraUWP project. The specific depend on the settings during compilation.
+
+![image-20201114120001641](images/image-20201114120001641.png)
+
+the required files is 
+
+1. AgoraUWP.dll
+2. AgoraWinRT.dll
+3. AgoraWinRT.winmd
+
+### Create New UWP Project
+
+Create a new UWP solution through Visual Studio
+
+![image-20201114124043704](images/image-20201114124043704.png)
+
+### Add Agora C++ RTC Library File
+
+Add Existing Item
+
+![image-20201114124137499](images/image-20201114124137499.png)
+
+Download Agora RTC SDK from Agora Official website, and select agora_rtc_sdk.dll among them. Pay attention, you must select the corresponding x86 or x64 version.
+
+![image-20201114124418606](images/image-20201114124418606.png)
+
+Modify "Copy to Output Directory" in agora_rtc_sdk.dll properties to "Copy always"
+
+![image-20201114124617071](images/image-20201114124617071.png)
+
+### Add AgoraWinRT and AgoraUWP Reference
+
+Add References in project
+
+![image-20201114124748758](images/image-20201114124748758.png)
+
+Select browse
+
+![image-20201114124834054](images/image-20201114124834054.png)
+
+Click "Browse...", find AgoraUWP.dll and AgoraWinRT.winmd in AgoraUWP and AgoraWinRT bin directory.
+
+![image-20201114121437673](images/image-20201114121437673.png)
+
+Click "Add"
+
+![image-20201114125125239](images/image-20201114125125239.png)
+
+Click "OK", add AgoraUWP and AgoraWnRT to project's references
+
+![image-20201114125217706](images/image-20201114125217706.png)
+
+### Finally
+
+For subsequent use, you can refer to the AgoraUWPDemo project in the AgoraWinRT project. Note that the project needs to add microphone and webcam capabilities.
+
+![image-20201114125344615](images/image-20201114125344615.png)

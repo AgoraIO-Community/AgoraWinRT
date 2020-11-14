@@ -466,7 +466,7 @@ private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuant
 
 ### 添加 Agora C++ RTC 库文件
 
-在 AgoraWinRTTest 项目中选择添加现在项
+在 AgoraWinRTTest 项目中选择添加“现有项“
 
 ![image-20201114120645626](images/image-20201114120645626.png)
 
