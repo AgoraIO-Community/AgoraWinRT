@@ -1,287 +1,295 @@
-# AgoraWinRT开发说明手册
+# AgoraWinRT Development Manual
 
-因为UWP的特殊性，原生Agora C++开发包无法在没有明确申请权限的基础上就得到摄像头和麦克风的使用权限，并且因为窗口句柄的取消，也无法缺省的实现对视频的渲染，另一方面，UWP开发明显对于C#的用户更加友好，特此对Agora C++进行WinRT封装，并在WinRT封装的基础上针对UWP的设备管理和音视频渲染再度封装，从而方便C#用户在UWP平台上进行Agora应用的开发，C++用户也可以参考或直接使用WinRT封装进行开发。
+*English* ｜ [**中文**](Readme.zh.md)
 
-## 架构说明
+In UWP, Agora C++ Native Development kit cannot get the camera and microphone permission because they should be explicitly applying, and there is no handle property in UWP on Windows, Agora C++ Native also cannot render video data by default function like setupLocalVideo and setupRemoteVideo. On the other hand, UWP development is more friendly to C# users.
 
-整个架构分为两个主要部分，AgoraWinRT和AgoraUWP。
+Based on those reasons, this project encapsulates native c++ kit to WinRT kit, and based on the WinRT kit, it encapsulates the UWP kit to manage video and audio devices. If you are a C++ user, you can also directly use the WinRT kit for development.
 
-AgoraWinRT是对Agora C++的封装，而AgoraUWP则是对AgoraWinRT的封装。
+## Architecture Description
 
-### AgoraWinRT说明
+The whole architecture is divided into two main parts: AgoraWinRT and AgoraUWP.
 
-AgoraWinRT针对Agora C++的API进行封装，封装时除了名字空间在AgoraWinRT名字空间下之外，其中的函数名称、类型名称都与Agora C++一致，使用者可直接参考[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)中对应的类型、函数说明进行查找即可。
+AgoraWinRT is encapsulated from Agora C++ Native.
 
-#### AgoraWinRT没有封装的部分
+AgoraUWP is based on AgoraWinRT, and add device management and video render on UWP.
 
-在AgoraWinRT中，因为各种原因有个别API没有进行封装，以下是列表及原因说明
+### AgoraWinRT Description
 
-| API名称                             | 原因说明                                                     |
+The AgoraWinRT SDK is encapsulated with the Agora C++ API, it uses the same function names and type names as Agora C++ SDK except for the namespace. Users can directly refer to [Agora C++ API Reference for All Platforms](https://docs.agora.io/en/Audio%20Broadcast/API%20Reference/cpp/index.html) to find the corresponding type and function description.
+
+#### AgoraWinRT Unencapsulated Parts
+
+In AgoraWinRT, some Agora C++ API is not encapsulated, the following list is those function's name and reason.
+
+| Name                                | Reason                                                       |
 | ----------------------------------- | ------------------------------------------------------------ |
-| setVideoProfile                     | 2.3后废弃                                                    |
-| 屏幕共享                            | 技术原因，暂时不封装                                         |
-| 人脸检测                            | Android和iOS                                                 |
-| 音频播放路由                        | Android和iOS                                                 |
-| 耳返控制                            | Android和iOS                                                 |
-| 摄像头控制                          | Android和iOS                                                 |
+| Screen Capture                      | not implemented temporarily                                  |
+| Face Detection                      | Android and iOS                                              |
+| Audio Routing Control               | Android and iOS                                              |
+| In-ear Monitoring                   | Android and iOS                                              |
+| Camera Control                      | Android and iOS                                              |
 | setAudioSessionOperationRestriction | iOS                                                          |
-| queryInterface                      | COM架构                                                      |
-| IVideoDeviceManager                 | 视频设备管理部分因具体平台差异，转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| initialize                          | 集成至类创建中                                               |
-| release                             | 集成至dispose方法中                                          |
-| setupLocalVideo                     | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| setupRemoteVideo                    | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| setLocalRenderMode                  | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| setRemoteRenderMode                 | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| startPreview                        | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| stopPreview                         | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| enableLocalVideo                    | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
-| onVideoDeviceStateChanged           | 转移至具体平台的封装中实现，比如UWP平台上，详情参考[AgoraUWP说明](#AgoraUWP说明) |
+| queryInterface                      | useless in WinRT                                             |
+| IVideoDeviceManager                 | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| initialize                          | integrate into constructor                                   |
+| release                             | integrate into dispose                                       |
+| setupLocalVideo                     | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| setupRemoteVideo                    | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| setLocalRenderMode                  | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| setRemoteRenderMode                 | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| startPreview                        | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| stopPreview                         | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| enableLocalVideo                    | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
+| onVideoDeviceStateChanged           | implemented in specific platform such as UWP platform. For more details, please refer to [AgoraUWP Description](#AgoraUWP description) |
 
-#### AgoraWinRT项目文件说明
+#### AgoraWinRT Project Files Description
 
-AgoraWinRT项目为Windows Runtime Component（C++ WinRT）项目，其接口定义在几个idl文件中。
+AgoraWinRT project is a Windows Runtime Component (C++ WinRT) project, and the interfaces are defined in several idl files.
 
-| 文件名                           | 用途说明                                                     |
+| File Name                        | Description                                                  |
 | -------------------------------- | ------------------------------------------------------------ |
-| AgoraWinRT.idl                   | 主接口文件，定义了AgoraRtc的接口，为Agora C++ SDK的WinRT重定义版本 |
-| AgoraWinRTInterfaces.idl         | 事件接口定义文件，重定义了AgoraRtcEventHandler、MetadataObserver、AudioFrameObserver、VideoFrameObserver, PacketObserver，使用者在自己的类中可选择接口进行实现，并调用相应的注册方法，实现事件订阅 |
-| AgoraWinRTAudioDeviceManager.idl | Agora C++ IAudioDeviceManager的WinRT重定义文件               |
-| AgoraWinRTChannel.idl            | Agora C++ IChannel和IChannelEventHandler的WinRT重定义文件    |
-| AgoraWinRTTypes.idl              | Agora C++ SDK中各种其他类型的WinRT重定义文件                 |
-| AgoraWinRTEnums.idl              | Agora C++ SDK中各种枚举类型的WinRT重定义文件                 |
+| AgoraWinRT.idl                   | the main interface file, which is a WinRT redefinition of AgoraRtc in Agora C++ |
+| AgoraWinRTInterfaces.idl         | the event interfaces definition file, includes  AgoraRtcEventHandler、MetadataObserver、AudioFrameObserver、VideoFrameObserver, PacketObserver. Users can implement interface and call registration method to subscribe events. |
+| AgoraWinRTAudioDeviceManager.idl | include redefinition of Agora C++ IAudioDeviceManager |
+| AgoraWinRTChannel.idl            | include redefinition of Agora C++ IChannel and IChannelEventHandler |
+| AgoraWinRTTypes.idl              | include types redefiniton of Agora C++ SDK           |
+| AgoraWinRTEnums.idl              | include enums redefinition of Agora C++ SDK         |
 
-#### AgoraWinRT::AgoraRtc的事件注册
+#### AgoraWinRT::AgoraRtc Event Registration Method Description
 
-AgoraRtc为AgoraWinRT的核心封装类，其中集中了对Agora C++ SDK的封装，并且通过下表提供Agora C++ RTC部分的事件注册支持
+AgoraWinRT::AgoraRtc is the core class of AgoraWinRT, which encapsulate AgoraRtc in Agora C++, and provides event registration methods that users can use those methods to subscribe to events.
 
-| 注册方法                      | 注册事件                                                     |
+| Event Registration Method     | Event Interface                                              |
 | ----------------------------- | ------------------------------------------------------------ |
 | RegisterRtcEngineEventHandler | AgoraRtcEventHandler                                         |
 | RegisterMediaMetadataObserver | MetadataObserver                                             |
-| RegisterPacketObserver        | PacketObserver，基于Agora的内部机制，光注册并不会让这个接口生效，需要在调用EnableEncryption并且enable为true后，本接口中的函数事件才会调用 |
+| RegisterPacketObserver        | PacketObserver，based on the internal implementation of Agora, only registration will not make this interface work. User need to call enableEncryption and set enable as true, then PacketObserver's event can take effect. |
 | RegisterAudioFrameObserver    | AudioFrameObserver                                           |
 | RegisterVideoFrameObserver    | VideoFrameObserver                                           |
 
-#### AgoraWinRT::AgoraRtc的特殊实现点
+#### Special Feature of AgoraWinRT::AgoraRtc
 
-AgoraRtc对比Agora C++实现，去除了initialize和release两个接口。因为C++ WinRT本身可以利用C++面对对象的特性，实现在AgoraRtc类创建时自动初始RTC引擎，并且在类析构时自动调用引擎的release方法。同时为了方便.NET平台的资源管理，AgoraRtc实现了IDispose接口，从而用户可以使用using或直接调用dispose方法进行资源的释放。**注意，因为这种实现，用户在调用dispose释放AgoraRtc之后，想要再次利用AgoraRtc，必须重新创建新的AgoraRtc类，并注册事件，而不是像Agora C++ SDK中那样子可以持有引用，并重新initialize。**
+AgoraWinRT::AgoraRtc removes initialize and release functions. Instead of that, it automatically initializes the RTC engine when AgoraWinRT::AgoraRtc class is created in the constructor and automatically call the engine's release function when AgoraWinRT::AgoraRtc instance be destructed.
 
-#### AgoraWinRT::AgoraRtc的函数和事件接口文档
+At the same time, AgoraWinRT::AgoraRtc implements the IDispose interface, so users can use Using or directly call the dispose method to release resources. 
 
-[如前所述](#AgoraWinRT说明)AgoraRtc中，除了名字空间为AgoraWinRT外，其下所有的函数、类型、枚举类型、接口定义的名称都与Agora C++ SDK中的一致。其意图就是方便开发者直接通过官方的[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)文档查找具体的函数、类型、枚举类型、接口定义的具体说明。所以本处并不提供函数、类型、枚举类型、接口定义的说明文档，开发者可直接参考[官方文档](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)。
+**NOTE: user can not use AgoraWinRT::AgoraRtc instance again after calling Dispose method, instead of that, the user must recreate a new instance of AgoraWinRT::AgoraRtc.**
 
-### AgoraUWP说明
+#### AgoraWinRT::AgoraRtc Functions and Event Interfaces Document
 
-AgoraUWP是针对UWP平台实现的对AgoraWinRT的C#封装，并在AgoraWinRT的基础上，提供了VideoDeviceManager、视频采集与渲染功能。同时，缺省的实现了AgoraRtcEventHandler、VideoFrameObserver、AudioFrameObserver三个接口，并将其中的函数转而实现为C#风格的事件。
+[As mentioned above](#AgoarWinRT description), the name of all functions, types, enums, and interfaces definitions in AgoraWinRT::AgoraRtc is consistent with those in Agora C++ Naive SDK. Developers can use [the official documents](https://docs.agora.io/en/Audio%20Broadcast/API%20Reference/cpp/index.html) to find specific information of functions, types, enums, and interfaces.
 
-其实现时的函数、类型、方法等名称原则与AgoraWinRT中一样，除了名字空间为AgoraUWP外，都与Agora C++ SDK中保持一致。
+### AgoraUWP Description
 
-#### AgoraUWP项目文件说明
+AgoraUWP is based on AgoraWinRT , implemented by C#. It provides VideoDeviceManager, permission request, video capture, and rendering in the UWP platform. At the same time,  there are three interfaces, AgoraRtcEventHandler, VideoFrameObserver, AudioFrameObserver, implemented by default, and the functions among them are converted to C# style events from the callback function.
 
-AgoraUWP项目为类库（通用Windows）项目类型，其中各个文件的说明为：
+AgoraUWP uses the same function names and type names with Agora C++ like AgoraWinRT, except for the namespace. 
+
+#### AgoraUWP Project Files Description
+
+AgoraUWP is a DLL(Universal Windows) project
 
 | 文件名                     | 用途说明                                                     |
 | -------------------------- | ------------------------------------------------------------ |
-| AgoraUWP.cs                | 本文件为AgoraUWP的主文件，其中包括了AgoraWinRT中AgoraRtc的同名UWP封装，封装中缺省实现AgoraRtcEventHandler、VideoFrameObserver、AudioFrameObserver三个AgoraWinRT接口，并将其转化为C#风格的对应事件。并在封装中提供了对UWP平台的视频采集与渲染的缺省实现，让使用者可以像使用Agora C++ SDK那样，不用考虑视频采集与渲染问题，直接调用SDK的功能即可完成正常的视频通讯与直播。 |
-| AgoraUWPDelegate.cs        | AgoraRtcEventHandler、VideoFrameObserver、AudioFrameObserver三个接口对应的C#风格事件的定义文件 |
-| IVideoDeviceCollection.cs  | Agora C++ SDK的IVideoDeviceCollection在C#上的重定义          |
-| VideoDeviceManager.cs      | Agora C++ SDK的IVideoDevicemanger在C#上的重定义，并且提供IVideoDeviceCollection和IVideoDeviceManager在UWP平台上的C#实现 |
-| VideoCanvas.cs             | 因为UWP平台上没有窗口的handle，传统的通过传入窗口handle，在窗口中进行视频渲染的做法无法实现。因此定义了VideoCanvas抽象类，统一UWP平台上视屏渲染的实现接口，具体说明参考[VideoCanvas](#VideoCanvas类说明) |
-| ImageBrushVideoCanvas.cs   | 提供基于ImageBrush的VideoCanvas视频渲染实现，用户可以使用这个类在ImageBrush上实现视屏渲染，也可以参考这个类的实现，实现自己的视频渲染实现 |
-| IMediaCapturer.cs          | AgoraUWP使用的媒体捕捉器的接口，用户可以通过实现自己的媒体捕捉器以替换AgoraUWP中缺省的媒体捕捉器 |
-| GeneralMediaCapturer.cs    | IMediaCapturer接口的缺省实现，也是AgoraUWP缺省使用的媒体捕捉器，用户可以参考这个类的实现，实现自己的媒体捕捉器 |
-| MediaCaptureVideoSource.cs | 基于GeneralMediaCapturer的一个Agora VideoSource的实现        |
+| AgoraUWP.cs                | The main file of AgoraUWP, which includes AgoraUWP.AgoraRtc class. This class implements three AgoraWinRT interfaces: AgoraWinRT::AgoraRtcEventHandler、AgoraWinRT::VideoFrameObserver、AgoraWinRT::AudioFrameObserver in privately, and transfer those intefaces to events. It also provide video capture and rendering capabilities on UWP platform, so the user can simply use this SDK to implements video and audio communication app like using Agora C++ SDK. |
+| AgoraUWPDelegate.cs        | include redefinition of AgoraWinRT::AgoraRtcEventHandler、AgoraWinRT::VideoFrameObserver、AgoraWinRT::AudioFrameObserver |
+| IVideoDeviceCollection.cs  | include redefinition of AgoraWinRT::IVideoDeviceCollection |
+| VideoDeviceManager.cs      | include redefinition of AgoraWinRT::IVideoDevicemanger，and include a implementation of AgoraWinRT::IVideoDeviceCollection and AgoraWinRT::IVideoDeviceManager on UWP platform |
+| VideoCanvas.cs             | because there is no window handle on UWP platform, therefore, the VideoCanvas abstract class is defined to unify the implementation interface of video rendering on UWP platform, for specific instruction, refer to [VideoCanas](#VideoCanvas) |
+| ImageBrushVideoCanvas.cs   | a VideoCanvas implementation based on ImageBrush.            |
+| IMediaCapturer.cs          | the media capture interface used by AgoraUWP.AgoraRtc        |
+| GeneralMediaCapturer.cs    | a default implementation of AgoraWinRT::IMediaCapturer interface, it is also the default media capture used by AgoraUWP.AgoraRtc |
+| MediaCaptureVideoSource.cs | a implementation of Agora C++ VideoSource based on GeneralMediaCapturer |
 
 #### AgoraUWP.AgoraRtc
 
-本类是Agora RTC在UWP平台上的核心封装类，其继承了AgoraWinRT::AgoraRtc类，并实现了AgoraRtcEventHandler、VideoFrameObserver、AudioFrameObserver三个AgoraWinRT接口，同时将其转化为C#风格的对应事件。补充了在AgoraWinRT上没有实现的针对UWP平台的视频捕捉、渲染、视频设备管理功能，实现了setupLocalVideo、setupRemoteVideo、setLocalRenderMode、setRemoteRenderMode、startPreview、stopPreview、enableLocalVideo函数，具体功能请参考[Agora C++ API Reference for All Platforms](https://docs.agora.io/cn/Audio%20Broadcast/API%20Reference/cpp/index.html)中同名函数说明。
+This class is the core class in AgoraUWP. It inherits from AgoraWinRT::AgoraRtc and implements AgoraWinRT::AgoraRtcEventHandler, AgoraWinRT::VideoFrameObserver, AgoraWinRT::AudioFrameObserver interfaces, and converts them into events.
 
-在使用AgoraUWP.AgoraRtc类时与使用Agora C++原生实现时有几个不同点：
+This class provides video capture, video rendering and device management functions on UWP platform that were not implmented on AgoraWinRT, and implemented setupLocalVideo, setupRemoteVideo, setLocalRenderMode, setRemoteRenderMode, startPreview, stopPreview, enableLocalVideo functions.
 
-1. 因为UWP平台的权限管理原因，使用摄像头和麦克风需要申请权限。经过测试，申请权限部分因为有弹窗确认的流程，无法使用同步代码，特别添加RequestCameraAccess异步静态函数，使用者在使用之前需要异步调用本函数已申请权限。
-2. 因为UWP平台上无窗口handle，setupLocalVideo与setupRemoteVideo函数参数改为接受VideoCanvas参数，任何继承并实现了VideoCanvas的类都可以正确得到需要渲染的视频帧数据，用户需要自己实现其在UWP窗体上的视频渲染，或者使用AgoraUWP.ImageBrushVideoCanvas从而直接在ImageBrush上实现视频渲染。
+These are serval differences between AgoraUWP.AgoraRtc and Agora C++ SDK:
 
-#### AgoraUWP.IMediaCapturer和AgoraUWP.GeneralMediaCapturer
+1. Users need to apply for permission to use the camera and microphone on the UWP platform. After testing, in the progress of applying for permission, pop-up confirmation windows cannot show in synchronous function. Therefore, AgoraUWP adds RequestCameraAccess asynchronous static function, the user must call this function to apply for permission before create and using AgoraUWP.AgoraRtc instance.
+2. the parameters of SetupLocalVideo and SetupRemoteVideo functions are modified to accept parameters of AgoraUWP.VideCanvas, because there is no window handle on the UWP platform.  Users can use AgoraUWP.ImageBrushVideoCanvas to implement video rendering on ImageBrush, and the user can inherit VideoCanvas to implement video rendering on their own.
 
-IMediaCapturer定义了一个在UWP上的音视频帧捕捉器，而GeneralMediaCapturer则是它的缺省实现了。
+#### AgoraUWP.IMediaCapturer and AgoraUWP.GeneralMediaCapturer
 
-GeneralMediaCapturer本身不但被AgoraUWP.AgoraRtc作为内部视频帧捕捉器使用，同时也可以作为音视频自采集时的音视频帧捕捉器独立使用。
+IMediaCapturer defines an audio and video frame capturer on UWP, and GeneralMediaCapturer is the default implementation.
 
-IMediaCapturer定义说明如下：
+GeneralMediaCapturer is not only used by AgoraUWP.AgoraRtc as an internal video frame capture, but also can be used independently as an audio and video frame capture for audio and video self-capturing.
+
+The definition of IMediaCapturer is as follows:
 
 1. VideoDevice
 
-   得到当前捕捉器所使用的视频设备，可能为null
+   Get the video device used by the current capture, which can be null
 
 2. AudioDevice
 
-   得到当前捕捉器所使用的音频设备，可能为null
+   Get the audio device used by the current capture, which can be null
 
 3. AudioFormat
 
-   当前使用的音频格式数据，如采样率、声道数等，具体可参考msdn中关于[MediaFrameFormat](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture.Frames.MediaFrameFormat?redirectedfrom=MSDN&view=winrt-19041)部分
+   The currently used audio format data, such as sampling rate, number of channels, etc., can be found in MSDN about [MediaFrameFormat](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture. Frames.MediaFrameFormat?redirectedfrom=MSDN&view=winrt-19041) part
 
 4. VideoFormat
 
-   当前使用的视频格式数据
+   Video format data currently in use
 
 5. VideoBufferType
 
-   当前给出的视频数据buffer的格式，缺省为 VIDEO_BUFFER_RAW_DATA
+   The format of the currently given video data buffer, the default is VIDEO_BUFFER_RAW_DATA
 
 6. OnVideoFrameArrived
 
-   当采集到视频帧数据时触发
+   Trigger when video frame data is collected
 
 7. EnableVideo
 
-   是否开启视频帧采集，缺省为true，如果设置为false，则OnVideoFrameArrived不会触发
+   Whether to enable video frame capture, the default is true, if set to false, OnVideoFrameArrived will not be triggered
 
-8. OnAudioFrameArrived 
+8. OnAudioFrameArrived
 
-   但采集到音频帧数据时触发
+   Trigger when the audio frame data is collected
 
 9. EnableAudio
 
-   是否开启采集音频帧，缺省为true，如果设置为false，则OnAudioFrameArrived不会触发
+   Whether to enable the capture of audio frames, the default is true, if set to false, OnAudioFrameArrived will not be triggered
 
-#### VideoCanvas和ImageBrushVideoCanvas
+#### VideoCanvas and ImageBrushVideoCanvas
 
-VideoCanvas定义了可被AgoraUWP.AgoraRtc接受为本地SetupLocalVideo与远程SetupRemoteVideo视频渲染窗口所应实现的方法和属性。
+VideoCanvas defines the methods and properties that can be accepted by SetupLocalVideo and SetupRemoteVideo functions in AgoraUWP.AgoraRtc.
 
-ImageBrushVideoCanvas则是基于ImageBrush之上的VideoCanvas实现类。
+ImageBrushVideoCanvas is a VideoCanvas implementation class based on ImageBrush.
 
-VideoCanvas定义说明如下：
+The definition of VideoCanvas is as follows:
 
 1. Target
 
-   需要在其上进行渲染的对象，比如ImageBrushVideoCanvas中的ImageBrush对象
+   Objects that need to be rendered on, such as ImageBrush objects in ImageBrushVideoCanvas
 
 2. RenderMode
 
-   视频在视频渲染窗口的填充方式
+   How to fill the video in the video rendering window
 
 3. Channel
 
-   视频对应来源的频道
+   The channel of the source video
 
 4. User
 
-   视频对应的用户id
+   User id corresponding to the video
 
 5. MirrorMode
 
-   视频是否需要镜像显示
+   Video mirror display
 
 6. Render(MediaFrameReference)
 
-   本地的视频预览时所使用的渲染方法
+   The rendering method used in the local video preview
 
 7. Render(VideoFrame)
 
-   AgoraUWP.AgoraRtc进行本地和远程视频渲染时调用的方法
+   Methods to call when AgoraUWP.AgoraRtc performs local and remote video rendering
 
-VideoCanvas类为抽象类，其中两个Render被实现为虚方法，方便用户根据需要对两个方法进行有选择的单独实现，比如VideoDeviceManager的StartDeviceTest中的VideoCanvas就可以只实现Render(MediaFrameReference)，因为这个函数中VideoCanvas只在本地视频测试中使用。
+The VideoCanvas class is an abstract class, in which two Render functions are implemented as virtual methods, which is convenient for users to selectively implement the two methods according to their needs. For example, VideoCanvas in the StartDeviceTest of VideoDeviceManager can only implement Render(MediaFrameReference), because of this function VideoCanvas is only used in local video testing.
 
 #### MediaCaptureVideoSource
 
-Agora C++中提供了一个setVideoSource的方法，让用户可以提供自己的VideoSource，但是在Agora的示例中，自定义的视频采集是以视频自采集setExternalVideoSource和pushVideoFrame两个方法进行的。本类只是提供了一个基于GeneralMeidaCapturer进行自定义的VideoSource的例子，用户可以参考其实现自己的VideoSource。
+Agora C++ provides a setVideoSource method, which allows users to provide their own VideoSource, but in Agora's example, the custom video capture is performed in two methods: setExternalVideoSource and pushVideoFrame. 
 
-## 使用实例说明
+So this class only provides an example of a custom VideoSource based on GeneralMeidaCapturer. Users can refer to it to implement their own VideoSource.
 
-AgoraUWPDemo为调用AgoraUWP的示例。
+## About AgoraUWPDemo
 
-例子中演示了三种模式：
+AgoraUWPDemo is an example of using AgoraUWP.
 
-1. 使用SDK内部采集模式
+Three modes are demonstrated in the example:
 
-   直接使用SDK内部的音视频采集，用户不用关心采集部分，只用关心业务部分。
+1. Use SDK internal-collection mode
 
-2. 使用音频自采集
+    Use the internal audio and video collection inside the AgoraUWP SDK, users don't need to care about the collection part.
 
-   演示了如何进行使用GeneralMediaCapturer进行音频自采集，作为示例，使用者可参考并实现自己的音频自采集方法。
+2. Use audio self-collection
 
-3. 使用音频自渲染
+    It demonstrates how to use GeneralMediaCapturer for audio self-collection. As an example, users can refer to and implement their own audio self-collection method.
 
-   演示了如何使用[AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041)结合[PullAudioFrame](https://docs.agora.io/cn/Video/API%20Reference/cpp/classagora_1_1media_1_1_i_media_engine.html#aaf43fc265eb4707bb59f1bf0cbe01940)对外部音频进行渲染。
+3. Use audio self-rendering
 
-同时示例中还演示了如何调整分辨率、帧率、码率等。
+    Demonstrates how to use [AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041) combined with [PullAudioFrame](https://docs .agora.io/en/Video/API%20Reference/cpp/classagora_1_1media_1_1_i_media_engine.html#aaf43fc265eb4707bb59f1bf0cbe01940) to render external audio.
 
-### 使用SDK内部采集模式流程
+At the same time, the example also demonstrates how to adjust the video resolution, frame rate, bit rate, etc.
 
-本流程对应着[如何快速开始](https://docs.agora.io/cn/Video/start_call_windows?platform=Windows)一节
+### Use SDK Internal-collection Mode
+
+This process corresponds to the section [How to quickly start](https://docs.agora.io/en/Video/start_call_windows?platform=Windows)
 
 ```mermaid
 sequenceDiagram
 participant UWP as UWP App
 participant SDK as Agora UWP SDK
 participant Agora as SD-RTN
-Note left of UWP: 申请摄像头和麦克风权限
+Note left of UWP: Apply for camera and microphone permissions
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
-Note left of UWP: 初始化
+Note left of UWP: Initialization
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: 设置本地视图
+Note left of UWP: Set local view
 UWP->>SDK: SetupLocalVideo(new ImageBrushVideoCanvas)
 UWP->>SDK: EnableVideo
-UWP->>SDK: StartPreview 可选
-Note left Of UWP: 加入频道
+UWP->>SDK: StartPreview optional
+Note left Of UWP: Join the channel
 UWP->>SDK: JoinChannel
-SDK->>Agora: 请求加入频道
+SDK->>Agora: Request to join the channel
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: 设置远程视图
-Note right of Agora: 远程用户加入
-Agora-->>UWP: OnFirstRemoteVideoDecoded 或者 OnUserJoined
+Note left of UWP: Set remote view
+Note right of Agora: Remote user join
+Agora-->>UWP: OnFirstRemoteVideoDecoded or OnUserJoined
 UWP->>SDK: SetupRemoteVideo(new ImageBrushVideoCanvas)
-Note left of UWP: 离开频道
+Note left of UWP: Leave the channel
 UWP->>SDK: LeaveChannel
-SDK->>Agora: 请求离开频道
-Note left of UWP: 释放
+SDK->>Agora: Request to leave the channel
+Note left of UWP: Release
 UWP->>SDK: Dispose
 ```
 
-![快速开始流程](images/image-20201020161921981.png)
+![image-20201105165511709](images/image-20201105165511709.png)
 
-请注意，因为UWP平台限制，必须对摄像头和麦克风权限进行申请才可以使用，所以在初始化之前，用户需要先调用AgoraUWP.AgoraRtc.RequestCameraAccess异步方法进行权限申请，因为是异步，这个方法推荐在程序一开始比如界面显示时进行，而把真正初始化AgoraRtc对象放置在真正开始需要进行视频通话的时候再进行，否则会造成AgoraRtc无法获得设备权限。
+Please note that due to UWP platform restrictions, you must apply for camera and microphone permissions before you can use it. Therefore, at the very beginning of the program, the user must call AgoraUWP.AgoraRtc.RequestCameraAccess asynchronous method to apply for permission, otherwise, it will cause AgoraUWP.AgoraRtc to fail to obtain device permissions.
 
-### 使用音频自采集
+### Use Audio Self-collection
 
-本流程对应[自定义音频采集和渲染](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)一节中的前半部，自定义音频采集
+This process corresponds to the first half of the section [Custom Audio Capture and Rendering](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows), the Custom Audio Capture.
 
 ```mermaid
 sequenceDiagram
 participant UWP as UWP App
 participant SDK as Agora UWP SDK
 participant Agora as SD-RTN
-Note left of UWP: 申请摄像头和麦克风权限
+Note left of UWP: Apply for camera and microphone permissions
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
-Note left of UWP: 初始化
+Note left of UWP: Initialization
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: 设置使用外部音频源
+Note left of UWP: Set to use an external audio source
 UWP->>SDK: SetExternalAudioSource
-Note left of UWP: 加入频道
+Note left of UWP: Join the channel
 UWP->>SDK: JoinChannel
-SDK->>Agora: 请求加入频道
+SDK->>Agora: Request to join the channel
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: 将处理后的音频数据发送给SDK
+Note left of UWP: Send the processed audio data to the SDK
 UWP->>SDK: PushAudioFrame
-Note left of UWP: 离开频道
+Note left of UWP: Leave the channel
 UWP->>SDK: LeaveChannel
-SDK->>Agora: 请求离开频道
-Note left of UWP: 释放
+SDK->>Agora: Request to leave the channel
+Note left of UWP: Release
 UWP->>SDK: Dispose
 ```
 
-![自采集音频流程](images/image-20201020162134496.png)
+![image-20201105165949740](images/image-20201105165949740.png)
 
-在演示中
+Start function is 
 
 ```c#
-/// <summary>
-/// 演示如何进行音频自采集和自渲染
-/// </summary>
-/// <param name="sender"></param>
-/// <param name="e"></param>
 private void StartEngineAndSelfAudioProcess()
 {
     InitEngine();
@@ -290,7 +298,7 @@ private void StartEngineAndSelfAudioProcess()
 }
 ```
 
-除了初始化引擎外，还初始化了一个基于GeneralMediaCapturer实现的音频采集器
+In this function, in addition to initializing the engine, an audio capture based on GeneralMediaCapturer is also be created.
 
 ```c#
 private void InitAudioCapture()
@@ -302,7 +310,7 @@ private void InitAudioCapture()
 }
 ```
 
-在这个音频采集器中，当采集到音频数据时，AudioFrameArrivedEvent被触发，将采集到的PCM32的音频数据转化为Agora能处理的PCM16的音频数据后，通过PushAudioFrame进行发送
+In this audio collector, when audio data is collected, AudioFrameArrivedEvent is triggered. After the collected PCM32 audio data is converted into PCM16 audio data that Agora C++ SDK can process, it is sent to PushAudioFrame function.
 
 ```c#
 private void AudioFrameArrivedEvent(AudioMediaFrame frame)
@@ -338,38 +346,39 @@ private void AudioFrameArrivedEvent(AudioMediaFrame frame)
 }
 ```
 
-本示例和官方的示例是有差别的，官方使用了一个队列，确保声音数据不因处理的时间问题而丢失，本示例没有进行这方面的处理，使用者可以根据自己应用的需要参考[官方示例](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)实现。
+This example is different from [the official example](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows). [The official example](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows) uses a queue to ensure that the sound data won't be lost due to processing time issues, this example does not deal with this aspect. 
 
-### 使用音频自渲染
+### Use Audio Self-rendering
 
-本流程对应[自定义音频采集和渲染](https://docs.agora.io/cn/Video/custom_audio_windows?platform=Windows)一节中的后半部分，自定义音频渲染
+This process corresponds to the second half of the section [Custom Audio Capture and Rendering](https://docs.agora.io/en/Video/custom_audio_windows?platform=Windows), the Custom Audio Rendering.
 
 ```mermaid
 sequenceDiagram
 participant UWP as UWP App
 participant SDK as Agora UWP SDK
 participant Agora as SD-RTN
-Note left of UWP: 申请摄像头和麦克风权限
+Note left of UWP: Apply for camera and microphone permissions
 UWP->>SDK: AgoraUWP.AgoraRtc.RequestCameraAccess
-Note left of UWP: 初始化
+Note left of UWP: Initialization
 UWP->>SDK: new AgoraUWP.AgoraRtc
-Note left of UWP: 设置使用外部音频渲染
+Note left of UWP: Set to use external audio rendering
 UWP->>SDK: SetExternalAudioSink
-Note left of UWP: 加入频道
+Note left of UWP: Join the channel
 UWP->>SDK: JoinChannel
-SDK->>Agora: 请求加入频道
+SDK->>Agora: Request to join the channel
 SDK-->>UWP: OnJoinChannelSuccess
-Note left of UWP: 拉取远端音频数据，自行处理后进行播放
+Note left of UWP: Pull remote audio data, process it, and play it
 UWP->>SDK: PullAudioFrame
-Note left of UWP: 离开频道
+Note left of UWP: Leave the channel
 UWP->>SDK: LeaveChannel
-SDK->>Agora: 请求离开频道
-Note left of UWP: 释放
+SDK->>Agora: Request to leave the channel
+Note left of UWP: Release
 UWP->>SDK: Dispose
 ```
-![音频自渲染流程](images/image-20201020162339492.png)
 
-在演示中
+![image-20201105171003324](images/image-20201105171003324.png)
+
+Start function is 
 
 ```c#
 private void StartEngineAndPullAudioProcess()
@@ -380,7 +389,7 @@ private void StartEngineAndPullAudioProcess()
 }
 ```
 
-除了初始化AgoraRtc引擎外，还初始化了一个[AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041)作为音频播放器。
+In this function, in addition to initializing the engine, it also creates an [AudioGraph](https://docs.microsoft.com/en-us/uwp/api/windows.media.audio.audiograph?view=winrt-19041) as an audio player.
 
 ```c#
 private void InitAudioGraph()
@@ -404,7 +413,7 @@ private void InitAudioGraph()
 }
 ```
 
-其中m_audioInput作为PCM数据的输入端，链接至缺省的系统音频输出端，比如扬声器或耳机。每当m_audioInput准备好可以处理新的音频数据时，会触发QuantumStarted事件，在这个事件中就可以调用Agora的PullAudioFrame得到音频数据并进行处理后播放。
+The m_audioInput is used as the input of PCM data and is linked to the default system audio outputs, such as speakers or headphones. Whenever m_audioInput is ready to process new audio data, it will trigger the QuantumStarted event. In this event, you can call Agora's PullAudioFrame to get the audio data and play it.
 
 ```c#
 private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
@@ -442,67 +451,66 @@ private void QuantumStartedEvent(AudioFrameInputNode sender, FrameInputNodeQuant
  }
 ```
 
-## 如何在UWP 项目中使用
+## How To Use In Your UWP Project
 
-如果要在一个新的或已经存在的 UWP 项目中使用 AgoraUWP 和 AgoraWinRT，只需如下几步，这里以一个新的 UWP 项目为例
+If you want to use AgoraUWP and AgoraWinRT in a new or existing UWP project, you only need to take the following steps, here is a new UWP project as an example
 
-### 生成库文件
+### Generate library files
 
-编译完 AgoraWinRT 和 AgoraUWP 项目后，在 AgoraUWP 项目的 bin/x86 或 bin/x64 下生成 debug 或 release 目录，具体活动解决方案配置与活动解决方案平台依编译时的设置而定。
+After compiling the AgoraWinRT and AgoraUWP projects, generate the debug or release directory under bin/x86 or bin/x64 of the AgoraUWP project. The specific depend on the settings during compilation.
 
 ![image-20201114120001641](images/image-20201114120001641.png)
 
-其中需要的文件是
+the required files is 
 
 1. AgoraUWP.dll
 2. AgoraWinRT.dll
 3. AgoraWinRT.winmd
 
-### 新建 UWP 项目
+### Create New UWP Project
 
-通过Visual Studio新建一个 UWP 项目
+Create a new UWP solution through Visual Studio
 
-![image-20201114120452111](images/image-20201114120452111.png)
+![image-20201114124043704](images/image-20201114124043704.png)
 
-### 添加 Agora C++ RTC 库文件
+### Add Agora C++ RTC Library File
 
-在 AgoraWinRTTest 项目中选择添加“现有项“
+Add Existing Item
 
-![image-20201114120645626](images/image-20201114120645626.png)
+![image-20201114124137499](images/image-20201114124137499.png)
 
-找到从 Agora 官网上下载的 Agora RTC SDK，选择其中的 agora_rtc_sdk.dll，注意要选择对应的 x86 或x64 版本。
+Download Agora RTC SDK from Agora Official website, and select agora_rtc_sdk.dll among them. Pay attention, you must select the corresponding x86 or x64 version.
 
-![image-20201114120857750](images/image-20201114120857750.png)
+![image-20201114124418606](images/image-20201114124418606.png)
 
-将 agora_rtc_sdk.dll 的属性中的复制到输出目录选择为“始终复制”
+Modify "Copy to Output Directory" in agora_rtc_sdk.dll properties to "Copy always"
 
-![image-20201114121008509](images/image-20201114121008509.png)
+![image-20201114124617071](images/image-20201114124617071.png)
 
-### 添加 AgoraWinRT 和 AgoraUWP 引用
+### Add AgoraWinRT and AgoraUWP Reference
 
-在项目中选择添加引用
+Add References in project
 
-![image-20201114121056564](images/image-20201114121056564.png)
+![image-20201114124748758](images/image-20201114124748758.png)
 
-选择浏览
+Select browse
 
-![image-20201114121149713](images/image-20201114121149713.png)
+![image-20201114124834054](images/image-20201114124834054.png)
 
-点击“浏览”按键后，在文件浏览器中找到生成的库文件目录，选择 AgoraUWP.dll 和 AgoraWinRT.winmd这两个文件
+Click "Browse...", find AgoraUWP.dll and AgoraWinRT.winmd in AgoraUWP and AgoraWinRT bin directory.
 
 ![image-20201114121437673](images/image-20201114121437673.png)
 
-点击“添加”
+Click "Add"
 
-![image-20201114121515872](images/image-20201114121515872.png)
+![image-20201114125125239](images/image-20201114125125239.png)
 
-点击“确定”，就可以将 AgoraUWP 和 AgoraWinRT 库添加到项目中了。
+Click "OK", add AgoraUWP and AgoraWnRT to project's references
 
-![image-20201114121858351](images/image-20201114121858351.png)
+![image-20201114125217706](images/image-20201114125217706.png)
 
-### 最后
+### Finally
 
-之后的使用就可以参考 AgoraWinRT 工程里的 AgoraUWPDemo 项目 了，注意，项目需要添加麦克风和网络摄像头的功能才可以。
+For subsequent use, you can refer to the AgoraUWPDemo project in the AgoraWinRT project. Note that the project needs to add microphone and webcam capabilities.
 
-![image-20201114121818384](images/image-20201114121818384.png)
-
+![image-20201114125344615](images/image-20201114125344615.png)
