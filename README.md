@@ -1,6 +1,6 @@
 # AgoraWinRT Development Manual
 
-*English* ｜ [**中文**](Readme.zh.md)
+*English* ｜ [**中文**](README.zh.md)
 
 In UWP, Agora C++ Native Development kit cannot get the camera and microphone permission because they should be explicitly applying, and there is no handle property in UWP on Windows, Agora C++ Native also cannot render video data by default function like setupLocalVideo and setupRemoteVideo. On the other hand, UWP development is more friendly to C# users.
 
