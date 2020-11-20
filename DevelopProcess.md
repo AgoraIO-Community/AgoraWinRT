@@ -1,95 +1,95 @@
 # AgoraWinRT
-AgoraWinRT的实现及UWP上的包装类
+The realization of AgoraWinRT and the packaging class on UWP
 
-## UPWDemo实现部分
+## UPWDemo implementation part
 
-- [x] 设置视频分辨率、帧率、码率
-- [x] 退出频道的时候，预览不会自动恢复
-- [x] 开启｜关闭视频
-- [x] 静音｜取消静音
-- [x] 加入离开频道
-             
-## 实现API部分
+-[x] Set video resolution, frame rate, bit rate
+-[x] When you exit the channel, the preview will not be restored automatically
+-[x] On｜Off video
+-[x] Mute｜Unmute
+-[x] Join and leave the channel
 
-- [x] 音频自渲染
-- [x] 音频自采集
-- [x] 视频自渲染
-- [x] 视频自采集
-- [x] 视频管理
-- [x] 音频管理
-- [x] 频道管理
+## Implement the API part
 
-- [x] 设备管理
-- [x] 原始音频数据
-- [x] 原始视频数据
-- [x] 媒体附属信息
-- [x] 音频录制
-- [x] 直播输入在线媒体流
-- [x] 多频道管理
-- [x] 加密
-- [x] 流消息
-- [x] 通话前网络测试
-- [x] 视频流回退
-- [x] 视频双流模式
-- [x] 跨频道媒体流转发
-- [x] 音量提示
-- [x] CDN推流
-- [x] 听声辨位
-- [x] 变声与混响
-- [x] 音乐文件播放及混音
-- [x] 音效文件播放管理
-- [x] 视频前初级后处理
-- [x] 数据统计
+-[x] Audio self rendering
+-[x] Audio self-collection
+-[x] Video self-rendering
+-[x] Video self-capture
+-[x] Video management
+-[x] Audio management
+-[x] Channel Management
 
-## 程序结构说明
+-[x] Device management
+-[x] Raw audio data
+-[x] Original video data
+-[x] Media ancillary information
+-[x] Audio recording
+-[x] Live input online media stream
+-[x] Multi-channel management
+-[x] Encryption
+-[x] Streaming message
+-[x] Network test before call
+-[x] Video stream back
+-[x] Video dual stream mode
+-[x] Cross-channel media stream forwarding
+-[x] Volume reminder
+-[x] CDN push
+-[x] Identify position by listening
+-[x] Voice change and reverb
+-[x] Music file playback and mixing
+-[x] Sound effect file playback management
+-[x] Primary post-processing before video
+-[x] Statistics
+
+## Program structure description
 
 ### AgoraWinRT
 
-AgoraWinRT部分为Agora C++部分的WinRT封装，其命名与Agora C++ API相同，实现在AgoraWinRT名字空间内部。
+The AgoraWinRT part is the WinRT package of the Agora C++ part. Its name is the same as the Agora C++ API and is implemented in the AgoraWinRT namespace.
 
-#### 不实现的部分
-- setVideoProfile: 2.3后废弃
-- 屏幕共享: 技术原因
-- 人脸检测: Android和iOS
-- 音频播放路由: Android和iOS
-- 耳返控制: Android和iOS
-- 自定义视频模块: 使用视频自采集代替
-- 摄像头控制: Android和iOS
-- 其他音频控制中的 setAudioSessionOperationRestriction: iOS
-- queryInterface: 内部使用
+#### Part not implemented
+-setVideoProfile: Obsolete after 2.3
+-Screen sharing: technical reasons
+-Face detection: Android and iOS
+-Audio playback routing: Android and iOS
+-Ear back control: Android and iOS
+-Custom video module: use video self-capture instead
+-Camera control: Android and iOS
+-SetAudioSessionOperationRestriction in other audio control: iOS
+-queryInterface: internal use
 
-#### 在UWP中实现的部分
-- [x] onVideoDeviceStatsChanged
-- [x] onFirstLocalVideoFrame
+#### Part implemented in UWP
+-[x] onVideoDeviceStatsChanged
+-[x] onFirstLocalVideoFrame
 
-- [x] enableLocalVideo
-- [x] setRemoteRenderModel
-- [x] setLocalRenderModel
-- [x] setupRemoteVideo 
-- [x] setupLocalVideo
-- [x] startPreview 
-- [x] stopPreview 
+-[x] enableLocalVideo
+-[x] setRemoteRenderModel
+-[x] setLocalRenderModel
+-[x] setupRemoteVideo
+-[x] setupLocalVideo
+-[x] startPreview
+-[x] stopPreview
 
-- [x] GetVideoDeviceManager
+-[x] GetVideoDeviceManager
 
 ### AgoraUWP
 
-AgoraWinRT在UWP中的封装，提供一些UWP下特殊的WinRT不方便原生提供的功能，主要集中在视频采集与视频设备管理
+The encapsulation of AgoraWinRT in UWP provides some special functions that WinRT inconveniently provide natively under UWP, mainly focusing on video capture and video device management
 
-#### 实现的主要功能
-- 提供缺省情况下本地视频的采集与渲染
-- 远程视频的渲染
-- 提供对视频采集设备的管理功能
+#### Main functions implemented
+-Provide local video capture and rendering by default
+-Rendering of remote video
+-Provide management functions for video capture equipment
 
-#### 文件说明
-- AgoraUWP.cs 提供对AgoraWinRT的继承与封装，并整合以下几个类提供完整的Agora C++ API在UWP上的模拟实现
-- AgoraUWPDelegate.cs 将Agora C++事件转换为delegate
-- GeneralMediaCapturer.cs 提供缺省的视频采集功能
-- ImageBrushVideoCanvas.cs 提供基于ImageBrush的视频渲染功能
-- ImageVideoCanvas.cs 提供基于Image的视屏渲染功能，此类的功能较ImageBrushVideoCanvas差
-- MediaList.cs 提供得到Windows下设备的示例
-- VideoDeviceManager.cs 为Agora C++中VideoDeviceManager的UWP实现
+#### File description
+-AgoraUWP.cs provides inheritance and encapsulation of AgoraWinRT, and integrates the following classes to provide a complete simulation implementation of Agora C++ API on UWP
+-AgoraUWPDelegate.cs converts Agora C++ events to delegates
+-GeneralMediaCapturer.cs provides default video capture function
+-ImageBrushVideoCanvas.cs provides video rendering function based on ImageBrush
+-ImageVideoCanvas.cs provides Image-based video rendering function, which is inferior to ImageBrushVideoCanvas
+-MediaList.cs provides examples of getting devices under Windows
+-VideoDeviceManager.cs is the UWP implementation of VideoDeviceManager in Agora C++
 
 ### AgoraUWPDemo
 
-提供UWP使用示例
+Provide UWP usage examples

@@ -14,7 +14,7 @@ using Windows.Security.Authentication.Identity.Core;
 using Windows.Security.Cryptography.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml.Media;
-
+ 
 namespace AgoraUWP
 {
     public class AgoraRtc : AgoraWinRT.AgoraRtc,
@@ -88,7 +88,7 @@ namespace AgoraUWP
             base.SetExternalVideoSource(true, false);
         }
         private void InitVideoCapture(DeviceInformation device)
-        {            
+        {
             defaultMediaCapturer?.Dispose();
             defaultMediaCapturer = new GeneralMediaCapturer(device, StreamingCaptureMode.Video);
             defaultMediaCapturer.OnVideoFrameArrived += VideoFrameArrivedEvent;
