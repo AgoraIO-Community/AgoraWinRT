@@ -86,6 +86,9 @@ namespace winrt::AgoraWinRT::implementation
         int16_t SetLocalVoicePitch(float pitch);
         int16_t SetLocalVoiceEqualization(AgoraWinRT::AUDIO_EQUALIZATION_BAND_FREQUENCY const& freq, int16_t gain);
         int16_t SetLocalVoiceReverb(AgoraWinRT::AUDIO_REVERB_TYPE const& type, uint64_t value);
+        int16_t SetVoiceBeautifierPreset(AgoraWinRT::VOICE_BEAUTIFIER_PRESET const& preset);
+        int16_t SetAudioEffectPreset(AgoraWinRT::AUDIO_EFFECT_PRESET const& preset);
+        int16_t SetAudioEffectParameters(AgoraWinRT::AUDIO_EFFECT_PRESET const& preset, uint8_t param1, uint8_t param2);
         //������λ
         int16_t EnableSoundPositionIndication(bool enabled);
         int16_t SetRemoteVoicePosition(uint64_t uid, float pan, float gain);

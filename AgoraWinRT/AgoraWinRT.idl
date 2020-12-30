@@ -83,6 +83,10 @@ namespace AgoraWinRT
 		Int16 SetLocalVoicePitch(Single pitch);
 		Int16 SetLocalVoiceEqualization(AgoraWinRT.AUDIO_EQUALIZATION_BAND_FREQUENCY freq, Int16 gain);
 		Int16 SetLocalVoiceReverb(AgoraWinRT.AUDIO_REVERB_TYPE type, UInt64 value);
+		Int16 SetVoiceBeautifierPreset(AgoraWinRT.VOICE_BEAUTIFIER_PRESET preset);
+		Int16 SetAudioEffectPreset(AgoraWinRT.AUDIO_EFFECT_PRESET preset);
+		Int16 SetAudioEffectParameters(AgoraWinRT.AUDIO_EFFECT_PRESET preset, UInt8 param1, UInt8 param2);
+
 
 		//ÌýÉù±çÎ»
 		Int16 EnableSoundPositionIndication(Boolean enabled);

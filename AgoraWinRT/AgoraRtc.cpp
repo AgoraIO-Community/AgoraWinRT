@@ -277,6 +277,18 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		return m_rtcEngine->setLocalVoiceReverb((agora::rtc::AUDIO_REVERB_TYPE)type, value);
 	}
+	int16_t AgoraRtc::SetVoiceBeautifierPreset(AgoraWinRT::VOICE_BEAUTIFIER_PRESET const& preset)
+	{
+		return m_rtcEngine->setVoiceBeautifierPreset((agora::rtc::VOICE_BEAUTIFIER_PRESET)preset);
+	}
+	int16_t AgoraRtc::SetAudioEffectPreset(AgoraWinRT::AUDIO_EFFECT_PRESET const& preset)
+	{
+		return m_rtcEngine->setAudioEffectPreset((agora::rtc::AUDIO_EFFECT_PRESET)preset);
+	}
+	int16_t AgoraRtc::SetAudioEffectParameters(AgoraWinRT::AUDIO_EFFECT_PRESET const& preset, uint8_t param1, uint8_t param2)
+	{
+		return m_rtcEngine->setAudioEffectParameters((agora::rtc::AUDIO_EFFECT_PRESET)preset, param1, param2);
+	}
 	int16_t AgoraRtc::EnableSoundPositionIndication(bool enabled)
 	{
 		return m_rtcEngine->enableSoundPositionIndication(enabled);
