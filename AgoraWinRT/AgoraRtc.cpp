@@ -54,6 +54,10 @@ namespace winrt::AgoraWinRT::implementation
 	{
 		return m_rtcEngine->setClientRole((agora::rtc::CLIENT_ROLE_TYPE)type);
 	}
+	int16_t AgoraRtc::SetClientRole(AgoraWinRT::CLIENT_ROLE_TYPE const& type, AgoraWinRT::ClientRoleOptions const& options)
+	{
+		return m_rtcEngine->setClientRole((agora::rtc::CLIENT_ROLE_TYPE)type, Utils::To(options));
+	}
 	int16_t AgoraRtc::JoinChannel(hstring const& token, hstring const& channel, hstring const& info, uint64_t uid)
 	{
 		return m_rtcEngine->joinChannel(Utils::To(token).c_str(), Utils::To(channel).c_str(), Utils::To(info).c_str(), uid);

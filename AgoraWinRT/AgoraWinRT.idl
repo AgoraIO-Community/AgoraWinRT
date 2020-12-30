@@ -17,6 +17,7 @@ namespace AgoraWinRT
 		//∆µµ¿π‹¿Ì
 		Int16 SetChannelProfile(AgoraWinRT.CHANNEL_PROFILE_TYPE type);
 		Int16 SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE type);
+		Int16 SetClientRole(AgoraWinRT.CLIENT_ROLE_TYPE type, AgoraWinRT.ClientRoleOptions options);
 		Int16 JoinChannel(String token, String channel, String info, UInt64 uid);
 		Int16 SwitchChannel(String token, String channel);
 		Int16 LeaveChannel();

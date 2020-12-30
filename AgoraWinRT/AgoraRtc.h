@@ -25,6 +25,7 @@ namespace winrt::AgoraWinRT::implementation
         //Ƶ������
         int16_t SetChannelProfile(AgoraWinRT::CHANNEL_PROFILE_TYPE const& type);
         int16_t SetClientRole(AgoraWinRT::CLIENT_ROLE_TYPE const& type);
+        int16_t SetClientRole(AgoraWinRT::CLIENT_ROLE_TYPE const& type, AgoraWinRT::ClientRoleOptions const& options);
         int16_t JoinChannel(hstring const& token, hstring const& channel, hstring const& info, uint64_t uid);
         int16_t SwitchChannel(hstring const& token, hstring const& channel);
         int16_t LeaveChannel();
